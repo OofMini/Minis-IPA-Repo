@@ -12,3 +12,5 @@ Use these links to manually add my repo:
   ```
   https://OofMini.github.io/Minis-IPA-Repo/altstore.json
   ```
+
+(AltStore source not working, will be soon)
