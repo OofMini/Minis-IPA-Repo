@@ -1,85 +1,102 @@
 {
   "name": "Mini's IPA Repo",
   "identifier": "com.oofmini.iparepo",
-  "sourceURL": "https://OofMini.github.io/Minis-IPA-Repo/altstore.json",
   "apps": [
     {
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "subtitle": "EeveeSpotify-6.1.3",
-      "version": "9.0.72",
-      "versionDate": "2025-09-02",
-      "versionDescription": "EeveeSpotify-6.1.3",
-      "downloadURL": "https://www.dropbox.com/scl/fi/urjsrvcsbmek44ista5ro/EeveeSpotify.ipa?rlkey=5h8rnwn1trbyicptntpl411vl&st=sfc520c5&dl=1",
-      "localizedDescription": "EeveeSpotify-6.1.3",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
-      "tintColor": "018084"
+      "tintColor": "1DB954",
+      "versions": [
+        {
+          "version": "9.0.72",
+          "date": "2025-09-02",
+          "localizedDescription": "EeveeSpotify-6.1.3",
+          "downloadURL": "https://www.dropbox.com/scl/fi/urjsrvcsbmek44ista5ro/EeveeSpotify.ipa?rlkey=5h8rnwn1trbyicptntpl411vl&st=sfc520c5&dl=1",
+          "size": 86394368
+        }
+      ]
     },
     {
       "name": "YTLitePlus",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "subtitle": "YTLitePlus-v5.2b3",
-      "version": "20.32.4",
-      "versionDate": "2025-09-02",
-      "versionDescription": "YTLitePlus-v5.2b3",
-      "downloadURL": "https://www.dropbox.com/scl/fi/1c477g0pq64xam8oj9g8q/YouTubePlus_5.2b3.ipa?rlkey=puooqub0nb7e5zdett5330zgk&st=p35zty2t&dl=1",
-      "localizedDescription": "YTLitePlus-v5.2b3",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
-      "tintColor": "FF0000"
+      "tintColor": "FF0000",
+      "versions": [
+        {
+          "version": "20.32.4",
+          "date": "2025-09-02",
+          "localizedDescription": "YTLitePlus-v5.2b3",
+          "downloadURL": "https://www.dropbox.com/scl/fi/1c477g0pq64xam8oj9g8q/YouTubePlus_5.2b3.ipa?rlkey=puooqub0nb7e5zdett5330zgk&st=p35zty2t&dl=1",
+          "size": 115546112
+        }
+      ]
     },
     {
       "name": "X",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "subtitle": "NeoFreeBird-2.0",
-      "version": "11.17.1",
-      "versionDate": "2025-09-02",
-      "versionDescription": "NeoFreeBird-2.0",
-      "downloadURL": "https://www.dropbox.com/scl/fi/fh7ewsouqioiptfry7fww/NeoFreeBird-trollstore_5.1_11.17.1.tipa?rlkey=xbnoibw2zesrgw3xebutmgvv3&st=9c09us9u&dl=1",
-      "localizedDescription": "NeoFreeBird-2.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
-      "tintColor": "1DA1F2"
+      "tintColor": "1DA1F2",
+      "versions": [
+        {
+          "version": "11.17.1",
+          "date": "2025-09-02",
+          "localizedDescription": "NeoFreeBird-2.0",
+          "downloadURL": "https://www.dropbox.com/scl/fi/fh7ewsouqioiptfry7fww/NeoFreeBird-trollstore_5.1_11.17.1.tipa?rlkey=xbnoibw2zesrgw3xebutmgvv3&st=9c09us9u&dl=1",
+          "size": 160008192
+        }
+      ]
     },
     {
       "name": "InshotPro",
       "bundleIdentifier": "com.camerasideas.InstaShot",
       "developerName": "IPAOMTK",
-      "subtitle": "Inshot-1.89.2(Pro Features Unlocked)",
-      "version": "1.89.2",
-      "versionDate": "2025-09-02",
-      "versionDescription": "Inshot-1.89.2(Pro Features Unlocked)",
-      "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
-      "localizedDescription": "Inshot-1.89.2(Pro Features Unlocked)",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
-      "tintColor": "FF9900"
+      "tintColor": "FFB300",
+      "versions": [
+        {
+          "version": "1.89.2",
+          "date": "2025-09-02",
+          "localizedDescription": "Inshot-1.89.2(Pro Features Unlocked)",
+          "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
+          "size": 113650688
+        }
+      ]
     },
     {
       "name": "Dopamine2",
       "bundleIdentifier": "com.opa334.Dopamine",
       "developerName": "opa334",
-      "subtitle": "Dopamine2-JB",
-      "version": "2.4.5",
-      "versionDate": "2025-09-02",
-      "versionDescription": "Dopamine2-JB",
-      "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3&st=knrzpfge&dl=1",
-      "localizedDescription": "Dopamine2-JB",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
-      "tintColor": "00CC99"
+      "tintColor": "00C853",
+      "versions": [
+        {
+          "version": "2.4.5",
+          "date": "2025-09-02",
+          "localizedDescription": "Dopamine2-JB",
+          "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
+          "size": 53288960
+        }
+      ]
     },
     {
       "name": "Dopamine2-roothide",
       "bundleIdentifier": "com.opa334.Dopamine-roothide",
       "developerName": "roothide",
-      "subtitle": "Dopamine2-JB-roothide",
-      "version": "2.2.2.17",
-      "versionDate": "2025-09-02",
-      "versionDescription": "Dopamine2-JB-roothide",
-      "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
-      "localizedDescription": "Dopamine2-JB-roothide",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
-      "tintColor": "FF66CC"
+      "tintColor": "8E24AA",
+      "versions": [
+        {
+          "version": "2.2.2.17",
+          "date": "2025-09-02",
+          "localizedDescription": "Dopamine2-JB-roothide",
+          "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
+          "size": 53811200
+        }
+      ]
     }
   ]
 }
