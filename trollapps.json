@@ -30,6 +30,15 @@
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "downloadURL": "https://www.dropbox.com/scl/fi/fh7ewsouqioiptfry7fww/NeoFreeBird-trollstore_5.1_11.17.1.tipa?rlkey=xbnoibw2zesrgw3xebutmgvv3&st=9c09us9u&dl=1",
       "localizedDescription": "NeoFreeBird-2.0"
+    },
+    {
+      "name": "InshotPro",
+      "bundleIdentifier": "com.camerasideas.InstaShot",
+      "developerName": "IPAOMTK",
+      "version": "1.89.2",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
+      "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
+      "localizedDescription": "Inshot-1.89.2(Pro Features Unlocked)"
     }
   ]
 }
