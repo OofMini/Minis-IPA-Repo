@@ -19,6 +19,15 @@
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "downloadURL": "https://www.dropbox.com/scl/fi/1c477g0pq64xam8oj9g8q/YouTubePlus_5.2b3.ipa?rlkey=puooqub0nb7e5zdett5330zgk&st=p35zty2t&dl=1",
       "localizedDescription": "YTLitePlus-v5.2b3"
+    },
+    {
+      "name": "X",
+      "bundleIdentifier": "com.atebits.Tweetie2",
+      "developerName": "NeoFreeBird",
+      "version": "11.17.1",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
+      "downloadURL": "https://www.dropbox.com/scl/fi/fh7ewsouqioiptfry7fww/NeoFreeBird-trollstore_5.1_11.17.1.tipa?rlkey=xbnoibw2zesrgw3xebutmgvv3&st=9c09us9u&dl=1",
+      "localizedDescription": "NeoFreeBird-2.0"
     }
   ]
 }
