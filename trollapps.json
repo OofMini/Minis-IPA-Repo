@@ -39,6 +39,24 @@
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
       "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
       "localizedDescription": "Inshot-1.89.2(Pro Features Unlocked)"
+    },
+    {
+      "name": "Dopamine2",
+      "bundleIdentifier": "com.opa334.Dopamine",
+      "developerName": "opa334",
+      "version": "2.4.5",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
+      "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
+      "localizedDescription": "Dopamine2-JB"
+    },
+    {
+      "name": "Dopamine2-roothide",
+      "bundleIdentifier": "com.opa334.Dopamine-roothide",
+      "developerName": "roothide",
+      "version": "2.2.2.17",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
+      "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
+      "localizedDescription": "Dopamine2-JB-roothide"
     }
   ]
 }
