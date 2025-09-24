@@ -21,7 +21,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/acujg5gry6rxhvd8y9vqw/EeveeSpotify.ipa?rlkey=407k1ww5bhzavaas6ljsc130x&st=632r74zc&dl=1",
           "size": 87451238,
-          "versionDescription": "Tweak v6.1.4:\n\u2022 Premium unlocked\n\u2022 Ads removed\n\u2022 Enhanced playback"
+          "versionDescription": "Tweak v6.1.4:\n\u2022 Premium unlocked\n\u2022 Ads removed\n\u2022 Enhanced playback",
+          "developerName": "whoeevee",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#1DB954",
@@ -48,7 +50,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/j7v9xiped8ranpoog42q1/YouTubePlus_5.2b3.ipa?rlkey=b2y5dk10kjye94y6tyagrejbx&st=nz72hq84&dl=1",
           "size": 113357619,
-          "versionDescription": "Tweak v5.2b3:\n\u2022 Background playback\n\u2022 Ads removed\n\u2022 Picture-in-picture"
+          "versionDescription": "Tweak v5.2b3:\n\u2022 Background playback\n\u2022 Ads removed\n\u2022 Picture-in-picture",
+          "developerName": "dayanch96",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#FF0000",
@@ -75,7 +79,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/n469vrxncqdc9b50oui1g/NeoFreeBird-trollstore_5.1_11.24.tipa?rlkey=sa7l514xbz1nwym7wydoknhqe&st=duyem8ql&dl=1",
           "size": 142755430,
-          "versionDescription": "Tweak v2.0:\n\u2022 TrollStore build 5.1\n\u2022 Custom features\n\u2022 Performance optimizations"
+          "versionDescription": "Tweak v2.0:\n\u2022 TrollStore build 5.1\n\u2022 Custom features\n\u2022 Performance optimizations",
+          "developerName": "NeoFreeBird",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#1DA1F2",
@@ -101,7 +107,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
           "size": 113670144,
-          "versionDescription": "Pro Unlock:\n\u2022 All filters available\n\u2022 Watermark removed\n\u2022 Premium tools enabled"
+          "versionDescription": "Pro Unlock:\n\u2022 All filters available\n\u2022 Watermark removed\n\u2022 Premium tools enabled",
+          "developerName": "IPAOMTK",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#FF2D55",
@@ -128,7 +136,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
           "size": 53267661,
-          "versionDescription": "Version 2.4.5:\n\u2022 Semi-untethered jailbreak\n\u2022 iOS 15+ support\n\u2022 Rootless environment"
+          "versionDescription": "Version 2.4.5:\n\u2022 Semi-untethered jailbreak\n\u2022 iOS 15+ support\n\u2022 Rootless environment",
+          "developerName": "opa334",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#8E44AD",
@@ -154,7 +164,9 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
           "size": 53791949,
-          "versionDescription": "Version 2.2.2.17:\n\u2022 Roothide jailbreak\n\u2022 Systemless operation\n\u2022 Improved stealth"
+          "versionDescription": "Version 2.2.2.17:\n\u2022 Roothide jailbreak\n\u2022 Systemless operation\n\u2022 Improved stealth",
+          "developerName": "roothide",
+          "buildVersion": "1"
         }
       ],
       "tintColor": "#7F8C8D",
