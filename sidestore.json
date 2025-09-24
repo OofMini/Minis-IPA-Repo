@@ -8,7 +8,7 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "localizedDescription": "Tweaked Spotify client with premium features.",
+      "localizedDescription": "EeveeSpotify is a modified Spotify client (v9.0.80) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
       "description": "EeveeSpotify is a modified Spotify client (v9.0.80) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
@@ -29,7 +29,7 @@
       "name": "YTLitePlus",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube client with premium features.",
+      "localizedDescription": "YTLitePlus (v20.38.3, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
       "description": "YTLitePlus (v20.38.3, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
@@ -50,7 +50,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked Twitter/X client.",
+      "localizedDescription": "NeoFreeBird (v11.24, TrollStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
       "description": "NeoFreeBird (v11.24, TrollStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
@@ -71,7 +71,7 @@
       "name": "InshotPro",
       "bundleIdentifier": "com.camerasideas.InstaShot",
       "developerName": "IPAOMTK",
-      "localizedDescription": "Pro version of InShot video editor.",
+      "localizedDescription": "InshotPro (v1.89.2) is a tweaked version of the InShot video editor with all pro features unlocked, watermark removal, and premium filters enabled.",
       "description": "InshotPro (v1.89.2) is a tweaked version of the InShot video editor with all pro features unlocked, watermark removal, and premium filters enabled.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
       "screenshotURLs": [
@@ -92,7 +92,7 @@
       "name": "Dopamine2",
       "bundleIdentifier": "com.opa334.Dopamine",
       "developerName": "opa334",
-      "localizedDescription": "Modern iOS jailbreak.",
+      "localizedDescription": "Dopamine2 (v2.4.5) is a semi-untethered jailbreak tool for iOS 15+, built by opa334. Supports tweak injection, rootless jailbreak environment.",
       "description": "Dopamine2 (v2.4.5) is a semi-untethered jailbreak tool for iOS 15+, built by opa334. Supports tweak injection, rootless jailbreak environment.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
       "screenshotURLs": [
@@ -113,7 +113,7 @@
       "name": "Dopamine2-roothide",
       "bundleIdentifier": "com.opa334.Dopamine-roothide",
       "developerName": "roothide",
-      "localizedDescription": "Roothide jailbreak variant.",
+      "localizedDescription": "Dopamine2-roothide (v2.2.2.17) is a special build of Dopamine with roothide support, allowing systemless jailbreak with better stealth and compatibility.",
       "description": "Dopamine2-roothide (v2.2.2.17) is a special build of Dopamine with roothide support, allowing systemless jailbreak with better stealth and compatibility.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
       "screenshotURLs": [
