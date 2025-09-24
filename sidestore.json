@@ -1,7 +1,7 @@
 {
   "name": "Mini's IPA Repo",
-  "subtitle": "Tweaked Apps",
-  "description": "A collection of tweaked ipas, including music, video, social media, jailbreak tools, and more.",
+  "subtitle": "Tweaks and Jailbreak Tools",
+  "description": "A collection of popular tweaked apps and jailbreak utilities.",
   "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png",
   "apps": [
     {
@@ -9,7 +9,6 @@
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
       "localizedDescription": "EeveeSpotify is a modified Spotify client (v9.0.80) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
-      "description": "EeveeSpotify is a modified Spotify client (v9.0.80) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -21,8 +20,15 @@
           "version": "9.0.80",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/acujg5gry6rxhvd8y9vqw/EeveeSpotify.ipa?rlkey=407k1ww5bhzavaas6ljsc130x&st=632r74zc&dl=1",
-          "size": 87451238
+          "size": 87451238,
+          "versionDescription": "Tweak v6.1.4:\n\u2022 Premium unlocked\n\u2022 Ads removed\n\u2022 Enhanced playback"
         }
+      ],
+      "tintColor": "#1DB954",
+      "subtitle": "Ad-free Spotify client",
+      "permissions": [
+        "Background audio playback",
+        "Media library access"
       ]
     },
     {
@@ -30,7 +36,6 @@
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
       "localizedDescription": "YTLitePlus (v20.38.3, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
-      "description": "YTLitePlus (v20.38.3, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -42,8 +47,15 @@
           "version": "20.38.3",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/j7v9xiped8ranpoog42q1/YouTubePlus_5.2b3.ipa?rlkey=b2y5dk10kjye94y6tyagrejbx&st=nz72hq84&dl=1",
-          "size": 113357619
+          "size": 113357619,
+          "versionDescription": "Tweak v5.2b3:\n\u2022 Background playback\n\u2022 Ads removed\n\u2022 Picture-in-picture"
         }
+      ],
+      "tintColor": "#FF0000",
+      "subtitle": "Enhanced YouTube with premium features",
+      "permissions": [
+        "Background audio playback",
+        "Picture-in-picture support"
       ]
     },
     {
@@ -51,7 +63,6 @@
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "localizedDescription": "NeoFreeBird (v11.24, TrollStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
-      "description": "NeoFreeBird (v11.24, TrollStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -63,8 +74,14 @@
           "version": "11.24",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/n469vrxncqdc9b50oui1g/NeoFreeBird-trollstore_5.1_11.24.tipa?rlkey=sa7l514xbz1nwym7wydoknhqe&st=duyem8ql&dl=1",
-          "size": 142755430
+          "size": 142755430,
+          "versionDescription": "Tweak v2.0:\n\u2022 TrollStore build 5.1\n\u2022 Custom features\n\u2022 Performance optimizations"
         }
+      ],
+      "tintColor": "#1DA1F2",
+      "subtitle": "Tweaked Twitter/X client",
+      "permissions": [
+        "Network access"
       ]
     },
     {
@@ -72,7 +89,6 @@
       "bundleIdentifier": "com.camerasideas.InstaShot",
       "developerName": "IPAOMTK",
       "localizedDescription": "InshotPro (v1.89.2) is a tweaked version of the InShot video editor with all pro features unlocked, watermark removal, and premium filters enabled.",
-      "description": "InshotPro (v1.89.2) is a tweaked version of the InShot video editor with all pro features unlocked, watermark removal, and premium filters enabled.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-1.png",
@@ -84,8 +100,15 @@
           "version": "1.89.2",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
-          "size": 113670144
+          "size": 113670144,
+          "versionDescription": "Pro Unlock:\n\u2022 All filters available\n\u2022 Watermark removed\n\u2022 Premium tools enabled"
         }
+      ],
+      "tintColor": "#FF2D55",
+      "subtitle": "Unlocked Pro video editor",
+      "permissions": [
+        "Media library access",
+        "Camera access"
       ]
     },
     {
@@ -93,7 +116,6 @@
       "bundleIdentifier": "com.opa334.Dopamine",
       "developerName": "opa334",
       "localizedDescription": "Dopamine2 (v2.4.5) is a semi-untethered jailbreak tool for iOS 15+, built by opa334. Supports tweak injection, rootless jailbreak environment.",
-      "description": "Dopamine2 (v2.4.5) is a semi-untethered jailbreak tool for iOS 15+, built by opa334. Supports tweak injection, rootless jailbreak environment.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-1.png",
@@ -105,8 +127,14 @@
           "version": "2.4.5",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
-          "size": 53267661
+          "size": 53267661,
+          "versionDescription": "Version 2.4.5:\n\u2022 Semi-untethered jailbreak\n\u2022 iOS 15+ support\n\u2022 Rootless environment"
         }
+      ],
+      "tintColor": "#8E44AD",
+      "subtitle": "Modern jailbreak for iOS 15+",
+      "permissions": [
+        "System exploit execution"
       ]
     },
     {
@@ -114,7 +142,6 @@
       "bundleIdentifier": "com.opa334.Dopamine-roothide",
       "developerName": "roothide",
       "localizedDescription": "Dopamine2-roothide (v2.2.2.17) is a special build of Dopamine with roothide support, allowing systemless jailbreak with better stealth and compatibility.",
-      "description": "Dopamine2-roothide (v2.2.2.17) is a special build of Dopamine with roothide support, allowing systemless jailbreak with better stealth and compatibility.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-1.png",
@@ -126,8 +153,14 @@
           "version": "2.2.2.17",
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
-          "size": 53791949
+          "size": 53791949,
+          "versionDescription": "Version 2.2.2.17:\n\u2022 Roothide jailbreak\n\u2022 Systemless operation\n\u2022 Improved stealth"
         }
+      ],
+      "tintColor": "#7F8C8D",
+      "subtitle": "Roothide jailbreak variant",
+      "permissions": [
+        "System exploit execution"
       ]
     }
   ]
