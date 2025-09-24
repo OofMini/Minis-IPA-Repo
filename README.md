@@ -18,3 +18,6 @@ Use these links to manually add my repo:
   ```
   https://OofMini.github.io/Minis-IPA-Repo/sidestore.json
   ```
+
+
+https://oofmini.github.io/Minis-IPA-Repo/
