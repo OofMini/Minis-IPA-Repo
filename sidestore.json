@@ -1,0 +1,92 @@
+{
+  "name": "Mini's IPA Repo",
+  "subtitle": "A collection of tweaked ipas.",
+  "description": "A collection of tweaked ipas.",
+  "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png",
+  "apps": [
+    {
+      "name": "EeveeSpotify",
+      "bundleIdentifier": "com.spotify.client",
+      "developerName": "whoeevee",
+      "localizedDescription": "EeveeSpotify-6.1.4",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
+      "versions": [
+        {
+          "version": "9.0.80",
+          "downloadURL": "https://www.dropbox.com/scl/fi/acujg5gry6rxhvd8y9vqw/EeveeSpotify.ipa?rlkey=407k1ww5bhzavaas6ljsc130x&st=632r74zc&dl=1",
+          "size": 87451238
+        }
+      ]
+    },
+    {
+      "name": "YTLitePlus",
+      "bundleIdentifier": "com.google.ios.youtube",
+      "developerName": "dayanch96",
+      "localizedDescription": "YTLitePlus-v5.2b3",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
+      "versions": [
+        {
+          "version": "20.38.3",
+          "downloadURL": "https://www.dropbox.com/scl/fi/j7v9xiped8ranpoog42q1/YouTubePlus_5.2b3.ipa?rlkey=b2y5dk10kjye94y6tyagrejbx&st=nz72hq84&dl=1",
+          "size": 113357619
+        }
+      ]
+    },
+    {
+      "name": "X",
+      "bundleIdentifier": "com.atebits.Tweetie2",
+      "developerName": "NeoFreeBird",
+      "localizedDescription": "NeoFreeBird-2.0",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
+      "versions": [
+        {
+          "version": "11.24",
+          "downloadURL": "https://www.dropbox.com/scl/fi/n469vrxncqdc9b50oui1g/NeoFreeBird-trollstore_5.1_11.24.tipa?rlkey=sa7l514xbz1nwym7wydoknhqe&st=duyem8ql&dl=1",
+          "size": 142755430
+        }
+      ]
+    },
+    {
+      "name": "InshotPro",
+      "bundleIdentifier": "com.camerasideas.InstaShot",
+      "developerName": "IPAOMTK",
+      "localizedDescription": "Inshot-1.89.2(Pro Features Unlocked)",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
+      "versions": [
+        {
+          "version": "1.89.2",
+          "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
+          "size": 113670144
+        }
+      ]
+    },
+    {
+      "name": "Dopamine2",
+      "bundleIdentifier": "com.opa334.Dopamine",
+      "developerName": "opa334",
+      "localizedDescription": "Dopamine2-JB",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
+      "versions": [
+        {
+          "version": "2.4.5",
+          "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
+          "size": 53267661
+        }
+      ]
+    },
+    {
+      "name": "Dopamine2-roothide",
+      "bundleIdentifier": "com.opa334.Dopamine-roothide",
+      "developerName": "roothide",
+      "localizedDescription": "Dopamine2-JB-roothide",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
+      "versions": [
+        {
+          "version": "2.2.2.17",
+          "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
+          "size": 53791949
+        }
+      ]
+    }
+  ]
+}
