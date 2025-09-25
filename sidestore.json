@@ -8,7 +8,7 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "localizedDescription": "EeveeSpotify is a modified Spotify client (v9.0.80) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
+      "localizedDescription": "EeveeSpotify is a modified Spotify client (v9.0.82) that unlocks premium features, removes ads, and enhances playback experience. Tweak version: 6.1.4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -17,14 +17,14 @@
       ],
       "versions": [
         {
-          "version": "9.0.80",
+          "version": "9.0.82",
           "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/acujg5gry6rxhvd8y9vqw/EeveeSpotify.ipa?rlkey=407k1ww5bhzavaas6ljsc130x&st=632r74zc&dl=1",
+          "downloadURL": "https://www.dropbox.com/scl/fi/smh3g6li9i0b4umbmdg5r/EeveeSpotify.ipa?rlkey=b3hqbfchsnkgo6w1do1e7tjsz&st=9rahbqd9&dl=1",
           "size": 87451238,
           "versionDescription": "v6.1.4\n• Premium unlocked\n• Ads removed\n• Enhanced playback",
           "developerName": "whoeevee",
           "buildVersion": "1",
-          "localizedTitle": "v9.0.80"
+          "localizedTitle": "v9.0.82"
         }
       ],
       "tintColor": "#1DB954",
@@ -38,7 +38,7 @@
       "name": "YTLitePlus",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "YTLitePlus (v20.38.3, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
+      "localizedDescription": "YTLitePlus (v20.38.4, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -47,14 +47,14 @@
       ],
       "versions": [
         {
-          "version": "20.38.3",
+          "version": "20.38.4",
           "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/j7v9xiped8ranpoog42q1/YouTubePlus_5.2b3.ipa?rlkey=b2y5dk10kjye94y6tyagrejbx&st=nz72hq84&dl=1",
+          "downloadURL": "https://www.dropbox.com/scl/fi/izye65n97mo4j1clfndsk/YouTubePlus_5.2b3.ipa?rlkey=q2ijaj955nwwtwec3i9xoyyth&st=9anrtiqs&dl=1",
           "size": 113357619,
           "versionDescription": "v5.2b3\n• Background playback\n• Ads removed\n• Picture-in-picture",
           "developerName": "dayanch96",
           "buildVersion": "1",
-          "localizedTitle": "v20.38.3"
+          "localizedTitle": "v20.38.4"
         }
       ],
       "tintColor": "#FF0000",
@@ -68,7 +68,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "NeoFreeBird (v11.24, TrollStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
+      "localizedDescription": "NeoFreeBird (v11.25.1, TrollStore/AltSideStore build 5.1) modifies the official X (Twitter) client with custom features and optimizations. Tweak version: 2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -77,14 +77,14 @@
       ],
       "versions": [
         {
-          "version": "11.24",
+          "version": "11.25.1",
           "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/n469vrxncqdc9b50oui1g/NeoFreeBird-trollstore_5.1_11.24.tipa?rlkey=sa7l514xbz1nwym7wydoknhqe&st=duyem8ql&dl=1",
+          "downloadURL": "https://www.dropbox.com/scl/fi/fubd7prhau8gbh2zvpb3u/NeoFreeBird-sideloaded_5.1_11.25.1.ipa?rlkey=yehsyledz78jm2s9wibz0febc&st=btmlbjrg&dl=1",
           "size": 142755430,
           "versionDescription": "v2.0\n• TrollStore build 5.1\n• Custom features\n• Performance optimizations",
           "developerName": "NeoFreeBird",
           "buildVersion": "1",
-          "localizedTitle": "v11.24"
+          "localizedTitle": "v11.25.1"
         }
       ],
       "tintColor": "#1DA1F2",
