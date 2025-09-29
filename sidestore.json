@@ -35,10 +35,10 @@
       ]
     },
     {
-      "name": "YTLitePlus",
+      "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "YTLitePlus (v20.38.4, tweak v5.2b3) is a YouTube mod that enables background playback, removes ads, and includes picture-in-picture support.",
+      "localizedDescription": "YTLite (v20.38.4, tweak v5.2b3) is a YouTube tweak that enables background playback, removes ads, and includes picture-in-picture support.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
