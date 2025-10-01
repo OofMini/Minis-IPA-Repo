@@ -8,7 +8,7 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "localizedDescription": "Modified Spotify client with premium features unlocked, ads removed, and enhanced playback. App v9.0.84, Tweak v6.1.4.",
+      "localizedDescription": "Modified Spotify client with premium features unlocked, ads removed, and enhanced playback. App v9.0.84, Tweak v6.1.5.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -67,7 +67,7 @@
         {
           "version": "11.26.1",
           "date": "2025-09-25",
-          "downloadURL": "https://www.dropbox.com/scl/fi/fubd7prhau8gbh2zvpb3u/NeoFreeBird-sideloaded_5.1_11.25.1.ipa?rlkey=yehsyledz78jm2s9wibz0febc&st=btmlbjrg&dl=1",
+          "downloadURL": "https://www.dropbox.com/scl/fi/zjkqrnett3emc0dkbxa9c/NeoFreeBird-sideloaded_5.1_11.26.1.ipa?rlkey=ive6nbz9lzz83t7e2wrk6lyhw&st=dtot6kd9&dl=1",
           "size": 142816051,
           "versionDescription": "TrollStore build 5.1, custom features, performance improvements"
         }
