@@ -8,7 +8,7 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "localizedDescription": "Modified Spotify client with premium features unlocked, ads removed, and enhanced playback. App v9.0.84, Tweak v6.1.5.",
+      "localizedDescription": "Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v9.0.84, EeveeSpotify v6.1.5.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -32,7 +32,7 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube with background playback, ad removal, and picture-in-picture. App v20.39.5, Tweak v5.2b3.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.39.5, YTLite v5.2b3.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -56,7 +56,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked Twitter/X client with custom features and performance optimizations. App v11.26.1, Tweak v2.0.",
+      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.26.1, NeoFreeBird v2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -69,7 +69,7 @@
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/ipa/NeoFreeBird-sideloaded_5.1_11.26.1.ipa",
           "size": 142816051,
-          "versionDescription": "TrollStore build 5.1, custom features, performance improvements"
+          "versionDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
         }
       ],
       "tintColor": "#1DA1F2",
