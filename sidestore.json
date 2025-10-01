@@ -25,7 +25,7 @@
         }
       ],
       "tintColor": "#1DB954",
-      "subtitle": "Ad-free Spotify client",
+      "subtitle": "Tweaked Spotify client",
       "permissions": ["background-audio", "media-access"]
     },
     {
@@ -49,7 +49,7 @@
         }
       ],
       "tintColor": "#FF0000",
-      "subtitle": "Enhanced YouTube with premium features",
+      "subtitle": "Tweaked YouTube with premium features",
       "permissions": ["background-audio", "pip"]
     },
     {
@@ -73,7 +73,7 @@
         }
       ],
       "tintColor": "#1DA1F2",
-      "subtitle": "Tweaked Twitter/X client",
+      "subtitle": "Tweaked Twitter/X",
       "permissions": ["network"]
     },
     {
