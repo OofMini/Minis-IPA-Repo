@@ -5,24 +5,220 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini's IPA Repo - Tweaked iOS Apps & Jailbreak Tools</title>
     <meta name="description" content="Premium tweaked applications and modern jailbreak utilities for iOS 15+. Featuring Spotify, YouTube, Twitter clients and more.">
+    
+    <!-- SEO Optimization -->
+    <meta name="keywords" content="iOS apps, jailbreak, tweaked apps, SideStore, TrollApps, IPA repository, dopamine, spotify, youtube">
+    <meta property="og:title" content="Mini's IPA Repo - Tweaked iOS Apps">
+    <meta property="og:description" content="Premium tweaked applications and modern jailbreak utilities for iOS 15+">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
+    <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Mini's IPA Repo",
+        "description": "Premium tweaked applications and modern jailbreak utilities for iOS 15+",
+        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
+        "applicationCategory": "Utilities",
+        "operatingSystem": "iOS",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+
     <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            --card-border: rgba(255,255,255,0.15);
+            --header-bg: #000000;
+            --accent-color: #a0a0ff;
+            --success-color: #1db954;
+            --warning-color: #ffa500;
+            --error-color: #ff4444;
+            --info-color: #007AFF;
+            --shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: linear-gradient(145deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
+            --card-border: rgba(0,0,0,0.15);
+            --header-bg: #f8f9fa;
+            --accent-color: #007AFF;
+            --shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            background: #000000;
-            color: white;
+            background: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
+            view-transition-name: root;
         }
 
+        /* Smooth Page Transitions */
+        @view-transition {
+            navigation: auto;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            view-transition-name: loading-screen;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--card-border);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--card-border) 25%, transparent 37%, var(--card-border) 63%);
+            background-size: 400% 100%;
+            animation: skeleton-loading 1.4s ease infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+
+        .skeleton-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-text {
+            height: 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-text.short {
+            width: 60%;
+        }
+
+        .skeleton-button {
+            height: 44px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        /* Search and Filter */
+        .search-filter-container {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .search-box::placeholder {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .category-tab:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Existing styles with theme variables */
         .hero {
-            background: #000000;
+            background: var(--header-bg);
             padding: 25px 20px 20px 20px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--card-border);
             text-align: center;
         }
 
@@ -30,16 +226,16 @@
             width: 80px;
             height: 80px;
             border-radius: 18px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            box-shadow: var(--shadow);
             margin-bottom: 15px;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid var(--card-border);
         }
 
         .hero h1 {
             font-size: 2.4em;
             font-weight: 800;
             margin: 0 0 8px 0;
-            background: linear-gradient(45deg, #fff, #a0a0ff);
+            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -61,15 +257,15 @@
         }
 
         .badge {
-            background: #1db954;
+            background: var(--success-color);
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.85em;
             font-weight: 600;
         }
 
-        .badge.purple { background: #8A2BE2; }
-        .badge.orange { background: #FF6B35; }
+        .badge.purple { background: var(--accent-color); }
+        .badge.orange { background: var(--warning-color); }
 
         .cta-buttons {
             display: flex;
@@ -92,13 +288,13 @@
         }
 
         .cta-button.blue {
-            background: #007AFF;
-            border-color: #0066CC;
+            background: var(--info-color);
+            border-color: var(--info-color);
         }
 
         .cta-button.purple {
-            background: #8A2BE2;
-            border-color: #7B1FA2;
+            background: var(--accent-color);
+            border-color: var(--accent-color);
         }
 
         .cta-button:hover {
@@ -123,9 +319,9 @@
         .stat-card {
             text-align: center;
             padding: 20px;
-            background: rgba(255,255,255,0.05);
+            background: var(--card-bg);
             border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--card-border);
         }
 
         .stat-number {
@@ -134,9 +330,9 @@
             margin-bottom: 5px;
         }
 
-        .stat-green { color: #1db954; }
-        .stat-blue { color: #007AFF; }
-        .stat-purple { color: #8A2BE2; }
+        .stat-green { color: var(--success-color); }
+        .stat-blue { color: var(--info-color); }
+        .stat-purple { color: var(--accent-color); }
 
         .intro {
             text-align: center;
@@ -147,13 +343,14 @@
         .intro h2 {
             font-size: 1.8em;
             margin-bottom: 15px;
-            color: #fff;
+            color: var(--text-color);
             font-weight: 700;
         }
 
         .intro p {
             font-size: 1.1em;
-            color: #ccc;
+            color: var(--text-color);
+            opacity: 0.8;
             line-height: 1.6;
             margin-bottom: 25px;
         }
@@ -177,25 +374,26 @@
 
         .feature-title {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-color);
             margin-bottom: 4px;
         }
 
         .feature-desc {
             font-size: 0.9em;
-            color: #ccc;
+            color: var(--text-color);
+            opacity: 0.8;
         }
 
         .status-legend {
-            background: rgba(255,255,255,0.05);
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             margin: 30px 0;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--card-border);
         }
 
         .status-legend h3 {
-            color: #fff;
+            color: var(--text-color);
             margin-bottom: 15px;
             text-align: center;
         }
@@ -213,10 +411,10 @@
             gap: 8px;
         }
 
-        .status-working { color: #1db954; }
-        .status-warning { color: #ffa500; }
-        .status-error { color: #ff4444; }
-        .status-update { color: #007AFF; }
+        .status-working { color: var(--success-color); }
+        .status-warning { color: var(--warning-color); }
+        .status-error { color: var(--error-color); }
+        .status-update { color: var(--info-color); }
 
         .app-grid {
             display: grid;
@@ -233,13 +431,13 @@
         }
 
         @keyframes subtleGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.1); }
-            50% { box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+            0%, 100% { box-shadow: var(--shadow); }
+            50% { box-shadow: 0 0 30px var(--card-border); }
         }
 
         .app-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border: 1px solid rgba(255,255,255,0.15);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 25px;
             text-align: center;
@@ -250,6 +448,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            view-transition-name: app-card;
         }
 
         .app-card::before {
@@ -269,7 +468,7 @@
 
         .app-card:hover {
             transform: translateY(-8px) scale(1.02);
-            border-color: rgba(255,255,255,0.3);
+            border-color: var(--accent-color);
             animation: subtleGlow 2s infinite;
         }
 
@@ -283,7 +482,11 @@
             background: rgba(0,0,0,0.3);
             border-radius: 25px;
             padding: 8px;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid var(--card-border);
+        }
+
+        [data-theme="light"] .app-icon-container {
+            background: rgba(255,255,255,0.3);
         }
 
         .app-icon {
@@ -312,7 +515,7 @@
 
         .app-card h3 {
             margin: 0 auto 15px auto;
-            color: #fff;
+            color: var(--text-color);
             font-size: 1.3em;
             font-weight: 700;
             width: 100%;
@@ -322,7 +525,8 @@
 
         .app-card p {
             font-size: 0.95em;
-            color: #ccc;
+            color: var(--text-color);
+            opacity: 0.8;
             line-height: 1.6;
             margin: 0 auto 25px auto;
             width: 100%;
@@ -335,7 +539,7 @@
             gap: 8px;
             padding: 12px 24px;
             border-radius: 12px;
-            background: linear-gradient(45deg, #1db954, #1ed760);
+            background: linear-gradient(45deg, var(--success-color), #1ed760);
             color: #fff;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -344,6 +548,7 @@
             margin-top: auto;
             border: none;
             box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+            cursor: pointer;
         }
 
         .download-btn:hover {
@@ -354,14 +559,14 @@
         .repo-info {
             margin-top: 50px;
             padding: 35px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            background: var(--card-bg);
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid var(--card-border);
             text-align: center;
         }
 
         .repo-info h3 {
-            color: #fff;
+            color: var(--text-color);
             font-size: 1.5em;
             margin-bottom: 25px;
             text-align: center;
@@ -371,7 +576,7 @@
         .repo-link {
             margin: 15px 0;
             font-size: 1.1em;
-            color: #fff;
+            color: var(--text-color);
             text-align: center;
             display: flex;
             align-items: center;
@@ -380,23 +585,44 @@
         }
 
         .repo-link a {
-            color: #fff;
+            color: var(--text-color);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
 
         .repo-link a:hover {
-            color: #1db954;
+            color: var(--success-color);
         }
 
         .repo-link code {
-            background: rgba(255,255,255,0.1);
+            background: var(--card-bg);
             padding: 6px 12px;
             border-radius: 6px;
             font-family: 'Monaco', 'Menlo', monospace;
-            color: #fff;
+            color: var(--text-color);
             font-size: 0.9em;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
         /* Responsive Design */
@@ -450,6 +676,16 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button class="theme-btn" id="themeToggle">🌓</button>
+    </div>
+
     <header class="hero">
         <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
         <h1>Mini's IPA Repo</h1>
@@ -472,14 +708,26 @@
     </header>
 
     <main class="container">
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">All Apps</button>
+                <button class="category-tab" data-category="tweaked">Tweaked Apps</button>
+                <button class="category-tab" data-category="jailbreak">Jailbreak Tools</button>
+                <button class="category-tab" data-category="music">Music</button>
+                <button class="category-tab" data-category="social">Social</button>
+            </div>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number stat-green">6+</div>
+                <div class="stat-number stat-green" id="totalApps">6+</div>
                 <div class="stat-desc">Apps Available</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-blue">100%</div>
-                <div class="stat-desc">Working</div>
+                <div class="stat-number stat-blue" id="totalDownloads">0</div>
+                <div class="stat-desc">Total Downloads</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number stat-purple">iOS 15+</div>
@@ -534,113 +782,26 @@
             </div>
         </section>
 
-        <section class="app-grid">
-            <!-- EeveeSpotify -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • v9.0.84</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>EeveeSpotify</h3>
-                    <p>By <b>whoeevee</b><br>Premium Spotify experience with all features unlocked, zero advertisements, and enhanced audio quality.</p>
-                    <a href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa" class="download-btn">
-                        <span>⬇️</span> Download IPA
-                    </a>
-                </div>
+        <!-- App Grid with Skeleton Loading -->
+        <section class="app-grid" id="appGrid">
+            <!-- Skeleton loading cards -->
+            <div class="app-card skeleton">
+                <div class="skeleton-icon skeleton"></div>
+                <div class="skeleton-text skeleton"></div>
+                <div class="skeleton-text short skeleton"></div>
+                <div class="skeleton-button skeleton"></div>
             </div>
-
-            <!-- YTLite -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG" alt="YTLite Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • v20.39.6</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>YTLite</h3>
-                    <p>By <b>dayanch96</b><br>Enhanced YouTube with background playback, ad-free experience, and premium features unlocked.</p>
-                    <a href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa" class="download-btn">
-                        <span>⬇️</span> Download IPA
-                    </a>
-                </div>
+            <div class="app-card skeleton">
+                <div class="skeleton-icon skeleton"></div>
+                <div class="skeleton-text skeleton"></div>
+                <div class="skeleton-text short skeleton"></div>
+                <div class="skeleton-button skeleton"></div>
             </div>
-
-            <!-- X (NeoFreeBird) -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png" alt="NeoFreeBird Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • v11.27</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>X (NeoFreeBird)</h3>
-                    <p>By <b>NeoFreeBird</b><br>Premium Twitter/X client with advanced customization, no ads, and performance enhancements.</p>
-                    <a href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa" class="download-btn">
-                        <span>⬇️</span> Download IPA
-                    </a>
-                </div>
-            </div>
-
-            <!-- InShot Pro -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png" alt="InShot Pro Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • Latest</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>InShot Pro</h3>
-                    <p>By <b>IPAOMTK</b><br>Professional video editing suite with all premium filters, tools, and watermark removal.</p>
-                    <a href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1" class="download-btn">
-                        <span>⬇️</span> Download IPA
-                    </a>
-                </div>
-            </div>
-
-            <!-- Dopamine 2 -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png" alt="Dopamine 2 Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • v2.0.0</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>Dopamine 2</h3>
-                    <p>By <b>opa334</b><br>Modern semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.</p>
-                    <a href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1" class="download-btn">
-                        <span>⬇️</span> Download TIPA
-                    </a>
-                </div>
-            </div>
-
-            <!-- Dopamine 2 (Roothide) -->
-            <div class="app-card">
-                <div class="app-icon-container">
-                    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png" alt="Dopamine 2 Roothide Icon" class="app-icon">
-                </div>
-                <div class="app-status">
-                    <span class="status-working">✅</span>
-                    <span>Fully Working • v2.0.0</span>
-                </div>
-                <div class="app-card-content">
-                    <h3>Dopamine 2 (Roothide)</h3>
-                    <p>By <b>roothide</b><br>Systemless jailbreak variant with enhanced stealth and improved iOS 15+ compatibility.</p>
-                    <a href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1" class="download-btn">
-                        <span>⬇️</span> Download TIPA
-                    </a>
-                </div>
+            <div class="app-card skeleton">
+                <div class="skeleton-icon skeleton"></div>
+                <div class="skeleton-text skeleton"></div>
+                <div class="skeleton-text short skeleton"></div>
+                <div class="skeleton-button skeleton"></div>
             </div>
         </section>
 
@@ -667,26 +828,271 @@
         </section>
     </main>
 
-    <script>
-        // Add any JavaScript functionality here
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add loading animation to app cards
-            const appCards = document.querySelectorAll('.app-card');
-            appCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
-            // Add smooth hover effects
-            appCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-8px) scale(1.02)';
-                });
+    <script>
+        // App data with categories
+        const appsData = [
+            {
+                id: 'eeveespotify',
+                name: 'EeveeSpotify',
+                developer: 'whoeevee',
+                description: 'Premium Spotify experience with all features unlocked, zero advertisements, and enhanced audio quality.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png',
+                version: '9.0.84',
+                status: 'working',
+                category: ['tweaked', 'music'],
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa',
+                downloads: 0
+            },
+            {
+                id: 'ytlite',
+                name: 'YTLite',
+                developer: 'dayanch96',
+                description: 'Enhanced YouTube with background playback, ad-free experience, and premium features unlocked.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
+                version: '20.39.6',
+                status: 'working',
+                category: ['tweaked', 'music'],
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa',
+                downloads: 0
+            },
+            {
+                id: 'neofreebird',
+                name: 'X (NeoFreeBird)',
+                developer: 'NeoFreeBird',
+                description: 'Premium Twitter/X client with advanced customization, no ads, and performance enhancements.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png',
+                version: '11.27',
+                status: 'working',
+                category: ['tweaked', 'social'],
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa',
+                downloads: 0
+            },
+            {
+                id: 'inshot',
+                name: 'InShot Pro',
+                developer: 'IPAOMTK',
+                description: 'Professional video editing suite with all premium filters, tools, and watermark removal.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png',
+                version: 'Latest',
+                status: 'working',
+                category: ['tweaked'],
+                downloadUrl: 'https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1',
+                downloads: 0
+            },
+            {
+                id: 'dopamine2',
+                name: 'Dopamine 2',
+                developer: 'opa334',
+                description: 'Modern semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png',
+                version: '2.0.0',
+                status: 'working',
+                category: ['jailbreak'],
+                downloadUrl: 'https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1',
+                downloads: 0
+            },
+            {
+                id: 'dopamine2-roothide',
+                name: 'Dopamine 2 (Roothide)',
+                developer: 'roothide',
+                description: 'Systemless jailbreak variant with enhanced stealth and improved iOS 15+ compatibility.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png',
+                version: '2.0.0',
+                status: 'working',
+                category: ['jailbreak'],
+                downloadUrl: 'https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1',
+                downloads: 0
+            }
+        ];
+
+        // State management
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let currentCategory = 'all';
+        let searchTerm = '';
+        let totalDownloads = 0;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            loadDownloadStats();
+            renderAppGrid();
+            setupEventListeners();
+            
+            // Hide loading screen after content loads
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 1000);
+        });
+
+        // Theme Management
+        function initializeTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeButton();
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+            updateThemeButton();
+        }
+
+        function updateThemeButton() {
+            const button = document.getElementById('themeToggle');
+            button.textContent = currentTheme === 'dark' ? '🌓' : '🌙';
+        }
+
+        // Search and Filter
+        function filterApps() {
+            const filteredApps = appsData.filter(app => {
+                const matchesSearch = app.name.toLowerCase().includes(searchTerm) || 
+                                    app.description.toLowerCase().includes(searchTerm) ||
+                                    app.developer.toLowerCase().includes(searchTerm);
                 
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
+                const matchesCategory = currentCategory === 'all' || 
+                                      app.category.includes(currentCategory);
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            return filteredApps;
+        }
+
+        function renderAppGrid() {
+            const appGrid = document.getElementById('appGrid');
+            const filteredApps = filterApps();
+            
+            // Update app count
+            document.getElementById('totalApps').textContent = `${filteredApps.length}+`;
+            
+            if (filteredApps.length === 0) {
+                appGrid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-color); opacity: 0.7;">
+                        <h3>No apps found</h3>
+                        <p>Try adjusting your search or category filter</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            appGrid.innerHTML = filteredApps.map(app => `
+                <div class="app-card" data-app-id="${app.id}" data-category="${app.category.join(' ')}">
+                    <div class="app-icon-container">
+                        <img src="${app.icon}" alt="${app.name} Icon" class="app-icon">
+                    </div>
+                    <div class="app-status">
+                        <span class="status-${app.status}">${getStatusIcon(app.status)}</span>
+                        <span>Fully Working • v${app.version}</span>
+                    </div>
+                    <div class="app-card-content">
+                        <h3>${app.name}</h3>
+                        <p>By <b>${app.developer}</b><br>${app.description}</p>
+                        <button class="download-btn" onclick="trackDownload('${app.id}')">
+                            <span>⬇️</span> Download ${app.name.includes('Dopamine') ? 'TIPA' : 'IPA'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                working: '✅',
+                warning: '⚠️',
+                error: '❌',
+                update: '🔄'
+            };
+            return icons[status] || '✅';
+        }
+
+        // Download Tracking
+        function trackDownload(appId) {
+            const app = appsData.find(a => a.id === appId);
+            if (app) {
+                app.downloads++;
+                totalDownloads++;
+                
+                // Update localStorage
+                const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
+                downloadStats[appId] = (downloadStats[appId] || 0) + 1;
+                downloadStats.total = (downloadStats.total || 0) + 1;
+                localStorage.setItem('downloadStats', JSON.stringify(downloadStats));
+                
+                // Update UI
+                document.getElementById('totalDownloads').textContent = downloadStats.total;
+                
+                // Show toast notification
+                showToast(`Downloading ${app.name}...`);
+                
+                // Simulate download (in real implementation, this would be the actual download)
+                setTimeout(() => {
+                    window.open(app.downloadUrl, '_blank');
+                }, 500);
+            }
+        }
+
+        function loadDownloadStats() {
+            const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || { total: 0 };
+            totalDownloads = downloadStats.total;
+            document.getElementById('totalDownloads').textContent = totalDownloads;
+            
+            // Update individual app download counts
+            appsData.forEach(app => {
+                app.downloads = downloadStats[app.id] || 0;
+            });
+        }
+
+        // Toast Notifications
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Search box
+            document.getElementById('searchBox').addEventListener('input', function(e) {
+                searchTerm = e.target.value.toLowerCase();
+                renderAppGrid();
+            });
+            
+            // Category tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    renderAppGrid();
                 });
             });
-        });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Export functions to global scope for onclick handlers
+        window.trackDownload = trackDownload;
     </script>
 </body>
 </html>
