@@ -28,7 +28,8 @@
   Welcome to <b style="color: #fff;">Mini's IPA Repo</b> — a curated collection of <b style="color: #fff;">tweaked apps</b> and <b style="color: #fff;">modern jailbreak utilities</b> built for <b style="color: #fff;">SideStore</b> and <b style="color: #fff;">TrollApps</b>. Everything here is updated, optimized, and ready for iOS 15+.
 </p>
 
-<details hidden>
+<!-- Hidden CSS - Completely invisible but functional -->
+<div style="display: none;">
 <style>
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(15px);}
@@ -159,7 +160,7 @@
   color: #fff;
 }
 </style>
-</details>
+</div>
 
 <div class="app-grid">
 
@@ -233,7 +234,7 @@
   </div>
   
   <div class="repo-link-item">
-    📜 <strong>TollApps JSON:</strong> 
+    📜 <strong>TrollApps JSON:</strong> 
     <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
   </div>
 </div>
