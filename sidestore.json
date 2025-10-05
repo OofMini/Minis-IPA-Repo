@@ -83,7 +83,7 @@
       "name": "InshotPro",
       "bundleIdentifier": "com.camerasideas.InstaShot",
       "developerName": "IPAOMTK",
-      "localizedDescription": "Pro video editor with premium filters, tools, and no watermark. App v1.89.2.",
+      "localizedDescription": "Pro video editor with premium filters, tools, and no watermark. App v1.90.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-1.png",
@@ -92,9 +92,9 @@
       ],
       "versions": [
         {
-          "version": "1.89.2",
+          "version": "1.90.2",
           "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/jffchhr7d8r6f64gvn0wi/InShot-ipaomtk.com.ipa?rlkey=a6e6h9mmifju3upm2t0pk8s23&st=gn1k3x02&dl=1",
+          "downloadURL": "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1",
           "size": 113665638,
           "versionDescription": "All filters unlocked, watermark removed, premium tools enabled"
         }
