@@ -1,707 +1,138 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.2">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; min-height: 15.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini's IPA Repo - Tweaked iOS Apps & Jailbreak Tools</title>
+    <meta name="description" content="Premium tweaked applications and modern jailbreak utilities for iOS 15+. Featuring Spotify, YouTube, Twitter clients and more.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: white;
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: #000000;
+            padding: 25px 20px 20px 20px;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+
+        .repo-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            margin-bottom: 15px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.4em;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            background: linear-gradient(45deg, #fff, #a0a0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1em;
+            margin: 0 0 25px 0;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .badge {
+            background: #1db954;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge.purple { background: #8A2BE2; }
+        .badge.orange { background: #FF6B35; }
+
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid;
+        }
+
+        .cta-button.blue {
+            background: #007AFF;
+            border-color: #0066CC;
+        }
+
+        .cta-button.purple {
+            background: #8A2BE2;
+            border-color: #7B1FA2;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Mini's IPA Repo - Tweaked iOS Apps &amp; Jailbreak Tools&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="description" content="Premium tweaked applications and modern jailbreak utilities for iOS 15+. Featuring Spotify, YouTube, Twitter clients and more."&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>* {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #000000;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.hero {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #000000;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 25px 20px 20px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid #333;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-icon {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 80px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 80px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 0 20px rgba(255,255,255,0.2);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid rgba(255,255,255,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.hero h1 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 2.4em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 0 8px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(45deg, #fff, #a0a0ff);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>-webkit-background-clip: text;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>-webkit-text-fill-color: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-clip: text;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.hero-subtitle {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 0 25px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>opacity: 0.9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>letter-spacing: 0.5px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.badges {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.badge {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #1db954;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 6px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.85em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.badge.purple { background: #8A2BE2; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.badge.orange { background: #FF6B35; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cta-buttons {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cta-button {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 12px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-decoration: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cta-button.blue {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #007AFF;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: #0066CC;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cta-button.purple {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #8A2BE2;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: #7B1FA2;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cta-button:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-2px);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 5px 15px rgba(0,0,0,0.3);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 1000px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 30px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stats-grid {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto 40px auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 800px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-card {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(255,255,255,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255,255,255,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-number {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.8em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 800;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-green { color: #1db954; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-blue { color: #007AFF; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-purple { color: #8A2BE2; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.intro {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.intro h2 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.8em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.intro p {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.features {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.feature {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.feature-icon {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 2em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.feature-title {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.feature-desc {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-legend {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(255,255,255,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 30px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255,255,255,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-legend h3 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-items {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-item {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-working { color: #1db954; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-warning { color: #ffa500; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-error { color: #ff4444; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-update { color: #007AFF; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-grid {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 1200px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>from { opacity: 0; transform: translateY(20px); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>to { opacity: 1; transform: translateY(0); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes subtleGlow {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.1); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>50% { box-shadow: 0 0 20px rgba(255,255,255,0.2); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255,255,255,0.15);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: fadeIn 0.8s ease both;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card::before {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>content: '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: -100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: left 0.6s;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card:hover::before {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-8px) scale(1.02);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: rgba(255,255,255,0.3);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: subtleGlow 2s infinite;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-icon-container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto 20px auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(0,0,0,0.3);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid rgba(255,255,255,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-icon {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>object-fit: contain;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-status {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9em;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card-content {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex-grow: 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card h3 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto 15px auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.3em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.3;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.app-card p {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.95em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto 25px auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.download-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 12px 24px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(45deg, #1db954, #1ed760);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-decoration: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.95em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.download-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-2px);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-info {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 50px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 35px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255,255,255,0.15);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-info h3 {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.5em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-link {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 15px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-link a {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-decoration: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: color 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-link a:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #1db954;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.repo-link code {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(255,255,255,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 6px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Monaco', 'Menlo', monospace;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9em;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Responsive Design */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@media (max-width: 768px) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.hero h1 {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>font-size: 2em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.cta-buttons {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.cta-button {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>width: 200px;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.stats-grid {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>grid-template-columns: repeat(2, 1fr);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.features {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>gap: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.app-grid {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>grid-template-columns: 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>padding: 0 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.status-items {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@media (max-width: 480px) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.stats-grid {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>grid-template-columns: 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.hero {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>padding: 20px 15px 15px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>padding: 20px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="hero"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Mini's IPA Repo&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="hero-subtitle"&gt;Tweaks • Jailbreak Tools • Tweaked Apps&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="badges"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="badge"&gt;✅ Active&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="badge purple"&gt;📱 iOS 15+&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="badge orange"&gt;🛡️ Tested&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="cta-buttons"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;a href="trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json" class="cta-button blue"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;📱&lt;/span&gt; Add to TrollApps</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;a href="sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json" class="cta-button purple"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;⚙️&lt;/span&gt; Add to SideStore</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stats-grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="stat-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-number stat-green"&gt;6+&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-desc"&gt;Apps Available&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="stat-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-number stat-blue"&gt;100%&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-desc"&gt;Working&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="stat-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-number stat-purple"&gt;iOS 15+&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="stat-desc"&gt;Compatibility&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section class="intro"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Tweaked iOS App Repository&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>Welcome to &lt;b&gt;Mini's IPA Repo&lt;/b&gt; — your trusted source for &lt;b&gt;tweaked applications&lt;/b&gt; and &lt;b&gt;modern jailbreak utilities&lt;/b&gt;.</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="features"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="feature"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-icon"&gt;🚀&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-title"&gt;Premium Features&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-desc"&gt;Unlocked&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="feature"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-icon"&gt;🛡️&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-title"&gt;No Ads&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-desc"&gt;Clean Experience&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="feature"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-icon"&gt;⚡&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-title"&gt;Optimized&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="feature-desc"&gt;iOS 15+ Ready&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section class="status-legend"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;📊 App Status Legend&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="status-items"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="status-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="status-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-warning"&gt;⚠️&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Minor Issues&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="status-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-error"&gt;❌&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Not Working&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="status-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-update"&gt;🔄&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Update Available&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section class="app-grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- EeveeSpotify --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • v9.0.84&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;EeveeSpotify&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;whoeevee&lt;/b&gt;&lt;br&gt;Premium Spotify experience with all features unlocked, zero advertisements, and enhanced audio quality.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download IPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- YTLite --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG" alt="YTLite Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • v20.39.6&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;YTLite&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;dayanch96&lt;/b&gt;&lt;br&gt;Enhanced YouTube with background playback, ad-free experience, and premium features unlocked.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download IPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- X (NeoFreeBird) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png" alt="NeoFreeBird Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • v11.27&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;X (NeoFreeBird)&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;NeoFreeBird&lt;/b&gt;&lt;br&gt;Premium Twitter/X client with advanced customization, no ads, and performance enhancements.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download IPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- InShot Pro --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png" alt="InShot Pro Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • Latest&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;InShot Pro&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;IPAOMTK&lt;/b&gt;&lt;br&gt;Professional video editing suite with all premium filters, tools, and watermark removal.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&amp;dl=1" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download IPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Dopamine 2 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png" alt="Dopamine 2 Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • v2.0.0&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;Dopamine 2&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;opa334&lt;/b&gt;&lt;br&gt;Modern semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&amp;dl=1" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download TIPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Dopamine 2 (Roothide) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="app-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-icon-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png" alt="Dopamine 2 Roothide Icon" class="app-icon"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-status"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="status-working"&gt;✅&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;Fully Working • v2.0.0&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="app-card-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3&gt;Dopamine 2 (Roothide)&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p&gt;By &lt;b&gt;roothide&lt;/b&gt;&lt;br&gt;Systemless jailbreak variant with enhanced stealth and improved iOS 15+ compatibility.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;a href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&amp;dl=1" class="download-btn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span&gt;⬇️&lt;/span&gt; Download TIPA</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;section class="repo-info"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h3&gt;🌐 Repository Information&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="repo-link"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;🔗&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;strong&gt;Official Website:&lt;/strong&gt;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank"&gt;https://oofmini.github.io/Minis-IPA-Repo/&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="repo-link"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;📄&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;strong&gt;SideStore Manifest:&lt;/strong&gt;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;code&gt;https://OofMini.github.io/Minis-IPA-Repo/sidestore.json&lt;/code&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="repo-link"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span&gt;📄&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;strong&gt;TrollApps Manifest:&lt;/strong&gt;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;code&gt;https://OofMini.github.io/Minis-IPA-Repo/trollapps.json&lt;/code&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Add any JavaScript functionality here</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', function() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Smooth scrolling for anchor links</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('a[href^="#"]').forEach(anchor =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>anchor.addEventListener('click', function (e) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>e.preventDefault();</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>document.querySelector(this.getAttribute('href')).scrollIntoView({</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>behavior: 'smooth'</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Add loading animation to app cards</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const appCards = document.querySelectorAll('.app-card');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>appCards.forEach((card, index) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>card.style.animationDelay = `${index * 0.1}s`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <header class="hero">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
+        <h1>Mini's IPA Repo</h1>
+        <p class="hero-subtitle">Tweaks • Jailbreak Tools • Tweaked Apps</p>
+        
+        <div class="badges">
+            <span class="badge">✅ Active</span>
+            <span class="badge purple">📱 iOS 15+</span>
+            <span class="badge orange">🛡️ Tested</span>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json" class="cta-button blue">
+                <span>📱</span> Add to TrollApps
+            </a>
+            <a href="sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json" class="cta-button purple">
+                <span>⚙️</span> Add to SideStore
+            </a>
+        </div>
+    </header>
+
+    <div style="text-align: center; padding: 50px; color: #ccc;">
+        <h2>Website is working! 🎉</h2>
+        <p>Your GitHub Pages is now properly rendering HTML!</p>
+        <p>We can add the rest of your content once this basic version works.</p>
+    </div>
 </body>
 </html>
