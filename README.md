@@ -1,14 +1,13 @@
-<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: -8px -20px 0 -20px; padding: 30px 20px 20px 20px; color: white; font-family: 'Inter', 'Segoe UI', sans-serif;">
+<div style="background: #000000; margin: -8px -20px 0 -20px; padding: 25px 20px 20px 20px; color: white; font-family: 'Inter', 'Segoe UI', sans-serif;">
 <div align="center">
 
   <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" width="80" height="80" style="
     border-radius: 18px;
     box-shadow: 0 0 12px rgba(255,255,255,0.15);
     margin-bottom: 12px;
-    animation: float 4s ease-in-out infinite;
   " alt="Mini's IPA Repo Icon">
 
-  <h1 style="font-size: 2.2em; font-weight: 700; margin: 0 0 5px 0; animation: subtleGlow 4s ease-in-out infinite alternate;">
+  <h1 style="font-size: 2.2em; font-weight: 700; margin: 0 0 5px 0;">
     Mini's IPA Repo
   </h1>
   <p style="font-size: 1em; margin: 0 0 20px 0; opacity: 0.9;">Tweaks • Jailbreak Tools • Premium Apps</p>
@@ -24,81 +23,85 @@
 </div>
 </div>
 
-<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: 0 -20px; padding: 20px; color: white;">
+<div style="background: #000000; margin: 0 -20px; padding: 20px; color: white;">
 <p align="center" style="max-width:700px; margin:20px auto; font-size:1em; color: #ccc; line-height: 1.5;">
   Welcome to <b style="color: #fff;">Mini's IPA Repo</b> — a curated collection of <b style="color: #fff;">tweaked apps</b> and <b style="color: #fff;">modern jailbreak utilities</b> built for <b style="color: #fff;">SideStore</b> and <b style="color: #fff;">TrollApps</b>. Everything here is updated, optimized, and ready for iOS 15+.
 </p>
 
 <details hidden>
 <style>
-@keyframes gradientShift {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
-@keyframes float {
-  0%, 100% {transform: translateY(0);}
-  50% {transform: translateY(-4px);}
-}
-@keyframes subtleGlow {
-  from {text-shadow: 0 0 3px rgba(255,255,255,0.2);}
-  to {text-shadow: 0 0 6px rgba(255,255,255,0.3);}
-}
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(15px);}
   to {opacity: 1; transform: translateY(0);}
 }
 
+.app-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .app-card {
-  display: inline-block;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 16px;
-  width: 250px;
-  height: 360px;
-  margin: 15px;
-  padding: 15px;
+  width: 280px;
+  padding: 20px;
   text-align: center;
-  vertical-align: top;
   transition: all 0.3s ease;
   animation: fadeIn 1s ease both;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .app-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   background: rgba(255,255,255,0.12);
   border-color: rgba(255,255,255,0.25);
 }
+
 .app-card img {
   width: 90px;
   height: 90px;
   object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 0 8px rgba(255,255,255,0.1);
+  margin-bottom: 15px;
 }
+
 .app-card h3 {
-  margin-top: 10px;
+  margin: 0 0 10px 0;
   color: #fff;
-  font-size: 1.05em;
+  font-size: 1.1em;
+  font-weight: 600;
+  width: 100%;
 }
+
 .app-card p {
-  font-size: 0.85em;
+  font-size: 0.9em;
   color: #ccc;
-  height: 80px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.4;
+  line-height: 1.5;
+  margin: 0 0 15px 0;
+  width: 100%;
+  flex-grow: 1;
 }
+
 .download-btn {
   display: inline-block;
-  margin-top: 10px;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 10px;
   background: #1db954;
   color: #fff;
   text-decoration: none;
   transition: 0.3s;
   font-weight: 600;
+  font-size: 0.9em;
+  width: auto;
+  margin-top: auto;
 }
 .download-btn:hover { 
   opacity: 0.8;
@@ -106,12 +109,11 @@
 }
 
 .repo-links {
-  margin-top: 30px;
+  margin-top: 40px;
   padding: 25px;
   background: rgba(255,255,255,0.05);
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.1);
-  animation: fadeIn 1s ease both;
 }
 .repo-links h3 {
   color: #fff;
@@ -142,7 +144,7 @@
 </style>
 </details>
 
-<div align="center">
+<div class="app-grid">
 
 <div class="app-card">
   <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon">
