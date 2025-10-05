@@ -46,7 +46,7 @@
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/ipa/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
-          "versionDescription": "Background playback, ads removed, picture-in-picture support"
+          "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
       ],
       "tintColor": "#FF0000",
@@ -71,7 +71,7 @@
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/ipa/NeoFreeBird-sideloaded_5.1_11.26.1.ipa",
           "size": 142816051,
-          "versionDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
+          "localizedDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
         }
       ],
       "tintColor": "#1DA1F2",
@@ -96,7 +96,7 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1",
           "size": 113665638,
-          "versionDescription": "All filters unlocked, watermark removed, premium tools enabled"
+          "localizedDescription": "All filters unlocked, watermark removed, premium tools enabled"
         }
       ],
       "tintColor": "#FF2D55",
@@ -121,7 +121,7 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
           "size": 53267660,
-          "versionDescription": "Semi-untethered jailbreak, iOS 15+ support, rootless"
+          "localizedDescription": "Semi-untethered jailbreak, iOS 15+ support, rootless"
         }
       ],
       "tintColor": "#8E44AD",
@@ -146,7 +146,7 @@
           "date": "2025-09-24",
           "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
           "size": 53791948,
-          "versionDescription": "Roothide jailbreak, systemless, improved stealth"
+          "localizedDescription": "Roothide jailbreak, systemless, improved stealth"
         }
       ],
       "tintColor": "#7F8C8D",
