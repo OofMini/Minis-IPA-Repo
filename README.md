@@ -26,10 +26,3 @@ Welcome to **Mini's IPA Repo** — your trusted source for **tweaked application
 1. Install TrollApps or SideStore on your device
 2. Add this repository using the appropriate manifest URL
 3. Browse and install apps directly through your preferred client
-
-### 📊 App Status
-All applications are fully tested and working on iOS 15+.
-
----
-
-*Visit our website for the complete experience with app cards, animations, and direct installation options.*
