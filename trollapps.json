@@ -10,8 +10,8 @@
       "developerName": "whoeevee",
       "version": "9.0.82",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/smh3g6li9i0b4umbmdg5r/EeveeSpotify.ipa?rlkey=b3hqbfchsnkgo6w1do1e7tjsz&st=9rahbqd9&dl=1",
-      "localizedDescription": "EeveeSpotify-6.1.4"
+      "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/ipa/EeveeSpotify.ipa",
+      "localizedDescription": "EeveeSpotify-6.1.5"
     },
     {
       "name": "YTLitePlus",
@@ -26,9 +26,9 @@
       "name": "X",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "version": "11.25.1",
+      "version": "11.27",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/fubd7prhau8gbh2zvpb3u/NeoFreeBird-sideloaded_5.1_11.25.1.ipa?rlkey=yehsyledz78jm2s9wibz0febc&st=btmlbjrg&dl=1",
+      "downloadURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "localizedDescription": "NeoFreeBird-2.0"
     },
     {
