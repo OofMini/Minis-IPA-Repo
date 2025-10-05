@@ -33,7 +33,7 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.39.5, YTLite v5.2b3.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.39.6, YTLite v5.2b3.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -42,7 +42,7 @@
       ],
       "versions": [
         {
-          "version": "20.39.5",
+          "version": "20.39.6",
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/ipa/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
@@ -58,7 +58,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.26.1, NeoFreeBird v2.0.",
+      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.27, NeoFreeBird v2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -67,7 +67,7 @@
       ],
       "versions": [
         {
-          "version": "11.26.1",
+          "version": "11.27",
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/ipa/NeoFreeBird-sideloaded_5.1_11.26.1.ipa",
           "size": 142816051,
