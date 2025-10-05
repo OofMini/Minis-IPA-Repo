@@ -1,7 +1,7 @@
 {
   "name": "Mini's IPA Repo",
   "identifier": "com.oofmini.iparepo",
-  "IconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png",
+  "repoIconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png",
   "description": "A collection of popular tweaked apps and jailbreak utilities.",
   "apps": [
     {
