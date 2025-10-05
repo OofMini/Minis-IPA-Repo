@@ -26,7 +26,8 @@
       ],
       "tintColor": "#1DB954",
       "subtitle": "Tweaked Spotify client",
-      "permissions": ["background-audio", "media-access"]
+      "permissions": ["background-audio", "media-access"],
+      "minimumOSVersion": "16.1"
     },
     {
       "name": "YTLite",
@@ -50,7 +51,8 @@
       ],
       "tintColor": "#FF0000",
       "subtitle": "Tweaked YouTube with premium features",
-      "permissions": ["background-audio", "pip"]
+      "permissions": ["background-audio", "pip"],
+      "minimumOSVersion": "16.0"
     },
     {
       "name": "X (NeoFreeBird)",
@@ -74,7 +76,8 @@
       ],
       "tintColor": "#1DA1F2",
       "subtitle": "Tweaked Twitter/X",
-      "permissions": ["network"]
+      "permissions": ["network"],
+      "minimumOSVersion": "15.0"
     },
     {
       "name": "InshotPro",
@@ -98,7 +101,8 @@
       ],
       "tintColor": "#FF2D55",
       "subtitle": "Unlocked Pro video editor",
-      "permissions": ["media-access", "camera"]
+      "permissions": ["media-access", "camera"],
+      "minimumOSVersion": "15.0"
     },
     {
       "name": "Dopamine2",
@@ -122,7 +126,8 @@
       ],
       "tintColor": "#8E44AD",
       "subtitle": "Modern jailbreak for iOS 15+",
-      "permissions": ["system-exploit"]
+      "permissions": ["system-exploit"],
+      "minimumOSVersion": "15.0"
     },
     {
       "name": "Dopamine2-roothide",
@@ -146,7 +151,8 @@
       ],
       "tintColor": "#7F8C8D",
       "subtitle": "Roothide jailbreak variant",
-      "permissions": ["system-exploit"]
+      "permissions": ["system-exploit"],
+      "minimumOSVersion": "15.0"
     }
   ]
 }
