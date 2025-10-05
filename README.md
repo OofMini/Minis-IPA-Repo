@@ -13,7 +13,6 @@
   </h1>
   <p style="font-size: 1.1em; margin: 0 0 25px 0; opacity: 0.9; letter-spacing: 0.5px;">Tweaks • Jailbreak Tools • Tweaked Apps</p>
 
-  <!-- Status Badges -->
   <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
     <span style="background: #1db954; padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600;">✅ Active</span>
     <span style="background: #8A2BE2; padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600;">📱 iOS 15+</span>
@@ -34,7 +33,6 @@
 <div style="background: #000000; margin: 0 -20px; padding: 30px 20px; color: white;">
 <div style="max-width: 1000px; margin: 0 auto;">
 
-<!-- Quick Stats -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 0 auto 40px auto; max-width: 800px;">
   <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
     <div style="font-size: 1.8em; font-weight: 800; color: #1db954;">6+</div>
@@ -75,53 +73,6 @@
   </div>
 </div>
 
-<!-- Installation Guide -->
-<div style="background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); border-radius: 20px; padding: 30px; margin: 40px 0; border: 1px solid rgba(255,255,255,0.15);">
-  <h2 style="text-align: center; color: #fff; font-size: 1.8em; margin-bottom: 30px;">🚀 Quick Installation Guide</h2>
-  
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
-    <div style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
-      <h3 style="color: #fff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-        <span style="background: #007AFF; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8em;">1</span>
-        TrollApps Method
-      </h3>
-      <ol style="color: #ccc; line-height: 1.6; padding-left: 20px;">
-        <li>Install TrollApps on your device</li>
-        <li>Tap the "Add to TrollApps" button above</li>
-        <li>Confirm the repository addition</li>
-        <li>Browse and install apps directly</li>
-      </ol>
-    </div>
-    
-    <div style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
-      <h3 style="color: #fff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-        <span style="background: #8A2BE2; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8em;">2</span>
-        SideStore Method
-      </h3>
-      <ol style="color: #ccc; line-height: 1.6; padding-left: 20px;">
-        <li>Have SideStore installed and configured</li>
-        <li>Tap the "Add to SideStore" button above</li>
-        <li>Allow the repository to be added</li>
-        <li>Access apps through SideStore interface</li>
-      </ol>
-    </div>
-    
-    <div style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
-      <h3 style="color: #fff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-        <span style="background: #1db954; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8em;">3</span>
-        Manual Installation
-      </h3>
-      <ol style="color: #ccc; line-height: 1.6; padding-left: 20px;">
-        <li>Download the IPA file directly</li>
-        <li>Use your preferred sideloading tool</li>
-        <li>Install the app with proper entitlements</li>
-        <li>Trust the developer certificate</li>
-      </ol>
-    </div>
-  </div>
-</div>
-
-<!-- App Status Legend -->
 <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 30px 0; border: 1px solid rgba(255,255,255,0.1);">
   <h3 style="color: #fff; margin-bottom: 15px; text-align: center;">📊 App Status Legend</h3>
   <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
@@ -250,31 +201,26 @@
 
 </div>
 
-<div class="repo-links">
-  <h3>🌐 Repository Information</h3>
+<div style="margin-top: 50px; padding: 35px; background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); text-align: center;">
+  <h3 style="color: #fff; font-size: 1.5em; margin-bottom: 25px; text-align: center; font-weight: 700;">🌐 Repository Information</h3>
   
-  <div class="repo-link-item">
+  <div style="margin: 15px 0; font-size: 1.1em; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
     <span>🔗</span>
     <strong>Official Website:</strong> 
-    <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
+    <a href="https://oofmini.github.io/Minis-IPA-Repo/" style="color: #fff; text-decoration: none; font-weight: 600; transition: color 0.3s ease;" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
   </div>
   
-  <div class="repo-link-item">
+  <div style="margin: 15px 0; font-size: 1.1em; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
     <span>📄</span>
     <strong>SideStore Manifest:</strong> 
-    <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
+    <code style="background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 6px; font-family: 'Monaco', 'Menlo', monospace; color: #fff; font-size: 0.9em;">https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
   </div>
   
-  <div class="repo-link-item">
+  <div style="margin: 15px 0; font-size: 1.1em; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
     <span>📄</span>
     <strong>TrollApps Manifest:</strong> 
-    <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+    <code style="background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 6px; font-family: 'Monaco', 'Menlo', monospace; color: #fff; font-size: 0.9em;">https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
   </div>
-</div>
-
-<div class="footer">
-  <p>© 2024 Mini's IPA Repo. All applications are property of their respective developers.</p>
-  <p>This repository is not affiliated with Apple Inc. iOS is a registered trademark of Apple Inc.</p>
 </div>
 
 </div>
@@ -416,57 +362,5 @@
 .download-btn:hover { 
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);
-}
-
-.repo-links {
-  margin-top: 50px;
-  padding: 35px;
-  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.15);
-  text-align: center;
-}
-.repo-links h3 {
-  color: #fff;
-  font-size: 1.5em;
-  margin-bottom: 25px;
-  text-align: center;
-  font-weight: 700;
-}
-.repo-link-item {
-  margin: 15px 0;
-  font-size: 1.1em;
-  color: #fff;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-.repo-link-item a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-.repo-link-item a:hover {
-  color: #1db954;
-}
-.repo-link-item code {
-  background: rgba(255,255,255,0.1);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-family: 'Monaco', 'Menlo', monospace;
-  color: #fff;
-  font-size: 0.9em;
-}
-
-.footer {
-  margin-top: 50px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
-  color: #888;
-  font-size: 0.9em;
 }
 </style>
