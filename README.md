@@ -95,105 +95,105 @@
   </div>
 </div>
 
-<div class="app-grid">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • v9.0.84</span>
   </div>
-  <div class="app-card-content">
-    <h3>EeveeSpotify</h3>
-    <p>By <b>whoeevee</b><br>Premium Spotify experience with all features unlocked, zero advertisements, and enhanced audio quality.</p>
-    <a class="download-btn" href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">EeveeSpotify</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>whoeevee</b><br>Premium Spotify experience with all features unlocked, zero advertisements, and enhanced audio quality.</p>
+    <a href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download IPA
     </a>
   </div>
 </div>
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG" alt="YTLite Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG" alt="YTLite Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • v20.39.6</span>
   </div>
-  <div class="app-card-content">
-    <h3>YTLite</h3>
-    <p>By <b>dayanch96</b><br>Enhanced YouTube with background playback, ad-free experience, and premium features unlocked.</p>
-    <a class="download-btn" href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">YTLite</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>dayanch96</b><br>Enhanced YouTube with background playback, ad-free experience, and premium features unlocked.</p>
+    <a href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download IPA
     </a>
   </div>
 </div>
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png" alt="NeoFreeBird Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png" alt="NeoFreeBird Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • v11.27</span>
   </div>
-  <div class="app-card-content">
-    <h3>X (NeoFreeBird)</h3>
-    <p>By <b>NeoFreeBird</b><br>Premium Twitter/X client with advanced customization, no ads, and performance enhancements.</p>
-    <a class="download-btn" href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">X (NeoFreeBird)</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>NeoFreeBird</b><br>Premium Twitter/X client with advanced customization, no ads, and performance enhancements.</p>
+    <a href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download IPA
     </a>
   </div>
 </div>
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png" alt="InShot Pro Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png" alt="InShot Pro Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • Latest</span>
   </div>
-  <div class="app-card-content">
-    <h3>InShot Pro</h3>
-    <p>By <b>IPAOMTK</b><br>Professional video editing suite with all premium filters, tools, and watermark removal.</p>
-    <a class="download-btn" href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">InShot Pro</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>IPAOMTK</b><br>Professional video editing suite with all premium filters, tools, and watermark removal.</p>
+    <a href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download IPA
     </a>
   </div>
 </div>
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png" alt="Dopamine 2 Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png" alt="Dopamine 2 Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • v2.0.0</span>
   </div>
-  <div class="app-card-content">
-    <h3>Dopamine 2</h3>
-    <p>By <b>opa334</b><br>Modern semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.</p>
-    <a class="download-btn" href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">Dopamine 2</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>opa334</b><br>Modern semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.</p>
+    <a href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download TIPA
     </a>
   </div>
 </div>
 
-<div class="app-card">
-  <div class="app-icon-container">
-    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png" alt="Dopamine 2 Roothide Icon">
+<div style="background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 25px; text-align: center; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden;">
+  <div style="width: 100px; height: 100px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 25px; padding: 8px; border: 2px solid rgba(255,255,255,0.1);">
+    <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png" alt="Dopamine 2 Roothide Icon" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
   </div>
-  <div class="app-status">
-    <span class="status-working">✅</span>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; font-size: 0.9em;">
+    <span style="color: #1db954;">✅</span>
     <span style="color: #ccc;">Fully Working • v2.0.0</span>
   </div>
-  <div class="app-card-content">
-    <h3>Dopamine 2 (Roothide)</h3>
-    <p>By <b>roothide</b><br>Systemless jailbreak variant with enhanced stealth and improved iOS 15+ compatibility.</p>
-    <a class="download-btn" href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1">
+  <div style="width: 100%; display: flex; flex-direction: column; align-items: center; flex-grow: 1;">
+    <h3 style="margin: 0 auto 15px auto; color: #fff; font-size: 1.3em; font-weight: 700; width: 100%; text-align: center; line-height: 1.3;">Dopamine 2 (Roothide)</h3>
+    <p style="font-size: 0.95em; color: #ccc; line-height: 1.6; margin: 0 auto 25px auto; width: 100%; text-align: center;">By <b>roothide</b><br>Systemless jailbreak variant with enhanced stealth and improved iOS 15+ compatibility.</p>
+    <a href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; background: linear-gradient(45deg, #1db954, #1ed760); color: #fff; text-decoration: none; transition: all 0.3s ease; font-weight: 700; font-size: 0.95em; margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);">
       <span>⬇️</span> Download TIPA
     </a>
   </div>
@@ -225,142 +225,3 @@
 
 </div>
 </div>
-
-<style>
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(20px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
-@keyframes subtleGlow {
-  0%, 100% {box-shadow: 0 0 10px rgba(255,255,255,0.1);}
-  50% {box-shadow: 0 0 20px rgba(255,255,255,0.2);}
-}
-
-.app-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.app-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 25px;
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  animation: fadeIn 0.8s ease both;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.app-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.6s;
-}
-
-.app-card:hover::before {
-  left: 100%;
-}
-
-.app-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(255,255,255,0.3);
-  animation: subtleGlow 2s infinite;
-}
-
-.app-icon-container {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 20px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.3);
-  border-radius: 25px;
-  padding: 8px;
-  border: 2px solid rgba(255,255,255,0.1);
-}
-
-.app-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 20px;
-}
-
-.app-card-content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-grow: 1;
-}
-
-.app-card h3 {
-  margin: 0 auto 15px auto;
-  color: #fff;
-  font-size: 1.3em;
-  font-weight: 700;
-  width: 100%;
-  text-align: center;
-  line-height: 1.3;
-}
-
-.app-card p {
-  font-size: 0.95em;
-  color: #ccc;
-  line-height: 1.6;
-  margin: 0 auto 25px auto;
-  width: 100%;
-  text-align: center;
-}
-
-.app-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  font-size: 0.9em;
-}
-
-.status-working { color: #1db954; }
-.status-warning { color: #ffa500; }
-.status-error { color: #ff4444; }
-.status-update { color: #007AFF; }
-
-.download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 12px;
-  background: linear-gradient(45deg, #1db954, #1ed760);
-  color: #fff;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-weight: 700;
-  font-size: 0.95em;
-  margin-top: auto;
-  border: none;
-  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
-}
-.download-btn:hover { 
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);
-}
-</style>
