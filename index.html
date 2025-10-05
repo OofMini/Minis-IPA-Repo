@@ -167,7 +167,7 @@
         /* Search and Filter */
         .search-filter-container {
             max-width: 800px;
-            margin: 0 auto 30px;
+            margin: 30px auto;
             padding: 0 20px;
         }
 
@@ -658,6 +658,16 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .category-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-tab {
+                width: 200px;
+                text-align: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -708,18 +718,6 @@
     </header>
 
     <main class="container">
-        <!-- Search and Filter -->
-        <div class="search-filter-container">
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
-            <div class="category-tabs">
-                <button class="category-tab active" data-category="all">All Apps</button>
-                <button class="category-tab" data-category="tweaked">Tweaked Apps</button>
-                <button class="category-tab" data-category="jailbreak">Jailbreak Tools</button>
-                <button class="category-tab" data-category="music">Music</button>
-                <button class="category-tab" data-category="social">Social</button>
-            </div>
-        </div>
-
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number stat-green" id="totalApps">6+</div>
@@ -781,6 +779,18 @@
                 </div>
             </div>
         </section>
+
+        <!-- Search and Filter - MOVED HERE -->
+        <div class="search-filter-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">All Apps</button>
+                <button class="category-tab" data-category="tweaked">Tweaked Apps</button>
+                <button class="category-tab" data-category="jailbreak">Jailbreak Tools</button>
+                <button class="category-tab" data-category="music">Music</button>
+                <button class="category-tab" data-category="social">Social</button>
+            </div>
+        </div>
 
         <!-- App Grid with Skeleton Loading -->
         <section class="app-grid" id="appGrid">
