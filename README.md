@@ -1,24 +1,17 @@
-<div align="center" style="
-  position: relative;
-  overflow: hidden;
-  background: #000000;
-  border-radius: 20px;
-  padding: 60px 20px;
-  color: white;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  border: 1px solid #333;
-">
-  <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" width="110" height="110" style="
-    border-radius: 24px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
-    margin-bottom: 20px;
-    animation: float 5s ease-in-out infinite;
+<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: -20px -20px 0 -20px; padding: 40px 20px 20px 20px; color: white; font-family: 'Inter', 'Segoe UI', sans-serif;">
+<div align="center">
+
+  <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" width="90" height="90" style="
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    margin-bottom: 15px;
+    animation: float 4s ease-in-out infinite;
   " alt="Mini's IPA Repo Icon">
 
-  <h1 style="font-size: 2.8em; font-weight: 700; margin: 0; animation: glowText 3s ease-in-out infinite alternate;">
+  <h1 style="font-size: 2.5em; font-weight: 700; margin: 0; animation: subtleGlow 4s ease-in-out infinite alternate;">
     Mini's IPA Repo
   </h1>
-  <p style="font-size: 1.2em; margin-top: 8px; opacity: 0.9;">Tweaks • Jailbreak Tools • Premium Apps</p>
+  <p style="font-size: 1.1em; margin-top: 8px; opacity: 0.9;">Tweaks • Jailbreak Tools • Premium Apps</p>
 
   <div style="margin-top: 20px;">
     <a href="trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json">
@@ -29,35 +22,37 @@
     </a>
   </div>
 </div>
+</div>
 
-<p align="center" style="max-width:700px; margin:40px auto; font-size:1em; color: #ccc;">
-  Welcome to <b style="color: #fff;">Mini's IPA Repo</b> — a curated collection of <b style="color: #fff;">tweaked apps</b> and <b style="color: #fff;">modern jailbreak utilities</b> built for <b style="color: #fff;">SideStore</b> and <b style="color: #fff;">TrollApps</b>.  
-  Everything here is updated, optimized, and ready for iOS 15+.
+<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: 0 -20px; padding: 20px; color: white;">
+<p align="center" style="max-width:700px; margin:20px auto; font-size:1em; color: #ccc; line-height: 1.5;">
+  Welcome to <b style="color: #fff;">Mini's IPA Repo</b> — a curated collection of <b style="color: #fff;">tweaked apps</b> and <b style="color: #fff;">modern jailbreak utilities</b> built for <b style="color: #fff;">SideStore</b> and <b style="color: #fff;">TrollApps</b>. Everything here is updated, optimized, and ready for iOS 15+.
 </p>
 
 <details hidden>
 <style>
+@keyframes gradientShift {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
 @keyframes float {
   0%, 100% {transform: translateY(0);}
-  50% {transform: translateY(-8px);}
+  50% {transform: translateY(-5px);}
 }
-@keyframes glowText {
-  from {text-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff, 0 0 20px #ffffff;}
-  to {text-shadow: 0 0 12px #ffffff, 0 0 25px #ffffff, 0 0 35px #ffffff;}
+@keyframes subtleGlow {
+  from {text-shadow: 0 0 5px rgba(255,255,255,0.3);}
+  to {text-shadow: 0 0 10px rgba(255,255,255,0.5);}
 }
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(15px);}
   to {opacity: 1; transform: translateY(0);}
 }
-@keyframes linkGlow {
-  from {text-shadow: 0 0 5px #fff, 0 0 10px #fff;}
-  to {text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;}
-}
 
 .app-card {
   display: inline-block;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid #333;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 16px;
   width: 250px;
   height: 360px;
@@ -71,15 +66,15 @@
 }
 .app-card:hover {
   transform: scale(1.05);
-  background: rgba(255,255,255,0.1);
-  border-color: #555;
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
 }
 .app-card img {
   width: 90px;
   height: 90px;
   object-fit: cover;
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  box-shadow: 0 0 8px rgba(255,255,255,0.1);
 }
 .app-card h3 {
   margin-top: 10px;
@@ -92,6 +87,7 @@
   height: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.4;
 }
 .download-btn {
   display: inline-block;
@@ -106,28 +102,27 @@
 }
 .download-btn:hover { 
   opacity: 0.8;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .repo-links {
-  margin-top: 40px;
-  padding: 30px;
-  background: rgba(255,255,255,0.02);
+  margin-top: 30px;
+  padding: 25px;
+  background: rgba(255,255,255,0.05);
   border-radius: 16px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255,255,255,0.1);
   animation: fadeIn 1s ease both;
 }
 .repo-links h3 {
   color: #fff;
-  font-size: 1.4em;
+  font-size: 1.3em;
   margin-bottom: 20px;
   text-align: center;
-  animation: glowText 3s ease-in-out infinite alternate;
 }
 .repo-link-item {
-  margin: 15px 0;
-  font-size: 1.1em;
-  animation: linkGlow 2s ease-in-out infinite alternate;
+  margin: 12px 0;
+  font-size: 1em;
+  color: #fff;
 }
 .repo-link-item a {
   color: #fff;
@@ -137,18 +132,12 @@
 .repo-link-item a:hover {
   color: #1db954;
 }
-
-@media (prefers-color-scheme: light) {
-  .app-card {
-    background: rgba(0,0,0,0.05);
-    border: 1px solid #ddd;
-  }
-  .app-card p { color: #666; }
-  .download-btn { background: #007aff; }
-  .repo-links {
-    background: rgba(0,0,0,0.02);
-    border: 1px solid #ddd;
-  }
+.repo-link-item code {
+  background: rgba(255,255,255,0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  color: #fff;
 }
 </style>
 </details>
@@ -216,4 +205,5 @@
     📜 <strong>TrollApps JSON:</strong> 
     <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
   </div>
+</div>
 </div>
