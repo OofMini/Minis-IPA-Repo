@@ -57,7 +57,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
 }
 
 .app-card:hover {
@@ -69,42 +68,53 @@
 .app-icon-container {
   width: 100px;
   height: 100px;
-  margin-bottom: 15px;
+  margin: 0 auto 15px auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .app-card img {
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   border-radius: 22px;
   background: #000;
   padding: 2px;
   box-sizing: border-box;
+  display: block;
+  margin: 0 auto;
 }
 
 .app-card h3 {
-  margin: 0 0 12px 0;
+  margin: 0 auto 12px auto;
   color: #fff;
   font-size: 1.15em;
   font-weight: 600;
   width: 100%;
   text-align: center;
   line-height: 1.2;
-  padding: 0 5px;
+  padding: 0;
+  display: block;
+}
+
+.app-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .app-card p {
   font-size: 0.9em;
   color: #ccc;
   line-height: 1.5;
-  margin: 0 0 20px 0;
+  margin: 0 auto 20px auto;
   width: 100%;
   text-align: center;
-  padding: 0 5px;
+  padding: 0;
+  display: block;
 }
 
 .download-btn {
@@ -119,6 +129,7 @@
   font-size: 0.95em;
   margin-top: auto;
   min-width: 120px;
+  text-align: center;
 }
 .download-btn:hover { 
   opacity: 0.8;
@@ -168,54 +179,66 @@
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png" alt="EeveeSpotify Icon">
   </div>
-  <h3>EeveeSpotify</h3>
-  <p>By <b>whoeevee</b><br>Tweaked Spotify with premium features unlocked, no ads, and enhanced playback.</p>
-  <a class="download-btn" href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa">Download</a>
+  <div class="app-card-content">
+    <h3>EeveeSpotify</h3>
+    <p>By <b>whoeevee</b><br>Tweaked Spotify with premium features unlocked, no ads, and enhanced playback.</p>
+    <a class="download-btn" href="https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa">Download</a>
+  </div>
 </div>
 
 <div class="app-card">
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG" alt="YTLite Icon">
   </div>
-  <h3>YTLite</h3>
-  <p>By <b>dayanch96</b><br>Tweaked YouTube with background playback, no ads, and picture-in-picture.</p>
-  <a class="download-btn" href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa">Download</a>
+  <div class="app-card-content">
+    <h3>YTLite</h3>
+    <p>By <b>dayanch96</b><br>Tweaked YouTube with background playback, no ads, and picture-in-picture.</p>
+    <a class="download-btn" href="https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa">Download</a>
+  </div>
 </div>
 
 <div class="app-card">
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png" alt="NeoFreeBird Icon">
   </div>
-  <h3>X (NeoFreeBird)</h3>
-  <p>By <b>NeoFreeBird</b><br>Tweaked Twitter/X with premium features, custom tools, and performance improvements.</p>
-  <a class="download-btn" href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa">Download</a>
+  <div class="app-card-content">
+    <h3>X (NeoFreeBird)</h3>
+    <p>By <b>NeoFreeBird</b><br>Tweaked Twitter/X with premium features, custom tools, and performance improvements.</p>
+    <a class="download-btn" href="https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa">Download</a>
+  </div>
 </div>
 
 <div class="app-card">
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png" alt="InShot Pro Icon">
   </div>
-  <h3>InShot Pro</h3>
-  <p>By <b>IPAOMTK</b><br>Pro video editor with premium filters, tools, and no watermark.</p>
-  <a class="download-btn" href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1">Download</a>
+  <div class="app-card-content">
+    <h3>InShot Pro</h3>
+    <p>By <b>IPAOMTK</b><br>Pro video editor with premium filters, tools, and no watermark.</p>
+    <a class="download-btn" href="https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&dl=1">Download</a>
+  </div>
 </div>
 
 <div class="app-card">
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png" alt="Dopamine 2 Icon">
   </div>
-  <h3>Dopamine 2</h3>
-  <p>By <b>opa334</b><br>Semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.</p>
-  <a class="download-btn" href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1">Download</a>
+  <div class="app-card-content">
+    <h3>Dopamine 2</h3>
+    <p>By <b>opa334</b><br>Semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment.</p>
+    <a class="download-btn" href="https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&dl=1">Download</a>
+  </div>
 </div>
 
 <div class="app-card">
   <div class="app-icon-container">
     <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png" alt="Dopamine 2 Roothide Icon">
   </div>
-  <h3>Dopamine 2 (Roothide)</h3>
-  <p>By <b>roothide</b><br>Systemless variant with stealth and improved compatibility for iOS 15+.</p>
-  <a class="download-btn" href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1">Download</a>
+  <div class="app-card-content">
+    <h3>Dopamine 2 (Roothide)</h3>
+    <p>By <b>roothide</b><br>Systemless variant with stealth and improved compatibility for iOS 15+.</p>
+    <a class="download-btn" href="https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&dl=1">Download</a>
+  </div>
 </div>
 
 </div>
