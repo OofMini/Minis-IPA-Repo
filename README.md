@@ -1,24 +1,24 @@
-<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: -20px -20px 0 -20px; padding: 40px 20px 20px 20px; color: white; font-family: 'Inter', 'Segoe UI', sans-serif;">
+<div style="background: linear-gradient(135deg, #2b0057, #001f4d); background-size: 400% 400%; animation: gradientShift 12s ease infinite; margin: -8px -20px 0 -20px; padding: 30px 20px 20px 20px; color: white; font-family: 'Inter', 'Segoe UI', sans-serif;">
 <div align="center">
 
-  <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" width="90" height="90" style="
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(255,255,255,0.2);
-    margin-bottom: 15px;
+  <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" width="80" height="80" style="
+    border-radius: 18px;
+    box-shadow: 0 0 12px rgba(255,255,255,0.15);
+    margin-bottom: 12px;
     animation: float 4s ease-in-out infinite;
   " alt="Mini's IPA Repo Icon">
 
-  <h1 style="font-size: 2.5em; font-weight: 700; margin: 0; animation: subtleGlow 4s ease-in-out infinite alternate;">
+  <h1 style="font-size: 2.2em; font-weight: 700; margin: 0 0 5px 0; animation: subtleGlow 4s ease-in-out infinite alternate;">
     Mini's IPA Repo
   </h1>
-  <p style="font-size: 1.1em; margin-top: 8px; opacity: 0.9;">Tweaks • Jailbreak Tools • Premium Apps</p>
+  <p style="font-size: 1em; margin: 0 0 20px 0; opacity: 0.9;">Tweaks • Jailbreak Tools • Premium Apps</p>
 
-  <div style="margin-top: 20px;">
-    <a href="trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json">
-      <img src="https://img.shields.io/badge/Add%20to-TrollApps-blue?logo=apple&logoColor=white" alt="Add to TrollApps" style="margin:4px;">
+  <div style="margin: 0;">
+    <a href="trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json" style="display: inline-block; margin: 2px;">
+      <img src="https://img.shields.io/badge/Add%20to-TrollApps-007AFF?logo=apple&logoColor=white&style=for-the-badge" alt="Add to TrollApps" style="border-radius: 8px; border: none;">
     </a>
-    <a href="sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json">
-      <img src="https://img.shields.io/badge/Add%20to-SideStore-purple?logo=apple&logoColor=white" alt="Add to SideStore" style="margin:4px;">
+    <a href="sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json" style="display: inline-block; margin: 2px;">
+      <img src="https://img.shields.io/badge/Add%20to-SideStore-8A2BE2?logo=apple&logoColor=white&style=for-the-badge" alt="Add to SideStore" style="border-radius: 8px; border: none;">
     </a>
   </div>
 </div>
@@ -38,11 +38,11 @@
 }
 @keyframes float {
   0%, 100% {transform: translateY(0);}
-  50% {transform: translateY(-5px);}
+  50% {transform: translateY(-4px);}
 }
 @keyframes subtleGlow {
-  from {text-shadow: 0 0 5px rgba(255,255,255,0.3);}
-  to {text-shadow: 0 0 10px rgba(255,255,255,0.5);}
+  from {text-shadow: 0 0 3px rgba(255,255,255,0.2);}
+  to {text-shadow: 0 0 6px rgba(255,255,255,0.3);}
 }
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(15px);}
