@@ -170,260 +170,270 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp1",
-      "bundleIdentifier": "com.placeholder.app1",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder1.png",
+      "name": "Amethyst",
+      "bundleIdentifier": "com.alexytomi.amethyst",
+      "developerName": "alexytomi",
+      "localizedDescription": "Amethyst is a utility app offering system-level features and performance monitoring for advanced users.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
       "screenshotURLs": [
-        "https://example.com/placeholder1-1.png",
-        "https://example.com/placeholder1-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-3.png"
       ],
       "versions": [
         {
           "version": "1.0",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp1.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1",
+          "size": 30094131,
+          "localizedDescription": "Amethyst is a utility app offering system-level features and performance monitoring for advanced users."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#6A00C9",
+      "subtitle": "System utility",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp2",
-      "bundleIdentifier": "com.placeholder.app2",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder2.png",
+      "name": "Appstore++",
+      "bundleIdentifier": "com.cokernutx.appstoreplusplus",
+      "developerName": "cokernutx",
+      "localizedDescription": "Appstore++ extends app management capabilities, enabling advanced sideloading and TrollStore compatibility.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
       "screenshotURLs": [
-        "https://example.com/placeholder2-1.png",
-        "https://example.com/placeholder2-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "1.0.3",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp2.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1",
+          "size": 17616076,
+          "localizedDescription": "Appstore++ extends app management capabilities, enabling advanced sideloading and TrollStore compatibility."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#0A84FF",
+      "subtitle": "App manager / sideload helper",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp3",
-      "bundleIdentifier": "com.placeholder.app3",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder3.png",
+      "name": "Captions For Talking Videos",
+      "bundleIdentifier": "com.ipaomtk.captions",
+      "developerName": "IPAOMTK",
+      "localizedDescription": "Automatically generates accurate captions for talking videos using on-device and cloud processing.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos.png",
       "screenshotURLs": [
-        "https://example.com/placeholder3-1.png",
-        "https://example.com/placeholder3-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "12.38",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp3.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/o3kl1d0lnmyfhk1uj4pg4/Captions-For-Talking-Videos.ipa?rlkey=pj3qugfftxu62pd2o126hbrfs&st=3bumu067&dl=1",
+          "size": 389965414,
+          "localizedDescription": "Automatically generates accurate captions for talking videos using on-device and cloud processing."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#FF9500",
+      "subtitle": "Automatic captions for videos",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp4",
-      "bundleIdentifier": "com.placeholder.app4",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder4.png",
+      "name": "iTorrent",
+      "bundleIdentifier": "org.xitrix.itorrent",
+      "developerName": "XITRIX",
+      "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png",
       "screenshotURLs": [
-        "https://example.com/placeholder4-1.png",
-        "https://example.com/placeholder4-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "2.0.15",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp4.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1",
+          "size": 7130316,
+          "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#34C759",
+      "subtitle": "Torrent client",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp5",
-      "bundleIdentifier": "com.placeholder.app5",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder5.png",
+      "name": "LiveContainer",
+      "bundleIdentifier": "com.hugeblack.livecontainer",
+      "developerName": "hugeBlack",
+      "localizedDescription": "Runs live production containers for streaming apps and runtime isolation.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png",
       "screenshotURLs": [
-        "https://example.com/placeholder5-1.png",
-        "https://example.com/placeholder5-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "3.6.1",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp5.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1",
+          "size": 4194304,
+          "localizedDescription": "Runs live production containers for streaming apps and runtime isolation."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#FF2D55",
+      "subtitle": "Live streaming container",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp6",
-      "bundleIdentifier": "com.placeholder.app6",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder6.png",
+      "name": "ModMyIpa",
+      "bundleIdentifier": "com.powenn.modmyipa",
+      "developerName": "powenn",
+      "localizedDescription": "Tools for modifying and signing IPA packages for testing and distribution.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
       "screenshotURLs": [
-        "https://example.com/placeholder6-1.png",
-        "https://example.com/placeholder6-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "1.0.2",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp6.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1",
+          "size": 2936012,
+          "localizedDescription": "Tools for modifying and signing IPA packages for testing and distribution."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#5856D6",
+      "subtitle": "IPA modification utilities",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp7",
-      "bundleIdentifier": "com.placeholder.app7",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder7.png",
+      "name": "Moises",
+      "bundleIdentifier": "com.ipaomtk.moises",
+      "developerName": "IPAOMTK",
+      "localizedDescription": "AI-powered music separation, stems extraction, and practice tools for musicians.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/moises.png",
       "screenshotURLs": [
-        "https://example.com/placeholder7-1.png",
-        "https://example.com/placeholder7-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "2.97.0",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp7.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/qn1qrl25nurj5e7examyy/Moises-IPAOMTK.COM.ipa?rlkey=5bm8duwzvfv0bl7eqjlco5fdl&st=sn13bwss&dl=1",
+          "size": 73295462,
+          "localizedDescription": "AI-powered music separation, stems extraction, and practice tools for musicians."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#FFCC00",
+      "subtitle": "Music separation and tools",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp8",
-      "bundleIdentifier": "com.placeholder.app8",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder8.png",
+      "name": "Quizlet",
+      "bundleIdentifier": "com.ipaomtk.quizlet",
+      "developerName": "IPAOMTK",
+      "localizedDescription": "AI-enhanced flashcards and study sets for efficient learning and review.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet.png",
       "screenshotURLs": [
-        "https://example.com/placeholder8-1.png",
-        "https://example.com/placeholder8-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "10.2",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp8.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/a4p17hhem5u4duznojele/quizlet-ai-powered-flashcards.ipa?rlkey=vkq6ka6ru191doyi9efwb4bgw&st=r1wbqgsh&dl=1",
+          "size": 63019417,
+          "localizedDescription": "AI-enhanced flashcards and study sets for efficient learning and review."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#FF3B30",
+      "subtitle": "Study flashcards",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp9",
-      "bundleIdentifier": "com.placeholder.app9",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder9.png",
+      "name": "Reface Pro",
+      "bundleIdentifier": "com.ipaomtk.reface",
+      "developerName": "IPAOMTK",
+      "localizedDescription": "Professional face swap and video editing tools with high-quality output options.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
       "screenshotURLs": [
-        "https://example.com/placeholder9-1.png",
-        "https://example.com/placeholder9-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "5.23.0",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp9.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1",
+          "size": 106535321,
+          "localizedDescription": "Professional face swap and video editing tools with high-quality output options."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#00C7BE",
+      "subtitle": "Face swap and deepfake editor",
       "permissions": [
         "network"
       ],
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "PlaceholderApp10",
-      "bundleIdentifier": "com.placeholder.app10",
-      "developerName": "PlaceholderDev",
-      "localizedDescription": "This is a placeholder description for testing purposes.",
-      "iconURL": "https://example.com/placeholder10.png",
+      "name": "SuperMario (60fps)",
+      "bundleIdentifier": "com.mario.supermario64.60fps",
+      "developerName": "Mario",
+      "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
       "screenshotURLs": [
-        "https://example.com/placeholder10-1.png",
-        "https://example.com/placeholder10-2.png"
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-3.png"
       ],
       "versions": [
         {
-          "version": "1.0",
+          "version": "1.2.1",
           "date": "2025-10-06",
-          "downloadURL": "https://example.com/PlaceholderApp10.ipa",
-          "size": 12345678,
-          "localizedDescription": "Initial placeholder release"
+          "downloadURL": "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1",
+          "size": 9227468,
+          "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay."
         }
       ],
-      "tintColor": "#000000",
-      "subtitle": "Placeholder App",
+      "tintColor": "#FFD700",
+      "subtitle": "Emulated game (60fps)",
       "permissions": [
         "network"
       ],
