@@ -26,7 +26,10 @@
       ],
       "tintColor": "#1DB954",
       "subtitle": "Tweaked Spotify client",
-      "permissions": ["background-audio", "media-access"],
+      "permissions": [
+        "background-audio",
+        "media-access"
+      ],
       "minimumOSVersion": "16.1"
     },
     {
@@ -51,7 +54,10 @@
       ],
       "tintColor": "#FF0000",
       "subtitle": "Tweaked YouTube with premium features",
-      "permissions": ["background-audio", "pip"],
+      "permissions": [
+        "background-audio",
+        "pip"
+      ],
       "minimumOSVersion": "16.0"
     },
     {
@@ -76,7 +82,9 @@
       ],
       "tintColor": "#1DA1F2",
       "subtitle": "Tweaked Twitter/X",
-      "permissions": ["network"],
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -101,7 +109,10 @@
       ],
       "tintColor": "#FF2D55",
       "subtitle": "Unlocked Pro video editor",
-      "permissions": ["media-access", "camera"],
+      "permissions": [
+        "media-access",
+        "camera"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -126,7 +137,9 @@
       ],
       "tintColor": "#8E44AD",
       "subtitle": "Modern jailbreak for iOS 15+",
-      "permissions": ["system-exploit"],
+      "permissions": [
+        "system-exploit"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -151,7 +164,269 @@
       ],
       "tintColor": "#7F8C8D",
       "subtitle": "Roothide jailbreak variant",
-      "permissions": ["system-exploit"],
+      "permissions": [
+        "system-exploit"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp1",
+      "bundleIdentifier": "com.placeholder.app1",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder1.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder1-1.png",
+        "https://example.com/placeholder1-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp1.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp2",
+      "bundleIdentifier": "com.placeholder.app2",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder2.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder2-1.png",
+        "https://example.com/placeholder2-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp2.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp3",
+      "bundleIdentifier": "com.placeholder.app3",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder3.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder3-1.png",
+        "https://example.com/placeholder3-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp3.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp4",
+      "bundleIdentifier": "com.placeholder.app4",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder4.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder4-1.png",
+        "https://example.com/placeholder4-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp4.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp5",
+      "bundleIdentifier": "com.placeholder.app5",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder5.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder5-1.png",
+        "https://example.com/placeholder5-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp5.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp6",
+      "bundleIdentifier": "com.placeholder.app6",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder6.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder6-1.png",
+        "https://example.com/placeholder6-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp6.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp7",
+      "bundleIdentifier": "com.placeholder.app7",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder7.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder7-1.png",
+        "https://example.com/placeholder7-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp7.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp8",
+      "bundleIdentifier": "com.placeholder.app8",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder8.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder8-1.png",
+        "https://example.com/placeholder8-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp8.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp9",
+      "bundleIdentifier": "com.placeholder.app9",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder9.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder9-1.png",
+        "https://example.com/placeholder9-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp9.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "PlaceholderApp10",
+      "bundleIdentifier": "com.placeholder.app10",
+      "developerName": "PlaceholderDev",
+      "localizedDescription": "This is a placeholder description for testing purposes.",
+      "iconURL": "https://example.com/placeholder10.png",
+      "screenshotURLs": [
+        "https://example.com/placeholder10-1.png",
+        "https://example.com/placeholder10-2.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0",
+          "date": "2025-10-06",
+          "downloadURL": "https://example.com/PlaceholderApp10.ipa",
+          "size": 12345678,
+          "localizedDescription": "Initial placeholder release"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Placeholder App",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     }
   ]
