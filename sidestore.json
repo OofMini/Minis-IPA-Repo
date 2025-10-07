@@ -224,33 +224,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Captions For Talking Videos",
-      "bundleIdentifier": "com.ipaomtk.captions",
-      "developerName": "IPAOMTK",
-      "localizedDescription": "Automatically generates accurate captions for talking videos using on-device and cloud processing.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/captionsfortalkingvideos-3.png"
-      ],
-      "versions": [
-        {
-          "version": "12.38",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/o3kl1d0lnmyfhk1uj4pg4/Captions-For-Talking-Videos.ipa?rlkey=pj3qugfftxu62pd2o126hbrfs&st=3bumu067&dl=1",
-          "size": 389965414,
-          "localizedDescription": "Automatically generates accurate captions for talking videos using on-device and cloud processing."
-        }
-      ],
-      "tintColor": "#FF9500",
-      "subtitle": "Automatic captions for videos",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "iTorrent",
       "bundleIdentifier": "org.xitrix.itorrent",
       "developerName": "XITRIX",
@@ -332,33 +305,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Moises",
-      "bundleIdentifier": "com.ipaomtk.moises",
-      "developerName": "IPAOMTK",
-      "localizedDescription": "AI-powered music separation, stems extraction, and practice tools for musicians.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/moises.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/moises-3.png"
-      ],
-      "versions": [
-        {
-          "version": "2.97.0",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/qn1qrl25nurj5e7examyy/Moises-IPAOMTK.COM.ipa?rlkey=5bm8duwzvfv0bl7eqjlco5fdl&st=sn13bwss&dl=1",
-          "size": 73295462,
-          "localizedDescription": "AI-powered music separation, stems extraction, and practice tools for musicians."
-        }
-      ],
-      "tintColor": "#FFCC00",
-      "subtitle": "Music separation and tools",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "RefacePro",
       "bundleIdentifier": "com.ipaomtk.reface",
       "developerName": "IPAOMTK",
@@ -386,7 +332,7 @@
       "minimumOSVersion": "17.0"
     },
     {
-      "name": "SuperMario (60fps)",
+      "name": "SuperMario64 (60fps)",
       "bundleIdentifier": "com.mario.supermario64.60fps",
       "developerName": "Mario",
       "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
