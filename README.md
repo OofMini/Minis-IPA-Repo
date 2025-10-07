@@ -7,7 +7,6 @@ Welcome to **Mini's IPA Repo** — your trusted source for **tweaked application
 ### 🌟 Features
 - 🚀 Premium Features Unlocked
 - 🛡️ No Ads - Clean Experience  
-- ⚡ Optimized for iOS 15+
 
 ### 📱 Supported Apps
 - EeveeSpotify (by whoeevee)
