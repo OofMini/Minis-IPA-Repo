@@ -11,7 +11,7 @@ Welcome to **Mini's IPA Repo** — your trusted source for **tweaked application
 ### 📱 Supported Apps
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
-- X (NeoFreeBird) (by NeoFreeBird)
+- X (by NeoFreeBird)
 - InShot Pro (by IPAOMTK)
 - Amethyst (by alexytomi)
 - Appstore++ (by cokernutx)
