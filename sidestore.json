@@ -45,7 +45,7 @@
       ],
       "versions": [
         {
-          "version": "20.39.6",
+          "version": "20.40.4",
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
@@ -75,7 +75,7 @@
         {
           "version": "11.28",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa",
+          "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.28/NeoFreeBird-sideloaded_5.1_11.28.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
         }
