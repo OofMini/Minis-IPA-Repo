@@ -8,7 +8,7 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "localizedDescription": "Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v9.0.84, EeveeSpotify v6.1.5.",
+      "localizedDescription": "Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v9.0.86, EeveeSpotify v6.1.5.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -17,9 +17,9 @@
       ],
       "versions": [
         {
-          "version": "9.0.84",
+          "version": "9.0.86",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa",
+          "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.86/EeveeSpotify.ipa",
           "size": 87975526,
           "localizedDescription": "Premium unlocked, ads removed, enhanced playback"
         }
@@ -36,7 +36,7 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.39.6, YTLite v5.2b3.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.40.4, YTLite v5.2b3.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -47,7 +47,7 @@
         {
           "version": "20.39.6",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa",
+          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
@@ -64,7 +64,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.27, NeoFreeBird v2.0.",
+      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.28, NeoFreeBird v2.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -73,7 +73,7 @@
       ],
       "versions": [
         {
-          "version": "11.27",
+          "version": "11.28",
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa",
           "size": 142816051,
@@ -359,37 +359,10 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Quizlet",
-      "bundleIdentifier": "com.ipaomtk.quizlet",
-      "developerName": "IPAOMTK",
-      "localizedDescription": "AI-enhanced flashcards and study sets for efficient learning and review.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/quizlet-3.png"
-      ],
-      "versions": [
-        {
-          "version": "10.2",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/a4p17hhem5u4duznojele/quizlet-ai-powered-flashcards.ipa?rlkey=vkq6ka6ru191doyi9efwb4bgw&st=r1wbqgsh&dl=1",
-          "size": 63019417,
-          "localizedDescription": "AI-enhanced flashcards and study sets for efficient learning and review."
-        }
-      ],
-      "tintColor": "#FF3B30",
-      "subtitle": "Study flashcards",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
-      "name": "Reface Pro",
+      "name": "RefacePro",
       "bundleIdentifier": "com.ipaomtk.reface",
       "developerName": "IPAOMTK",
-      "localizedDescription": "Professional face swap and video editing tools with high-quality output options.",
+      "localizedDescription": "Reface Premium Unloked.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-1.png",
@@ -402,7 +375,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1",
           "size": 106535321,
-          "localizedDescription": "Professional face swap and video editing tools with high-quality output options."
+          "localizedDescription": "Reface Premium Unlocked."
         }
       ],
       "tintColor": "#00C7BE",
@@ -410,7 +383,7 @@
       "permissions": [
         "network"
       ],
-      "minimumOSVersion": "15.0"
+      "minimumOSVersion": "17.0"
     },
     {
       "name": "SuperMario (60fps)",
