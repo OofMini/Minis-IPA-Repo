@@ -20,7 +20,7 @@ Welcome to **Mini's IPA Repo** — your trusted source for **tweaked application
 - LiveContainer (by hugeBlack)
 - ModMyIpa (by powenn)
 - RefacePro (by IPAOMTK)
-- SuperMario64 (60fps) (by Mario)
+- SuperMario64 (60fps) (by Cypwn)
 
 ### 🔗 Repository Information
 - **Official Website**: https://oofmini.github.io/Minis-IPA-Repo/
