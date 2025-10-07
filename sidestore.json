@@ -116,60 +116,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Dopamine2",
-      "bundleIdentifier": "com.opa334.Dopamine",
-      "developerName": "opa334",
-      "localizedDescription": "Semi-untethered jailbreak for iOS 15+ with tweak injection and rootless environment. App v2.4.5.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-3.png"
-      ],
-      "versions": [
-        {
-          "version": "2.4.5",
-          "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
-          "size": 53267660,
-          "localizedDescription": "Semi-untethered jailbreak, iOS 15+ support, rootless"
-        }
-      ],
-      "tintColor": "#8E44AD",
-      "subtitle": "Modern jailbreak for iOS 15+",
-      "permissions": [
-        "system-exploit"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
-      "name": "Dopamine2-roothide",
-      "bundleIdentifier": "com.opa334.Dopamine-roothide",
-      "developerName": "roothide",
-      "localizedDescription": "Roothide variant of Dopamine for systemless jailbreak with stealth and compatibility. App v2.2.2.17.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-3.png"
-      ],
-      "versions": [
-        {
-          "version": "2.2.2.17",
-          "date": "2025-09-24",
-          "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
-          "size": 53791948,
-          "localizedDescription": "Roothide jailbreak, systemless, improved stealth"
-        }
-      ],
-      "tintColor": "#7F8C8D",
-      "subtitle": "Roothide jailbreak variant",
-      "permissions": [
-        "system-exploit"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "Amethyst",
       "bundleIdentifier": "com.alexytomi.amethyst",
       "developerName": "alexytomi",
