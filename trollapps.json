@@ -8,9 +8,9 @@
       "name": "EeveeSpotify",
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
-      "version": "9.0.84",
+      "version": "9.0.86",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
-      "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.84/EeveeSpotify.ipa",
+      "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/9.0.86/EeveeSpotify.ipa",
       "localizedDescription": "Premium unlocked, ads removed, enhanced playback",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/eeveespotify-1.png",
@@ -22,9 +22,9 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "version": "20.39.6",
+      "version": "20.40.4",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
-      "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.39.6/YouTubePlus_5.2b3.ipa",
+      "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa",
       "localizedDescription": "Background playback, ads removed, picture-in-picture support",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -36,9 +36,9 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "version": "11.27",
+      "version": "11.28",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
-      "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa",
+      "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.28/NeoFreeBird-sideloaded_5.1_11.28.ipa",
       "localizedDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -58,34 +58,6 @@
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-1.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-2.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-3.png"
-      ]
-    },
-    {
-      "name": "Dopamine2",
-      "bundleIdentifier": "com.opa334.Dopamine",
-      "developerName": "opa334",
-      "version": "2.4.5",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/83gkrrb2hq5nzv15e2f7q/Dopamine.tipa?rlkey=4tmq856xa31pqqw3t499gxm3z&st=knrzpfge&dl=1",
-      "localizedDescription": "Semi-untethered jailbreak, iOS 15+ support, rootless",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-3.png"
-      ]
-    },
-    {
-      "name": "Dopamine2-roothide",
-      "bundleIdentifier": "com.opa334.Dopamine-roothide",
-      "developerName": "roothide",
-      "version": "2.2.2.17",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Dopamine2-roothide.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/5b0ir4tyyzsyfrvoyr98u/Dopamine-2.tipa?rlkey=bjaykx5qol2uueo8jbaarxnfe&st=g8s02g4w&dl=1",
-      "localizedDescription": "Roothide jailbreak, systemless, improved stealth",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/dopamine2-roothide-3.png"
       ]
     },
     {
