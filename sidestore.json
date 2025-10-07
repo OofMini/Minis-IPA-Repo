@@ -45,7 +45,7 @@
       ],
       "versions": [
         {
-          "version": "20.39.6",
+          "version": "20.40.4",
           "date": "2025-09-25",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
@@ -75,7 +75,7 @@
         {
           "version": "11.28",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.27/NeoFreeBird-sideloaded_5.1_11.27.ipa",
+          "downloadURL": "https://github.com/OofMini/tweak/releases/download/11.28/NeoFreeBird-sideloaded_5.1_11.28.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
         }
@@ -119,7 +119,7 @@
       "name": "Amethyst",
       "bundleIdentifier": "com.alexytomi.amethyst",
       "developerName": "alexytomi",
-      "localizedDescription": "Amethyst is a utility app offering system-level features and performance monitoring for advanced users.",
+      "localizedDescription": "Minecraft Java IOS Edition.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-1.png",
@@ -132,7 +132,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1",
           "size": 30094131,
-          "localizedDescription": "Amethyst is a utility app offering system-level features and performance monitoring for advanced users."
+          "localizedDescription": "Minecraft Java IOS."
         }
       ],
       "tintColor": "#6A00C9",
@@ -146,7 +146,7 @@
       "name": "Appstore++",
       "bundleIdentifier": "com.cokernutx.appstoreplusplus",
       "developerName": "cokernutx",
-      "localizedDescription": "Appstore++ extends app management capabilities, enabling advanced sideloading and TrollStore compatibility.",
+      "localizedDescription": "Appstore++ allows users to downgrade apps.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-1.png",
@@ -159,7 +159,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1",
           "size": 17616076,
-          "localizedDescription": "Appstore++ extends app management capabilities, enabling advanced sideloading and TrollStore compatibility."
+          "localizedDescription": "Appstore++ allows users to downgrade apps."
         }
       ],
       "tintColor": "#0A84FF",
@@ -227,7 +227,7 @@
       "name": "ModMyIpa",
       "bundleIdentifier": "com.powenn.modmyipa",
       "developerName": "powenn",
-      "localizedDescription": "Tools for modifying and signing IPA packages for testing and distribution.",
+      "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-1.png",
@@ -240,7 +240,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1",
           "size": 2936012,
-          "localizedDescription": "Tools for modifying and signing IPA packages for testing and distribution."
+          "localizedDescription": "Tool for modifying .ipas and duplicating apps."
         }
       ],
       "tintColor": "#5856D6",
