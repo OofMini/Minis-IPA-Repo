@@ -7,22 +7,21 @@ Welcome to **Mini's IPA Repo** — your trusted source for **tweaked application
 ### 🌟 Features
 - 🚀 Premium Features Unlocked
 - 🛡️ No Ads - Clean Experience  
-- ⚡ Optimized for iOS 15+
 
 ### 📱 Supported Apps
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
-- X (NeoFreeBird) (by NeoFreeBird)
+- X (by NeoFreeBird)
 - InShot Pro (by IPAOMTK)
-- Dopamine 2 (by opa334)
-- Dopamine 2 Roothide (by roothide)
+- Amethyst (by alexytomi)
+- Appstore++ (by cokernutx)
+- iTorrent (by XITRIX)
+- LiveContainer (by hugeBlack)
+- ModMyIpa (by powenn)
+- RefacePro (by IPAOMTK)
+- SuperMario64 (by Cypwn)
 
 ### 🔗 Repository Information
 - **Official Website**: https://oofmini.github.io/Minis-IPA-Repo/
 - **SideStore Manifest**: https://OofMini.github.io/Minis-IPA-Repo/sidestore.json
 - **TrollApps Manifest**: https://OofMini.github.io/Minis-IPA-Repo/trollapps.json
-
-### 🚀 Quick Setup
-1. Install TrollApps or SideStore on your device
-2. Add this repository using the appropriate manifest URL
-3. Browse and install apps directly through your preferred client
