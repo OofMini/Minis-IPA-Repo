@@ -62,7 +62,7 @@
     },
     {
       "name": "Amethyst",
-      "bundleIdentifier": "com.alexytomi.amethyst",
+      "bundleIdentifier": "com.angelauramc.amethyst",
       "developerName": "alexytomi",
       "version": "1.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
@@ -76,7 +76,7 @@
     },
     {
       "name": "Appstore++",
-      "bundleIdentifier": "com.cokernutx.appstoreplusplus",
+      "bundleIdentifier": "com.cokepokes.AppStorePlus",
       "developerName": "cokernutx",
       "version": "1.0.3",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
@@ -90,7 +90,7 @@
     },
     {
       "name": "iTorrent",
-      "bundleIdentifier": "org.xitrix.itorrent",
+      "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
       "version": "2.0.15",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png",
@@ -104,7 +104,7 @@
     },
     {
       "name": "LiveContainer",
-      "bundleIdentifier": "com.hugeblack.livecontainer",
+      "bundleIdentifier": "com.kdt.livecontainer",
       "developerName": "hugeBlack",
       "version": "3.6.1",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png",
@@ -118,7 +118,7 @@
     },
     {
       "name": "ModMyIpa",
-      "bundleIdentifier": "com.powenn.modmyipa",
+      "bundleIdentifier": "com.powenn.ModMyIPA",
       "developerName": "powenn",
       "version": "1.0.2",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
@@ -132,7 +132,7 @@
     },
     {
       "name": "RefacePro",
-      "bundleIdentifier": "com.ipaomtk.reface",
+      "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
       "version": "5.23.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
@@ -146,7 +146,7 @@
     },
     {
       "name": "SuperMario64 (60fps)",
-      "bundleIdentifier": "com.mario.supermario64.60fps",
+      "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
       "developerName": "Mario",
       "version": "1.2.1",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
