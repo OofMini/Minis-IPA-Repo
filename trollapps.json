@@ -131,20 +131,6 @@
       ]
     },
     {
-      "name": "RefacePro",
-      "bundleIdentifier": "com.neocortext.doublicatapp",
-      "developerName": "IPAOMTK",
-      "version": "5.23.0",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1",
-      "localizedDescription": "Reface Premium Unlocked.",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-3.png"
-      ]
-    },
-    {
       "name": "SuperMario64 (60fps)",
       "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
       "developerName": "Mario",
