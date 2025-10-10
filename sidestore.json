@@ -117,7 +117,7 @@
     },
     {
       "name": "Amethyst",
-      "bundleIdentifier": "com.alexytomi.amethyst",
+      "bundleIdentifier": "com.angelauramc.amethyst",
       "developerName": "alexytomi",
       "localizedDescription": "Minecraft Java IOS Edition.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
@@ -144,7 +144,7 @@
     },
     {
       "name": "Appstore++",
-      "bundleIdentifier": "com.cokernutx.appstoreplusplus",
+      "bundleIdentifier": "com.cokepokes.AppStorePlus",
       "developerName": "cokernutx",
       "localizedDescription": "Appstore++ allows users to downgrade apps.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
@@ -171,7 +171,7 @@
     },
     {
       "name": "iTorrent",
-      "bundleIdentifier": "org.xitrix.itorrent",
+      "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
       "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png",
@@ -198,7 +198,7 @@
     },
     {
       "name": "LiveContainer",
-      "bundleIdentifier": "com.hugeblack.livecontainer",
+      "bundleIdentifier": "com.kdt.livecontainer",
       "developerName": "hugeBlack",
       "localizedDescription": "Runs live production containers for streaming apps and runtime isolation.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png",
@@ -225,7 +225,7 @@
     },
     {
       "name": "ModMyIpa",
-      "bundleIdentifier": "com.powenn.modmyipa",
+      "bundleIdentifier": "com.powenn.ModMyIPA",
       "developerName": "powenn",
       "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
@@ -252,7 +252,7 @@
     },
     {
       "name": "RefacePro",
-      "bundleIdentifier": "com.ipaomtk.reface",
+      "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
       "localizedDescription": "Reface Premium Unloked.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
@@ -279,7 +279,7 @@
     },
     {
       "name": "SuperMario64 (60fps)",
-      "bundleIdentifier": "com.mario.supermario64.60fps",
+      "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
       "developerName": "Mario",
       "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
