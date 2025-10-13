@@ -61,6 +61,28 @@
         .stagger-2 { transition-delay: 0.3s; }
         .stagger-3 { transition-delay: 0.45s; }
         
+        /* Animated Gradient for Title */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .animated-gradient {
+            background: linear-gradient(270deg, #8a2be2, #ffffff, #8a2be2);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+        }
+        
         /* Sidebar Styles */
         .sidebar {
             position: fixed;
@@ -173,10 +195,6 @@
             font-size: 2em;
             font-weight: 800;
             margin: 0 0 5px;
-            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         .hero-subtitle {
             font-size: 1em;
@@ -614,8 +632,8 @@
     <div class="page active" id="home-page">
         <header class="hero">
             <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
-            <h1>Mini's IPA Repo</h1>
-            <p class="hero-subtitle">Tweaks • Jailbreak Tools • Tweaked Apps</p>
+            <h1 class="animated-gradient">Mini's IPA Repo</h1>
+            <p class="hero-subtitle">Jailbreak Tools • Tweaked Apps</p>
             
             <div class="badges">
                 <span class="badge">✅ Active</span>
@@ -871,7 +889,7 @@
             {
                 id: 'supermario64',
                 name: 'SuperMario64 (60fps)',
-                developer: 'Mario',
+                developer: 'Cypwn',
                 description: 'Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png',
                 version: '1.2.1',
