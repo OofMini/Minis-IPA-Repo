@@ -36,7 +36,7 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.40.4, YTLite v5.2b3.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.41.4, YTLite v5.2b3.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -45,9 +45,9 @@
       ],
       "versions": [
         {
-          "version": "20.40.4",
+          "version": "20.41.4",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa",
+          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b3.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
