@@ -23,19 +23,14 @@
             --accent-color: #a0a0ff;
             --success-color: #1db954;
             --info-color: #007AFF;
-        }
-        [data-theme="light"] {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --card-bg: linear-gradient(145deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
-            --card-border: rgba(0,0,0,0.15);
-            --accent-color: #007AFF;
+            --trollapps-color: #8a2be2;
+            --sidestore-color: #1db954;
         }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         body {
             background: var(--bg-color);
@@ -47,7 +42,7 @@
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.8s ease;
+            transition: all 1s ease;
         }
         .fade-in.visible {
             opacity: 1;
@@ -56,15 +51,111 @@
         .fade-in-left {
             opacity: 0;
             transform: translateX(-30px);
-            transition: all 0.8s ease;
+            transition: all 1s ease;
         }
         .fade-in-left.visible {
             opacity: 1;
             transform: translateX(0);
         }
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-1 { transition-delay: 0.15s; }
+        .stagger-2 { transition-delay: 0.3s; }
+        .stagger-3 { transition-delay: 0.45s; }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-color);
+            border-right: 1px solid var(--card-border);
+            z-index: 1001;
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+        }
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+        .sidebar-menu {
+            list-style: none;
+        }
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .sidebar-menu a:hover {
+            background: var(--card-bg);
+            transform: translateX(5px);
+        }
+        .sidebar-menu a.active {
+            background: var(--card-bg);
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        /* Menu Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 999;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle:hover {
+            transform: scale(1.1);
+        }
+        
         .hero {
             background: var(--bg-color);
             padding: 20px 15px 15px;
@@ -126,13 +217,13 @@
             font-size: 0.9em;
             cursor: pointer;
         }
-        .cta-button.blue {
-            background: var(--info-color);
-            border-color: var(--info-color);
+        .cta-button.trollapps {
+            background: var(--trollapps-color);
+            border-color: var(--trollapps-color);
         }
-        .cta-button.purple {
-            background: var(--accent-color);
-            border-color: var(--accent-color);
+        .cta-button.sidestore {
+            background: var(--sidestore-color);
+            border-color: var(--sidestore-color);
         }
         .cta-button:hover {
             transform: translateY(-2px);
@@ -184,7 +275,7 @@
         .features {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 40px;
             flex-wrap: wrap;
             margin-top: 20px;
         }
@@ -242,7 +333,7 @@
             border-radius: 16px;
             padding: 20px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -262,9 +353,6 @@
             border-radius: 20px;
             padding: 6px;
             border: 2px solid var(--card-border);
-        }
-        [data-theme="light"] .app-icon-container {
-            background: rgba(255,255,255,0.3);
         }
         .app-icon {
             width: 100%;
@@ -364,25 +452,6 @@
             color: var(--text-color);
             font-size: 0.85em;
         }
-        .theme-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1000;
-        }
-        .theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-        .theme-btn:hover {
-            transform: scale(1.1);
-        }
         .toast {
             position: fixed;
             bottom: 15px;
@@ -393,7 +462,7 @@
             border-radius: 8px;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             font-size: 0.9em;
         }
@@ -401,6 +470,95 @@
             transform: translateY(0);
             opacity: 1;
         }
+        
+        /* SideStore Guide Styles */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .guide-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .guide-step {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .guide-step:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .step-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .step-description {
+            color: var(--text-color);
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .step-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid var(--card-border);
+        }
+        .step-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--info-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .step-link:hover {
+            transform: translateY(-2px);
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+        }
+        
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -422,97 +580,189 @@
             .fade-in-left.visible {
                 transform: translateY(0);
             }
+            .sidebar {
+                width: 260px;
+            }
+            .features {
+                gap: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="theme-toggle">
-        <button class="theme-btn" id="themeToggle">🌓</button>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar Menu -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="sidebar-icon">
+            <div class="sidebar-title">Mini's IPA Repo</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="sidebar-link active" data-page="home">🏠 Home</a></li>
+            <li><a href="#" class="sidebar-link" data-page="sidestore-guide">📱 SideStore Guide</a></li>
+        </ul>
+    </nav>
+
+    <!-- Menu Toggle Button -->
+    <div class="menu-toggle" id="menuToggle">
+        ☰
     </div>
 
-    <header class="hero">
-        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
-        <h1>Mini's IPA Repo</h1>
-        <p class="hero-subtitle">Tweaks • Jailbreak Tools • Tweaked Apps</p>
-        
-        <div class="badges">
-            <span class="badge">✅ Active</span>
-            <span class="badge purple">📱 iOS 15+</span>
-        </div>
+    <!-- Home Page -->
+    <div class="page active" id="home-page">
+        <header class="hero">
+            <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
+            <h1>Mini's IPA Repo</h1>
+            <p class="hero-subtitle">Tweaks • Jailbreak Tools • Tweaked Apps</p>
+            
+            <div class="badges">
+                <span class="badge">✅ Active</span>
+                <span class="badge purple">📱 iOS 15+</span>
+            </div>
 
-        <div class="cta-buttons">
-            <button class="cta-button blue" onclick="addToTrollApps()">
-                <span>📱</span> Add to TrollApps
+            <div class="cta-buttons">
+                <button class="cta-button trollapps" onclick="addToTrollApps()">
+                    <span>📱</span> Add to TrollApps
+                </button>
+                <button class="cta-button sidestore" onclick="addToSideStore()">
+                    <span>⚙️</span> Add to SideStore
+                </button>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="stats-grid">
+                <div class="stat-card fade-in stagger-1">
+                    <div class="stat-number stat-green" id="totalApps">11+</div>
+                    <div class="stat-desc">Apps Available</div>
+                </div>
+                <div class="stat-card fade-in stagger-2">
+                    <div class="stat-number stat-blue" id="totalDownloads">0</div>
+                    <div class="stat-desc">Total Downloads</div>
+                </div>
+            </div>
+
+            <section class="intro fade-in">
+                <h2>Tweaked iOS App Repository</h2>
+                <p>Welcome to <b>Mini's IPA Repo</b> — your trusted source for <b>tweaked applications</b> and <b>modern jailbreak utilities</b>.</p>
+                
+                <div class="features">
+                    <div class="feature fade-in-left stagger-1">
+                        <div class="feature-title">Premium Features</div>
+                        <div class="feature-desc">Unlocked</div>
+                    </div>
+                    <div class="feature fade-in-left stagger-2">
+                        <div class="feature-title">No Ads</div>
+                        <div class="feature-desc">Clean Experience</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="search-container fade-in">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
+            </div>
+
+            <section class="app-grid" id="appGrid"></section>
+
+            <section class="repo-info fade-in">
+                <h3>📦 Repository Information</h3>
+                
+                <div class="repo-link fade-in-left stagger-1">
+                    <span>🌐</span>
+                    <strong>Official Website:</strong> 
+                    <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
+                </div>
+                
+                <div class="repo-link fade-in-left stagger-2">
+                    <span>📱</span>
+                    <strong>SideStore Manifest:</strong> 
+                    <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
+                </div>
+                
+                <div class="repo-link fade-in-left stagger-3">
+                    <span>🧌</span>
+                    <strong>TrollApps Manifest:</strong> 
+                    <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- SideStore Guide Page -->
+    <div class="page" id="sidestore-guide-page">
+        <div class="guide-container">
+            <button class="back-button" onclick="switchPage('home')">
+                ← Back to Home
             </button>
-            <button class="cta-button purple" onclick="addToSideStore()">
-                <span>⚙️</span> Add to SideStore
-            </button>
+            
+            <h1 class="fade-in">SideStore Installation Guide</h1>
+            <p class="fade-in stagger-1" style="margin-bottom: 30px; opacity: 0.8;">
+                Follow these 6 steps to install SideStore on your iOS device
+            </p>
+            
+            <div class="guide-step fade-in stagger-1">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Install AltStore</h2>
+                <p class="step-description">
+                    First, you need to install AltStore on your computer. Visit 
+                    <a href="https://altstore.io" target="_blank" style="color: var(--accent-color);">altstore.io</a> 
+                    and download AltServer for your operating system (Windows or macOS).
+                </p>
+            </div>
+            
+            <div class="guide-step fade-in stagger-2">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Install AltStore on Your iOS Device</h2>
+                <p class="step-description">
+                    Connect your iOS device to your computer, open AltServer, and use it to install AltStore on your device. 
+                    Make sure iTunes (on Windows) or Finder (on macOS) is installed and can detect your device.
+                </p>
+            </div>
+            
+            <div class="guide-step fade-in stagger-3">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Download SideStore IPA</h2>
+                <p class="step-description">
+                    Download the latest SideStore IPA file from the official GitHub repository: 
+                    <a href="https://github.com/SideStore/SideStore/releases" target="_blank" style="color: var(--accent-color);">
+                        SideStore Releases
+                    </a>
+                </p>
+            </div>
+            
+            <div class="guide-step fade-in stagger-1">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Install SideStore Using AltStore</h2>
+                <p class="step-description">
+                    Open AltStore on your iOS device, go to the "My Apps" tab, tap the "+" button in the top left corner, 
+                    and select the SideStore IPA file you downloaded. AltStore will install SideStore on your device.
+                </p>
+            </div>
+            
+            <div class="guide-step fade-in stagger-2">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Configure SideStore</h2>
+                <p class="step-description">
+                    Open SideStore and go to Settings. You'll need to configure your Apple ID or use an Anisette server. 
+                    Follow the in-app instructions to complete the setup.
+                </p>
+            </div>
+            
+            <div class="guide-step fade-in stagger-3">
+                <div class="step-number">6</div>
+                <h2 class="step-title">Add Repositories and Install Apps</h2>
+                <p class="step-description">
+                    Once SideStore is configured, you can add repositories (like this one!) and install apps. 
+                    Use the "Add to SideStore" button on our home page to quickly add this repository.
+                </p>
+                <button class="step-link" onclick="switchPage('home'); addToSideStore();">
+                    Add This Repo to SideStore
+                </button>
+            </div>
         </div>
-    </header>
-
-    <main class="container">
-        <div class="stats-grid">
-            <div class="stat-card fade-in stagger-1">
-                <div class="stat-number stat-green" id="totalApps">11+</div>
-                <div class="stat-desc">Apps Available</div>
-            </div>
-            <div class="stat-card fade-in stagger-2">
-                <div class="stat-number stat-blue" id="totalDownloads">0</div>
-                <div class="stat-desc">Total Downloads</div>
-            </div>
-        </div>
-
-        <section class="intro fade-in">
-            <h2>Tweaked iOS App Repository</h2>
-            <p>Welcome to <b>Mini's IPA Repo</b> — your trusted source for <b>tweaked applications</b> and <b>modern jailbreak utilities</b>.</p>
-            
-            <div class="features">
-                <div class="feature fade-in-left stagger-1">
-                    <div class="feature-icon">🚀</div>
-                    <div class="feature-title">Premium Features</div>
-                    <div class="feature-desc">Unlocked</div>
-                </div>
-                <div class="feature fade-in-left stagger-2">
-                    <div class="feature-icon">🛡️</div>
-                    <div class="feature-title">No Ads</div>
-                    <div class="feature-desc">Clean Experience</div>
-                </div>
-                <div class="feature fade-in-left stagger-3">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Optimized</div>
-                    <div class="feature-desc">iOS 15+ Ready</div>
-                </div>
-            </div>
-        </section>
-
-        <div class="search-container fade-in">
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
-        </div>
-
-        <section class="app-grid" id="appGrid"></section>
-
-        <section class="repo-info fade-in">
-            <h3>📦 Repository Information</h3>
-            
-            <div class="repo-link fade-in-left stagger-1">
-                <span>🌐</span>
-                <strong>Official Website:</strong> 
-                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
-            </div>
-            
-            <div class="repo-link fade-in-left stagger-2">
-                <span>📱</span>
-                <strong>SideStore Manifest:</strong> 
-                <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
-            </div>
-            
-            <div class="repo-link fade-in-left stagger-3">
-                <span>🧌</span>
-                <strong>TrollApps Manifest:</strong> 
-                <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
-            </div>
-        </section>
-    </main>
+    </div>
 
     <div class="toast" id="toast"></div>
 
@@ -535,7 +785,7 @@
                 description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.41.4, YTLite v5.2b3.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
                 version: '20.41.4',
-                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/20.40.4/YouTubePlus_5.2b3.ipa',
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/20.41.4/YouTubePlus_5.2b3.ipa',
                 downloads: 0
             },
             {
@@ -630,7 +880,6 @@
             }
         ];
 
-        let currentTheme = localStorage.getItem('theme') || 'dark';
         let searchTerm = '';
         let totalDownloads = 0;
 
@@ -641,7 +890,6 @@
         }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
 
         document.addEventListener('DOMContentLoaded', () => {
-            initializeTheme();
             loadDownloadStats();
             renderAppGrid();
             setupEventListeners();
@@ -650,18 +898,6 @@
 
         function initializeScrollAnimations() {
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
-        }
-
-        function initializeTheme() {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '🌓' : '🌙';
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            document.getElementById('themeToggle').textContent = currentTheme === 'dark' ? '🌓' : '🌙';
         }
 
         function renderAppGrid() {
@@ -773,15 +1009,67 @@
             document.body.removeChild(textArea);
         }
 
+        // Sidebar and Page Navigation Functions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Update active link in sidebar
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Re-initialize animations for the new page
+            setTimeout(initializeScrollAnimations, 100);
+        }
+
         function setupEventListeners() {
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
             document.getElementById('searchBox').addEventListener('input', (e) => {
                 searchTerm = e.target.value.toLowerCase();
                 renderAppGrid();
             });
+            
+            // Sidebar and navigation
+            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+            
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    switchPage(pageId);
+                });
+            });
         }
 
+        // Make functions globally available
         window.trackDownload = trackDownload;
+        window.addToTrollApps = addToTrollApps;
+        window.addToSideStore = addToSideStore;
+        window.switchPage = switchPage;
     </script>
 </body>
 </html>
