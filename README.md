@@ -1,5 +1,3 @@
-# Mini's IPA Repo
-
 ### Apps
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
