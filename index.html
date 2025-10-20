@@ -83,101 +83,6 @@
             animation: gradientShift 4s ease infinite;
         }
         
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background: var(--bg-color);
-            border-right: 1px solid var(--card-border);
-            z-index: 1001;
-            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .sidebar.open {
-            left: 0;
-        }
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .sidebar-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--card-border);
-        }
-        .sidebar-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-        }
-        .sidebar-title {
-            font-size: 1.2em;
-            font-weight: 700;
-        }
-        .sidebar-menu {
-            list-style: none;
-        }
-        .sidebar-menu li {
-            margin-bottom: 10px;
-        }
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            color: var(--text-color);
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        .sidebar-menu a:hover {
-            background: var(--card-bg);
-            transform: translateX(5px);
-        }
-        .sidebar-menu a.active {
-            background: var(--card-bg);
-            border-left: 3px solid var(--accent-color);
-        }
-        
-        /* Menu Toggle Button */
-        .menu-toggle {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 999;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-        }
-        .menu-toggle:hover {
-            transform: scale(1.1);
-        }
-        
         .hero {
             background: var(--bg-color);
             padding: 20px 15px 15px;
@@ -489,119 +394,6 @@
             opacity: 1;
         }
         
-        /* SideStore Guide Styles */
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-        }
-        .guide-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .guide-step {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .guide-step:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
-        }
-        .step-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            background: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-        .step-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--text-color);
-        }
-        .step-description {
-            color: var(--text-color);
-            opacity: 0.9;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        .step-image {
-            max-width: 100%;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid var(--card-border);
-        }
-        .step-link {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--info-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        .step-link:hover {
-            transform: translateY(-2px);
-        }
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        .back-button:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-color);
-        }
-        
-        /* Enhanced Guide Styles */
-        .guide-step ol, .guide-step ul {
-            text-align: left;
-            margin: 15px 0;
-            padding-left: 20px;
-            color: var(--text-color);
-            opacity: 0.9;
-        }
-        
-        .guide-step li {
-            margin-bottom: 8px;
-        }
-        
-        .guide-step code {
-            display: block;
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-family: 'Monaco', 'Menlo', monospace;
-            color: var(--text-color);
-            font-size: 0.85em;
-            overflow-x: auto;
-        }
-        
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -623,9 +415,6 @@
             .fade-in-left.visible {
                 transform: translateY(0);
             }
-            .sidebar {
-                width: 260px;
-            }
             .features {
                 gap: 20px;
             }
@@ -633,303 +422,82 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
-    <!-- Sidebar Menu -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="sidebar-icon">
-            <div class="sidebar-title">Mini's IPA Repo</div>
+    <header class="hero">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
+        <h1 class="animated-gradient">Mini's IPA Repo</h1>
+        <p class="hero-subtitle">Jailbreak Tools • Tweaked Apps</p>
+        
+        <div class="badges">
+            <span class="badge">✅ Active</span>
+            <span class="badge purple">📱 iOS 15+</span>
         </div>
-        <ul class="sidebar-menu">
-            <li><a href="#" class="sidebar-link active" data-page="home">🏠 Home</a></li>
-            <li><a href="#" class="sidebar-link" data-page="sidestore-guide">📱 SideStore Guide</a></li>
-        </ul>
-    </nav>
 
-    <!-- Menu Toggle Button -->
-    <div class="menu-toggle" id="menuToggle">
-        ☰
-    </div>
-
-    <!-- Home Page -->
-    <div class="page active" id="home-page">
-        <header class="hero">
-            <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
-            <h1 class="animated-gradient">Mini's IPA Repo</h1>
-            <p class="hero-subtitle">Jailbreak Tools • Tweaked Apps</p>
-            
-            <div class="badges">
-                <span class="badge">✅ Active</span>
-                <span class="badge purple">📱 iOS 15+</span>
-            </div>
-
-            <div class="cta-buttons">
-                <button class="cta-button trollapps" onclick="addToTrollApps()">
-                    <span>📱</span> Add to TrollApps
-                </button>
-                <button class="cta-button sidestore" onclick="addToSideStore()">
-                    <span>⚙️</span> Add to SideStore
-                </button>
-            </div>
-        </header>
-
-        <main class="container">
-            <div class="stats-grid">
-                <div class="stat-card fade-in stagger-1">
-                    <div class="stat-number stat-green" id="totalApps">11+</div>
-                    <div class="stat-desc">Apps Available</div>
-                </div>
-                <div class="stat-card fade-in stagger-2">
-                    <div class="stat-number stat-blue" id="totalDownloads">0</div>
-                    <div class="stat-desc">Total Downloads</div>
-                </div>
-            </div>
-
-            <section class="intro fade-in">
-                <h2>Tweaked iOS App Repository</h2>
-                <p>Welcome to <b>Mini's IPA Repo</b> — your trusted source for <b>tweaked applications</b> and <b>modern jailbreak utilities</b>.</p>
-                
-                <div class="features">
-                    <div class="feature fade-in-left stagger-1">
-                        <div class="feature-title">Premium Features</div>
-                        <div class="feature-desc">Unlocked</div>
-                    </div>
-                    <div class="feature fade-in-left stagger-2">
-                        <div class="feature-title">No Ads</div>
-                        <div class="feature-desc">Clean Experience</div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="search-container fade-in">
-                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
-            </div>
-
-            <section class="app-grid" id="appGrid"></section>
-
-            <section class="repo-info fade-in">
-                <h3>📦 Repository Information</h3>
-                
-                <div class="repo-link fade-in-left stagger-1">
-                    <span>🌐</span>
-                    <strong>Official Website:</strong> 
-                    <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
-                </div>
-                
-                <div class="repo-link fade-in-left stagger-2">
-                    <span>📱</span>
-                    <strong>SideStore Manifest:</strong> 
-                    <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
-                </div>
-                
-                <div class="repo-link fade-in-left stagger-3">
-                    <span>🧌</span>
-                    <strong>TrollApps Manifest:</strong> 
-                    <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Enhanced SideStore Guide Page -->
-    <div class="page" id="sidestore-guide-page">
-        <div class="guide-container">
-            <button class="back-button" onclick="switchPage('home')">
-                ← Back to Home
+        <div class="cta-buttons">
+            <button class="cta-button trollapps" onclick="addToTrollApps()">
+                <span>📱</span> Add to TrollApps
             </button>
-            
-            <h1 class="fade-in">Complete SideStore Installation Guide</h1>
-            <p class="fade-in stagger-1" style="margin-bottom: 30px; opacity: 0.8;">
-                Follow these comprehensive steps to install and configure SideStore on your iOS device
-            </p>
-            
-            <div class="guide-step fade-in stagger-1">
-                <div class="step-number">1</div>
-                <h2 class="step-title">Install AltStore (Temporary)</h2>
-                <p class="step-description">
-                    First, you need to install AltStore temporarily to bootstrap SideStore. Visit 
-                    <a href="https://altstore.io" target="_blank" style="color: var(--accent-color);">altstore.io</a> 
-                    and download AltServer for your operating system (Windows or macOS).
-                </p>
-                <p class="step-description">
-                    <strong>Note:</strong> AltStore is only needed temporarily and can be uninstalled once SideStore is fully set up.
-                </p>
+            <button class="cta-button sidestore" onclick="addToSideStore()">
+                <span>⚙️</span> Add to SideStore
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="stats-grid">
+            <div class="stat-card fade-in stagger-1">
+                <div class="stat-number stat-green" id="totalApps">11+</div>
+                <div class="stat-desc">Apps Available</div>
             </div>
-            
-            <div class="guide-step fade-in stagger-2">
-                <div class="step-number">2</div>
-                <h2 class="step-title">Install AltStore on Your iOS Device</h2>
-                <p class="step-description">
-                    Connect your iOS device to your computer via USB, open AltServer, and use it to install AltStore on your device. 
-                    Make sure iTunes (on Windows) or Finder (on macOS) is installed and can detect your device.
-                </p>
-                <p class="step-description">
-                    <strong>Tip:</strong> Enable "Wi-Fi sync" in iTunes/Finder to refresh apps wirelessly later.
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-3">
-                <div class="step-number">3</div>
-                <h2 class="step-title">Download SideStore IPA</h2>
-                <p class="step-description">
-                    Download the latest SideStore IPA file from the official GitHub repository: 
-                    <a href="https://github.com/SideStore/SideStore/releases" target="_blank" style="color: var(--accent-color);">
-                        SideStore Releases
-                    </a>
-                </p>
-                <p class="step-description">
-                    Choose the latest stable release (not pre-release unless you need specific features).
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-1">
-                <div class="step-number">4</div>
-                <h2 class="step-title">Install SideStore Using AltStore</h2>
-                <p class="step-description">
-                    Open AltStore on your iOS device, go to the "My Apps" tab, tap the "+" button in the top left corner, 
-                    and select the SideStore IPA file you downloaded. AltStore will install SideStore on your device.
-                </p>
-                <p class="step-description">
-                    This may take a few minutes. Keep your device connected during installation.
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-2">
-                <div class="step-number">5</div>
-                <h2 class="step-title">Install iDevicePair (Required for Wireless Refresh)</h2>
-                <p class="step-description">
-                    For wireless app refreshing, you need to pair your device with your computer using iDevicePair:
-                </p>
-                <ul style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li><strong>Windows:</strong> Download and install <a href="https://github.com/libimobiledevice/ideviceinstaller/releases" target="_blank" style="color: var(--accent-color);">iDeviceInstaller</a></li>
-                    <li><strong>macOS:</strong> Install via Homebrew: <code>brew install libimobiledevice</code></li>
-                    <li><strong>Linux:</strong> Install via package manager: <code>sudo apt install libimobiledevice6</code></li>
-                </ul>
-                <p class="step-description">
-                    After installation, connect your device via USB and run: <code>idevicepair pair</code>
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-3">
-                <div class="step-number">6</div>
-                <h2 class="step-title">Configure Anisette Server (Host File Method)</h2>
-                <p class="step-description">
-                    SideStore requires an Anisette server for Apple ID authentication. You have several options:
-                </p>
-                <ul style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li><strong>Option A:</strong> Use the official SideStore server (may be rate-limited)</li>
-                    <li><strong>Option B:</strong> Set up your own server using the <a href="https://github.com/SideStore/SideStore/wiki/Self-Hosting-Anisette" target="_blank" style="color: var(--accent-color);">self-hosting guide</a></li>
-                    <li><strong>Option C:</strong> Use a community-hosted server (check SideStore Discord)</li>
-                </ul>
-                <p class="step-description">
-                    To use a custom server, you'll need to modify your hosts file. Add this line to your hosts file:
-                </p>
-                <code style="display: block; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin: 10px 0; font-family: monospace;">
-                    127.0.0.1 gs.apple.com
-                </code>
-                <p class="step-description">
-                    <strong>Hosts file locations:</strong><br>
-                    • Windows: <code>C:\Windows\System32\drivers\etc\hosts</code><br>
-                    • macOS/Linux: <code>/etc/hosts</code>
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-1">
-                <div class="step-number">7</div>
-                <h2 class="step-title">Set Up STOS VPN (Alternative Method)</h2>
-                <p class="step-description">
-                    As an alternative to host file modification, you can use STOS VPN to redirect Apple authentication:
-                </p>
-                <ol style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li>Download the STOS VPN configuration from the SideStore GitHub wiki</li>
-                    <li>Import the VPN profile to your device</li>
-                    <li>Enable the VPN when using SideStore</li>
-                    <li>The VPN will handle the Anisette server redirection automatically</li>
-                </ol>
-                <p class="step-description">
-                    This method is easier for most users but requires keeping the VPN active during app refreshes.
-                </p>
-                <a href="https://github.com/SideStore/SideStore/wiki/Setting-up-STOS-VPN" target="_blank" class="step-link">
-                    STOS VPN Setup Guide
-                </a>
-            </div>
-            
-            <div class="guide-step fade-in stagger-2">
-                <div class="step-number">8</div>
-                <h2 class="step-title">Configure SideStore App</h2>
-                <p class="step-description">
-                    Open SideStore on your iOS device and complete the setup:
-                </p>
-                <ul style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li>Go to Settings → Anisette Server</li>
-                    <li>Select your preferred server method (official, custom, or local)</li>
-                    <li>Enter your Apple ID (recommended: use an app-specific password)</li>
-                    <li>Enable "Background Refresh" for automatic app updates</li>
-                    <li>Configure "Refresh Apps Every" to your preference (24 hours recommended)</li>
-                </ul>
-                <p class="step-description">
-                    Test the configuration by trying to install a simple app first.
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-3">
-                <div class="step-number">9</div>
-                <h2 class="step-title">Add Repositories and Install Apps</h2>
-                <p class="step-description">
-                    Once SideStore is configured and working, you can add repositories and install apps:
-                </p>
-                <ul style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li>Use the "Add to SideStore" button below to quickly add this repository</li>
-                    <li>Browse available apps in the "Browse" tab</li>
-                    <li>Install apps with one tap</li>
-                    <li>Manage your installed apps in the "My Apps" tab</li>
-                </ul>
-                <button class="step-link" onclick="switchPage('home'); addToSideStore();">
-                    Add This Repo to SideStore
-                </button>
-            </div>
-            
-            <div class="guide-step fade-in stagger-1" style="border-color: var(--success-color);">
-                <div class="step-number">10</div>
-                <h2 class="step-title">Final Step: Uninstall AltStore</h2>
-                <p class="step-description">
-                    <strong>Once SideStore is fully functional and you've confirmed apps can refresh wirelessly:</strong>
-                </p>
-                <ol style="text-align: left; margin: 15px 0; padding-left: 20px; color: var(--text-color); opacity: 0.9;">
-                    <li>Make sure all your important apps are installed and working in SideStore</li>
-                    <li>Test wireless refresh by waiting 24 hours or manually triggering a refresh</li>
-                    <li>Once confirmed working, you can safely uninstall AltStore</li>
-                    <li>Long-press on AltStore and select "Delete App"</li>
-                </ol>
-                <p class="step-description">
-                    <strong>Benefits of removing AltStore:</strong> Frees up an app slot, reduces complexity, and SideStore operates independently with better wireless refresh capabilities.
-                </p>
-                <p class="step-description" style="color: var(--success-color); font-weight: bold;">
-                    Congratulations! You now have a fully independent SideStore setup without AltStore dependencies.
-                </p>
-            </div>
-            
-            <div class="guide-step fade-in stagger-2" style="text-align: center; background: rgba(160, 160, 255, 0.1);">
-                <h2 class="step-title">Need Help?</h2>
-                <p class="step-description">
-                    Join the SideStore community for support and updates:
-                </p>
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
-                    <a href="https://github.com/SideStore/SideStore/discussions" target="_blank" class="step-link" style="background: var(--info-color);">
-                        GitHub Discussions
-                    </a>
-                    <a href="https://discord.gg/sidestore" target="_blank" class="step-link" style="background: #5865F2;">
-                        Discord Server
-                    </a>
-                    <a href="https://github.com/SideStore/SideStore/wiki" target="_blank" class="step-link" style="background: var(--accent-color);">
-                        Official Wiki
-                    </a>
-                </div>
+            <div class="stat-card fade-in stagger-2">
+                <div class="stat-number stat-blue" id="totalDownloads">0</div>
+                <div class="stat-desc">Total Downloads</div>
             </div>
         </div>
-    </div>
+
+        <section class="intro fade-in">
+            <h2>Tweaked iOS App Repository</h2>
+            <p>Welcome to <b>Mini's IPA Repo</b> — your trusted source for <b>tweaked applications</b> and <b>modern jailbreak utilities</b>.</p>
+            
+            <div class="features">
+                <div class="feature fade-in-left stagger-1">
+                    <div class="feature-title">Premium Features</div>
+                    <div class="feature-desc">Unlocked</div>
+                </div>
+                <div class="feature fade-in-left stagger-2">
+                    <div class="feature-title">No Ads</div>
+                    <div class="feature-desc">Clean Experience</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="search-container fade-in">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
+        </div>
+
+        <section class="app-grid" id="appGrid"></section>
+
+        <section class="repo-info fade-in">
+            <h3>📦 Repository Information</h3>
+            
+            <div class="repo-link fade-in-left stagger-1">
+                <span>🌐</span>
+                <strong>Official Website:</strong> 
+                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
+            </div>
+            
+            <div class="repo-link fade-in-left stagger-2">
+                <span>📱</span>
+                <strong>SideStore Manifest:</strong> 
+                <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
+            </div>
+            
+            <div class="repo-link fade-in-left stagger-3">
+                <span>🧌</span>
+                <strong>TrollApps Manifest:</strong> 
+                <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+            </div>
+        </section>
+    </main>
 
     <div class="toast" id="toast"></div>
 
@@ -1176,59 +744,10 @@
             document.body.removeChild(textArea);
         }
 
-        // Sidebar and Page Navigation Functions
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('open');
-        }
-
-        function switchPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            document.getElementById(`${pageId}-page`).classList.add('active');
-            
-            // Update active link in sidebar
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Close sidebar on mobile
-            if (window.innerWidth <= 768) {
-                toggleSidebar();
-            }
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Re-initialize animations for the new page
-            setTimeout(initializeScrollAnimations, 100);
-        }
-
         function setupEventListeners() {
             document.getElementById('searchBox').addEventListener('input', (e) => {
                 searchTerm = e.target.value.toLowerCase();
                 renderAppGrid();
-            });
-            
-            // Sidebar and navigation
-            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
-            document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
-            
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const pageId = link.getAttribute('data-page');
-                    switchPage(pageId);
-                });
             });
         }
 
@@ -1236,7 +755,6 @@
         window.trackDownload = trackDownload;
         window.addToTrollApps = addToTrollApps;
         window.addToSideStore = addToSideStore;
-        window.switchPage = switchPage;
     </script>
 </body>
-</html> 
+</html>
