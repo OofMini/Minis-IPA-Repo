@@ -1,14 +1,6 @@
 # Mini's IPA Repo
 
-## Tweaked iOS App Repository
-
-Welcome to **Mini's IPA Repo** — your trusted source for **tweaked applications** and **modern jailbreak utilities**.
-
-### 🌟 Features
-- 🚀 Premium Features Unlocked
-- 🛡️ No Ads - Clean Experience  
-
-### 📱 Supported Apps
+### Apps
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
 - X (by NeoFreeBird)
