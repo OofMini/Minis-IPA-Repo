@@ -2,7 +2,7 @@
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
 - X (by NeoFreeBird)
-- InShot Pro (by IPAOMTK)
+- InShotPro (by IPAOMTK)
 - Amethyst (by alexytomi)
 - Appstore++ (by cokernutx)
 - iTorrent (by XITRIX)
