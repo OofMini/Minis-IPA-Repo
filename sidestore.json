@@ -170,7 +170,7 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "iTorrent",
+      "name": "iTorrent (IOS 17+)",
       "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
       "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device.",
@@ -194,7 +194,7 @@
       "permissions": [
         "network"
       ],
-      "minimumOSVersion": "15.0"
+      "minimumOSVersion": "17.0"
     },
     {
       "name": "LiveContainer",
@@ -251,7 +251,7 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "RefacePro",
+      "name": "RefacePro (IOS 17+)",
       "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
       "localizedDescription": "Reface Premium Unloked.",
