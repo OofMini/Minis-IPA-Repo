@@ -89,7 +89,7 @@
       ]
     },
     {
-      "name": "iTorrent",
+      "name": "iTorrent (IOS 17+)",
       "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
       "version": "2.0.15",
