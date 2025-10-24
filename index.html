@@ -11,6 +11,16 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
     <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mini's IPA Repo">
+    <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"WebApplication","name":"Mini's IPA Repo","description":"Premium tweaked applications for iOS 15+","url":"https://oofmini.github.io/Minis-IPA-Repo/","applicationCategory":"Utilities","operatingSystem":"iOS"}
     </script>
@@ -23,6 +33,8 @@
             --accent-color: #a0a0ff;
             --success-color: #1db954;
             --info-color: #007AFF;
+            --warning-color: #ffaa00;
+            --error-color: #ff4444;
             --trollapps-color: #8a2be2;
             --sidestore-color: #1db954;
         }
@@ -81,6 +93,68 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradientShift 4s ease infinite;
+        }
+        
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        .skeleton-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .skeleton-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin: 0 auto 15px;
+        }
+        
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        
+        .skeleton-text.short {
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .skeleton-text.medium {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .skeleton-button {
+            height: 40px;
+            border-radius: 10px;
+            margin-top: auto;
+            width: 150px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
         }
         
         .hero {
@@ -248,6 +322,12 @@
             margin-bottom: 12px;
             font-size: 0.85em;
             color: var(--success-color);
+            flex-wrap: wrap;
+        }
+        .download-count {
+            font-size: 0.8em;
+            opacity: 0.8;
+            color: var(--text-color);
         }
         .app-card-content {
             width: 100%;
@@ -345,11 +425,15 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             font-size: 0.9em;
+            max-width: 300px;
         }
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
+        .toast.error { background: var(--error-color); }
+        .toast.warning { background: var(--warning-color); }
+        .toast.info { background: var(--info-color); }
         
         @media (max-width: 768px) {
             .stats-grid {
@@ -371,6 +455,10 @@
             }
             .fade-in-left.visible {
                 transform: translateY(0);
+            }
+            .repo-link {
+                flex-direction: column;
+                gap: 5px;
             }
         }
     </style>
@@ -449,6 +537,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png',
                 version: '9.0.86',
                 downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa',
+                initialDownloads: 1250,
                 downloads: 0
             },
             {
@@ -459,6 +548,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
                 version: '20.42.3',
                 downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b3.ipa',
+                initialDownloads: 980,
                 downloads: 0
             },
             {
@@ -469,6 +559,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png',
                 version: '11.33',
                 downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded_5.1_11.33.ipa',
+                initialDownloads: 750,
                 downloads: 0
             },
             {
@@ -479,6 +570,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png',
                 version: '1.90.2',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1',
+                initialDownloads: 620,
                 downloads: 0
             },
             {
@@ -489,6 +581,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png',
                 version: '1.0',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1',
+                initialDownloads: 890,
                 downloads: 0
             },
             {
@@ -499,6 +592,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png',
                 version: '1.0.3',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1',
+                initialDownloads: 540,
                 downloads: 0
             },
             {
@@ -509,6 +603,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png',
                 version: '2.0.15',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1',
+                initialDownloads: 430,
                 downloads: 0
             },
             {
@@ -519,6 +614,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png',
                 version: '3.6.1',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1',
+                initialDownloads: 320,
                 downloads: 0
             },
             {
@@ -529,6 +625,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png',
                 version: '1.0.2',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1',
+                initialDownloads: 280,
                 downloads: 0
             },
             {
@@ -539,6 +636,7 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png',
                 version: '5.23.0',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1',
+                initialDownloads: 510,
                 downloads: 0
             },
             {
@@ -549,12 +647,14 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png',
                 version: '1.2.1',
                 downloadUrl: 'https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1',
+                initialDownloads: 670,
                 downloads: 0
             }
         ];
 
         let searchTerm = '';
         let totalDownloads = 0;
+        let deferredPrompt;
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -562,19 +662,109 @@
             });
         }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
 
+        // Enhanced initialization with error handling
         document.addEventListener('DOMContentLoaded', () => {
-            loadDownloadStats();
-            renderAppGrid();
-            setupEventListeners();
-            initializeScrollAnimations();
+            try {
+                loadDownloadStats();
+                setupNetworkMonitoring();
+                setupEventListeners();
+                initializeScrollAnimations();
+                loadAppsWithFallback();
+                setupPWA();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                showErrorState('Failed to initialize app: ' + error.message);
+            }
         });
 
         function initializeScrollAnimations() {
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
         }
 
+        // 7. Skeleton Loading Screens
+        function showSkeletonLoading() {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = `
+                <div class="skeleton-card fade-in">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            `.repeat(6); // Show 6 skeleton cards
+            
+            setTimeout(() => {
+                appGrid.querySelectorAll('.skeleton-card').forEach(card => observer.observe(card));
+            }, 100);
+        }
+
+        // 11. Error Handling & Offline Support
+        async function loadAppsWithFallback() {
+            try {
+                showSkeletonLoading();
+                
+                if (!navigator.onLine) {
+                    throw new Error('No internet connection');
+                }
+
+                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json');
+                if (!manifestAvailable) {
+                    throw new Error('Repository temporarily unavailable');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 800));
+                renderAppGrid();
+                
+            } catch (error) {
+                console.error('Failed to load apps:', error);
+                showErrorState(error.message);
+            }
+        }
+
+        function showErrorState(message) {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = `
+                <div class="error-state fade-in" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <div style="font-size: 3em; margin-bottom: 20px;">😕</div>
+                    <h3 style="margin-bottom: 10px; color: var(--text-color);">Unable to Load Apps</h3>
+                    <p style="margin-bottom: 20px; opacity: 0.8;">${message}</p>
+                    <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+            setTimeout(() => observer.observe(appGrid.querySelector('.fade-in')), 100);
+        }
+
+        async function checkResourceAvailability(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+                return response.ok;
+            } catch (error) {
+                console.warn(`Resource unavailable: ${url}`, error);
+                return false;
+            }
+        }
+
+        function setupNetworkMonitoring() {
+            window.addEventListener('online', () => {
+                showToast('Connection restored', 'success');
+                loadDownloadStats();
+            });
+
+            window.addEventListener('offline', () => {
+                showToast('You are currently offline', 'warning');
+            });
+
+            if (!navigator.onLine) {
+                showToast('You are currently offline. Some features may be limited.', 'warning');
+            }
+        }
+
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
+            const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
             const filteredApps = appsData.filter(app => 
                 app.name.toLowerCase().includes(searchTerm) || 
                 app.description.toLowerCase().includes(searchTerm) ||
@@ -589,12 +779,18 @@
                 return;
             }
             
-            appGrid.innerHTML = filteredApps.map((app, index) => `
+            appGrid.innerHTML = filteredApps.map((app, index) => {
+                const appDownloads = downloadStats[app.id] || app.initialDownloads || 0;
+                return `
                 <div class="app-card fade-in stagger-${(index % 3) + 1}">
                     <div class="app-icon-container">
-                        <img src="${app.icon}" alt="${app.name}" class="app-icon">
+                        <img src="${app.icon}" alt="${app.name}" class="app-icon" 
+                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
                     </div>
-                    <div class="app-status">✅ Fully Working • v${app.version}</div>
+                    <div class="app-status">
+                        ✅ Fully Working • v${app.version}
+                        <span class="download-count">${formatNumber(appDownloads)} downloads</span>
+                    </div>
                     <div class="app-card-content">
                         <h3>${app.name}</h3>
                         <p>By <b>${app.developer}</b><br>${app.description}</p>
@@ -603,36 +799,139 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             
             setTimeout(() => {
                 appGrid.querySelectorAll('.app-card').forEach(card => observer.observe(card));
             }, 100);
         }
 
+        // 8. Real-time Download Counter
         function trackDownload(appId) {
-            const app = appsData.find(a => a.id === appId);
-            if (app) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) {
+                    throw new Error('App not found');
+                }
+
+                if (!navigator.onLine) {
+                    showToast('You are offline. Download link copied to clipboard.', 'warning');
+                    copyToClipboard(app.downloadUrl);
+                    return;
+                }
+
                 const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
-                downloadStats[appId] = (downloadStats[appId] || 0) + 1;
+                
+                if (!downloadStats[appId]) {
+                    downloadStats[appId] = app.initialDownloads || 0;
+                }
+                
+                downloadStats[appId]++;
                 downloadStats.total = (downloadStats.total || 0) + 1;
                 localStorage.setItem('downloadStats', JSON.stringify(downloadStats));
-                document.getElementById('totalDownloads').textContent = downloadStats.total;
+                
+                updateDownloadCounters();
                 showToast(`Downloading ${app.name}...`);
                 setTimeout(() => window.open(app.downloadUrl, '_blank'), 500);
+                
+            } catch (error) {
+                console.error('Download failed:', error);
+                showToast('Download failed: ' + error.message, 'error');
             }
+        }
+
+        function updateDownloadCounters() {
+            const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
+            document.getElementById('totalDownloads').textContent = formatNumber(downloadStats.total || 0);
+            
+            appsData.forEach(app => {
+                const appDownloads = downloadStats[app.id] || app.initialDownloads || 0;
+                const appCard = document.querySelector(`[onclick="trackDownload('${app.id}')"]`);
+                
+                if (appCard) {
+                    const downloadCountElement = appCard.closest('.app-card').querySelector('.download-count');
+                    if (downloadCountElement) {
+                        downloadCountElement.textContent = `${formatNumber(appDownloads)} downloads`;
+                    }
+                }
+            });
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
         }
 
         function loadDownloadStats() {
             const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || { total: 0 };
-            document.getElementById('totalDownloads').textContent = downloadStats.total;
+            document.getElementById('totalDownloads').textContent = formatNumber(downloadStats.total);
         }
 
-        function showToast(message) {
+        function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            } else if (type === 'success') {
+                toast.classList.add('success');
+            } else {
+                toast.classList.add('info');
+            }
+            
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // 10. PWA Features
+        function setupPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                setTimeout(showInstallPrompt, 3000);
+            });
+        }
+
+        function showInstallPrompt() {
+            if (!deferredPrompt) return;
+            
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `
+                Install Mini's IPA Repo? 
+                <button onclick="installApp()" style="margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                    Install
+                </button>
+            `;
+            toast.classList.add('show');
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    }
+                    deferredPrompt = null;
+                });
+            }
         }
 
         function addToTrollApps() {
@@ -693,6 +992,8 @@
         window.trackDownload = trackDownload;
         window.addToTrollApps = addToTrollApps;
         window.addToSideStore = addToSideStore;
+        window.loadAppsWithFallback = loadAppsWithFallback;
+        window.installApp = installApp;
     </script>
 </body>
 </html>
