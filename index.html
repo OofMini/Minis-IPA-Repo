@@ -460,10 +460,12 @@
     </header>
 
     <main class="container">
+        <!-- Search box starts immediately after hero -->
         <div class="search-container fade-in">
             <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
         </div>
 
+        <!-- App grid starts immediately after search -->
         <section class="app-grid" id="appGrid"></section>
 
         <section class="repo-info fade-in">
@@ -941,6 +943,13 @@
         window.addEventListener('load', () => {
             updateDownloadCounters();
         });
+
+        // Make functions globally available
+        window.trackDownload = trackDownload;
+        window.addToTrollApps = addToTrollApps;
+        window.addToSideStore = addToSideStore;
+        window.loadAppsWithFallback = loadAppsWithFallback;
+        window.installApp = installApp;
     </script>
 </body>
 </html>
