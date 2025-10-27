@@ -64,7 +64,7 @@
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.33, NeoFreeBird v5.1.",
+      "localizedDescription": "Tweaked Twitter/X with premium features and more. X v11.33, NeoFreeBird v5.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -75,9 +75,9 @@
         {
           "version": "11.33",
           "date": "2025-09-25",
-          "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded_5.1_11.33.ipa",
+          "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded_5.2_11.33.ipa",
           "size": 142816051,
-          "localizedDescription": "TrollStore/SideStore build 5.1, custom features, performance improvements"
+          "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
         }
       ],
       "tintColor": "#1DA1F2",
