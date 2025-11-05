@@ -37,6 +37,7 @@
             --error-color: #ff4444;
             --trollapps-color: #8a2be2;
             --sidestore-color: #1db954;
+            --feather-color: #ff6b35;
         }
         * {
             margin: 0;
@@ -221,6 +222,10 @@
         .cta-button.sidestore {
             background: var(--sidestore-color);
             border-color: var(--sidestore-color);
+        }
+        .cta-button.feather {
+            background: var(--feather-color);
+            border-color: var(--feather-color);
         }
         .cta-button:hover {
             transform: translateY(-2px);
@@ -456,6 +461,9 @@
             <button class="cta-button sidestore" onclick="addToSideStore()">
                 <span>⚙️</span> Add to SideStore
             </button>
+            <button class="cta-button feather" onclick="addToFeather()">
+                <span>🪶</span> Add to Feather
+            </button>
         </div>
     </header>
 
@@ -487,6 +495,12 @@
                 <span>🧌</span>
                 <strong>TrollApps Manifest:</strong> 
                 <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+            </div>
+            
+            <div class="repo-link fade-in-left stagger-3">
+                <span>🪶</span>
+                <strong>Feather Manifest:</strong> 
+                <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
             </div>
         </section>
     </main>
@@ -890,66 +904,4 @@
         }
 
         function addToTrollApps() {
-            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json';
-            const repoUrl = 'https://oofmini.github.io/Minis-IPA-Repo/trollapps.json';
-            window.location.href = trollAppsUrl;
-            setTimeout(() => {
-                if (!document.hidden) {
-                    copyToClipboard(repoUrl);
-                    showToast('TrollApps not found! Repository URL copied to clipboard.');
-                }
-            }, 1000);
-        }
-
-        function addToSideStore() {
-            const sideStoreUrl = 'sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json';
-            const repoUrl = 'https://oofmini.github.io/Minis-IPA-Repo/sidestore.json';
-            window.location.href = sideStoreUrl;
-            setTimeout(() => {
-                if (!document.hidden) {
-                    copyToClipboard(repoUrl);
-                    showToast('SideStore not found! Repository URL copied to clipboard.');
-                }
-            }, 1000);
-        }
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                } catch (err) {
-                    console.error('Fallback: Oops, unable to copy', err);
-                }
-                document.body.removeChild(textArea);
-            }
-        }
-
-        function setupEventListeners() {
-            const searchBox = document.getElementById('searchBox');
-            searchBox.addEventListener('input', (e) => {
-                searchTerm = e.target.value.toLowerCase();
-                renderAppGrid();
-            });
-        }
-
-        // Initialize on load
-        window.addEventListener('load', () => {
-            updateDownloadCounters();
-        });
-
-        // Make functions globally available
-        window.trackDownload = trackDownload;
-        window.addToTrollApps = addToTrollApps;
-        window.addToSideStore = addToSideStore;
-        window.loadAppsWithFallback = loadAppsWithFallback;
-        window.installApp = installApp;
-    </script>
-</body>
-</html>
+            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github
