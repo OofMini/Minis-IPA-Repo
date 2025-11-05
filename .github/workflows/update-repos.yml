@@ -219,8 +219,9 @@ jobs:
           validate_json
           validate_json_structure
           
-          # Initialize updated apps array
+          # Initialize updated apps array and store versions for workflow update
           UPDATED_APPS=()
+          UPDATED_VERSIONS=()
           
           # Update apps based on individual toggles
           if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
@@ -228,6 +229,8 @@ jobs:
             echo "Spotify IPA Version: ${{ github.event.inputs.spotify_ipa_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
             
             UPDATED_APPS+=("EeveeSpotify")
+            UPDATED_VERSIONS+=("spotify:${{ github.event.inputs.spotify_ipa_version }}:${{ github.event.inputs.spotify_tweak_version }}")
+            
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
                 "${{ github.event.inputs.spotify_ipa_version }}" \
@@ -240,6 +243,8 @@ jobs:
             echo "YouTube IPA Version: ${{ github.event.inputs.youtube_ipa_version }}, Tweak Version: ${{ github.event.inputs.youtube_tweak_version }}"
             
             UPDATED_APPS+=("YTLite")
+            UPDATED_VERSIONS+=("youtube:${{ github.event.inputs.youtube_ipa_version }}:${{ github.event.inputs.youtube_tweak_version }}")
+            
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
                 "${{ github.event.inputs.youtube_ipa_version }}" \
@@ -252,6 +257,8 @@ jobs:
             echo "Twitter IPA Version: ${{ github.event.inputs.twitter_ipa_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
             
             UPDATED_APPS+=("X (NeoFreeBird)")
+            UPDATED_VERSIONS+=("twitter:${{ github.event.inputs.twitter_ipa_version }}:${{ github.event.inputs.twitter_tweak_version }}")
+            
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
                 "${{ github.event.inputs.twitter_ipa_version }}" \
@@ -262,7 +269,9 @@ jobs:
           # Output updated apps for subsequent steps
           if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
             APPS_STR=$(printf "%s " "${UPDATED_APPS[@]}")
+            VERSIONS_STR=$(printf "%s " "${UPDATED_VERSIONS[@]}")
             echo "updated_apps=${APPS_STR% }" >> $GITHUB_OUTPUT
+            echo "updated_versions=${VERSIONS_STR% }" >> $GITHUB_OUTPUT
             echo "Apps to be updated: ${UPDATED_APPS[*]}"
           else
             echo "No apps selected for update"
@@ -278,6 +287,48 @@ jobs:
               exit 1
             fi
           done
+
+      - name: "Update workflow with new versions"
+        if: steps.update-files.outputs.updated_versions
+        run: |
+          echo "Updating workflow with new version defaults..."
+          
+          # Get the updated versions from previous step
+          UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+          IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+          
+          # Read current workflow file
+          WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          if [ ! -f "$WORKFLOW_FILE" ]; then
+            WORKFLOW_FILE=".github/workflows/main.yml"
+          fi
+          
+          if [ -f "$WORKFLOW_FILE" ]; then
+            # Create a temporary copy
+            cp "$WORKFLOW_FILE" "${WORKFLOW_FILE}.tmp"
+            
+            # Update each app's default versions
+            for version_pair in "${VERSION_PAIRS[@]}"; do
+              IFS=':' read -ra PARTS <<< "$version_pair"
+              APP="${PARTS[0]}"
+              IPA_VERSION="${PARTS[1]}"
+              TWEAK_VERSION="${PARTS[2]}"
+              
+              echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
+              
+              # Update IPA version default
+              sed -i "s/^      ${APP}_ipa_version:.*/      ${APP}_ipa_version:\n        description: \"${APP^} IPA Version:\"\n        default: \"$IPA_VERSION\"/" "${WORKFLOW_FILE}.tmp"
+              
+              # Update tweak version default  
+              sed -i "s/^      ${APP}_tweak_version:.*/      ${APP}_tweak_version:\n        description: \"${APP^} Tweak Version:\"\n        default: \"$TWEAK_VERSION\"/" "${WORKFLOW_FILE}.tmp"
+            done
+            
+            # Replace the original file
+            mv "${WORKFLOW_FILE}.tmp" "$WORKFLOW_FILE"
+            echo "Workflow file updated with new version defaults"
+          else
+            echo "Warning: Could not find workflow file to update defaults"
+          fi
 
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
@@ -306,8 +357,13 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Add changed files
+          # Add changed files (both JSON files and potentially the workflow file)
           git add sidestore.json feather.json trollapps.json
+          if [[ -f ".github/workflows/${{ github.workflow }}.yml" ]]; then
+            git add ".github/workflows/${{ github.workflow }}.yml"
+          elif [[ -f ".github/workflows/main.yml" ]]; then
+            git add ".github/workflows/main.yml"
+          fi
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
@@ -339,6 +395,23 @@ jobs:
           echo "- sidestore.json" >> $GITHUB_STEP_SUMMARY
           echo "- feather.json" >> $GITHUB_STEP_SUMMARY  
           echo "- trollapps.json" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if workflow was updated
+          if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
+            echo "- workflow.yml (updated defaults)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### New Default Versions Set:" >> $GITHUB_STEP_SUMMARY
+            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+            IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+            for version_pair in "${VERSION_PAIRS[@]}"; do
+              IFS=':' read -ra PARTS <<< "$version_pair"
+              APP="${PARTS[0]}"
+              IPA_VERSION="${PARTS[1]}"
+              TWEAK_VERSION="${PARTS[2]}"
+              echo "- ${APP^}: IPA $IPA_VERSION, Tweak $TWEAK_VERSION" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+          
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "Automated repository management" >> $GITHUB_STEP_SUMMARY
