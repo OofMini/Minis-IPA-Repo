@@ -5,17 +5,13 @@ on:
     inputs:
       # Main Header
       main_header:
-        description: "Configure Workflow"
+        description: "          Configure Workflow"
         required: false
         default: "main"
-      main_divider:
-        description: "────────────────"
-        required: false
-        default: ""
 
       # Spotify
       spotify_header:
-        description: "🎵 Spotify"
+        description: "              🎵 Spotify"
         required: false
         default: ""
       update_eeveespotify:
@@ -34,7 +30,7 @@ on:
 
       # YouTube
       youtube_header:
-        description: "📺 YouTube"
+        description: "              📺 YouTube"
         required: false
         default: ""
       update_ytlite:
@@ -53,7 +49,7 @@ on:
 
       # Twitter/X
       twitter_header:
-        description: "🐦 Twitter/X"
+        description: "             🐦 Twitter/X"
         required: false
         default: ""
       update_x_neofreebird:
@@ -72,7 +68,7 @@ on:
 
       # InshotPro
       inshot_header:
-        description: "🎬 InshotPro"
+        description: "             🎬 InshotPro"
         required: false
         default: ""
       update_inshotpro:
@@ -88,7 +84,7 @@ on:
 
       # RefacePro
       reface_header:
-        description: "🤖 RefacePro"
+        description: "             🤖 RefacePro"
         required: false
         default: ""
       update_refacepro:
@@ -104,7 +100,7 @@ on:
 
       # Amethyst
       amethyst_header:
-        description: "⚡ Amethyst"
+        description: "              ⚡ Amethyst"
         required: false
         default: ""
       update_amethyst:
@@ -120,7 +116,7 @@ on:
 
       # Appstore++
       appstore_header:
-        description: "📱 Appstore++"
+        description: "            📱 Appstore++"
         required: false
         default: ""
       update_appstoreplus:
@@ -136,7 +132,7 @@ on:
 
       # iTorrent
       itorrent_header:
-        description: "📥 iTorrent"
+        description: "              📥 iTorrent"
         required: false
         default: ""
       update_itorrent:
@@ -152,7 +148,7 @@ on:
 
       # LiveContainer
       livecontainer_header:
-        description: "📦 LiveContainer"
+        description: "            📦 LiveContainer"
         required: false
         default: ""
       update_livecontainer:
@@ -168,7 +164,7 @@ on:
 
       # ModMyIpa
       modmyipa_header:
-        description: "🔧 ModMyIpa"
+        description: "             🔧 ModMyIpa"
         required: false
         default: ""
       update_modmyipa:
@@ -184,7 +180,7 @@ on:
 
       # SuperMario64
       mario_header:
-        description: "🍄 SuperMario64"
+        description: "           🍄 SuperMario64"
         required: false
         default: ""
       update_supermario64:
@@ -200,7 +196,7 @@ on:
 
       # Options
       options_header:
-        description: "⚙️ Options"
+        description: "              ⚙️ Options"
         required: false
         default: ""
       change_description:
