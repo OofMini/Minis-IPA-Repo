@@ -3,10 +3,21 @@ name: 🚀 Repository Manager - Bulk App Updates
 on:
   workflow_dispatch:
     inputs:
+      # Main Header
+      main_header:
+        description: "Configure Workflow"
+        required: false
+        default: "main"
+      main_divider:
+        description: "────────────────"
+        required: false
+        default: ""
+
       # Spotify
       spotify_header:
         description: "🎵 Spotify"
         required: false
+        default: ""
       update_eeveespotify:
         description: "Update EeveeSpotify"
         type: boolean
@@ -20,11 +31,16 @@ on:
       eeveespotify_download_url:
         description: "EeveeSpotify Download URL"
         default: "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
+      spotify_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # YouTube
       youtube_header:
         description: "📺 YouTube"
         required: false
+        default: ""
       update_ytlite:
         description: "Update YTLite"
         type: boolean
@@ -38,11 +54,16 @@ on:
       ytlite_download_url:
         description: "YTLite Download URL"
         default: "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
+      youtube_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # Twitter/X
       twitter_header:
         description: "🐦 Twitter/X"
         required: false
+        default: ""
       update_x_neofreebird:
         description: "Update X (NeoFreeBird)"
         type: boolean
@@ -56,11 +77,16 @@ on:
       x_neofreebird_download_url:
         description: "X Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
+      twitter_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # InshotPro
       inshot_header:
         description: "🎬 InshotPro"
         required: false
+        default: ""
       update_inshotpro:
         description: "Update InshotPro"
         type: boolean
@@ -71,11 +97,16 @@ on:
       inshotpro_download_url:
         description: "InshotPro Download URL"
         default: "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1"
+      inshot_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # RefacePro
       reface_header:
         description: "🤖 RefacePro"
         required: false
+        default: ""
       update_refacepro:
         description: "Update RefacePro"
         type: boolean
@@ -86,11 +117,16 @@ on:
       refacepro_download_url:
         description: "RefacePro Download URL"
         default: "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1"
+      reface_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # Amethyst
       amethyst_header:
         description: "⚡ Amethyst"
         required: false
+        default: ""
       update_amethyst:
         description: "Update Amethyst"
         type: boolean
@@ -101,11 +137,16 @@ on:
       amethyst_download_url:
         description: "Amethyst Download URL"
         default: "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1"
+      amethyst_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # Appstore++
       appstore_header:
         description: "📱 Appstore++"
         required: false
+        default: ""
       update_appstoreplus:
         description: "Update Appstore++"
         type: boolean
@@ -116,11 +157,16 @@ on:
       appstoreplus_download_url:
         description: "Appstore++ Download URL"
         default: "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1"
+      appstore_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # iTorrent
       itorrent_header:
         description: "📥 iTorrent"
         required: false
+        default: ""
       update_itorrent:
         description: "Update iTorrent"
         type: boolean
@@ -131,11 +177,16 @@ on:
       itorrent_download_url:
         description: "iTorrent Download URL"
         default: "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1"
+      itorrent_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # LiveContainer
       livecontainer_header:
         description: "📦 LiveContainer"
         required: false
+        default: ""
       update_livecontainer:
         description: "Update LiveContainer"
         type: boolean
@@ -146,11 +197,16 @@ on:
       livecontainer_download_url:
         description: "LiveContainer Download URL"
         default: "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1"
+      livecontainer_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # ModMyIpa
       modmyipa_header:
         description: "🔧 ModMyIpa"
         required: false
+        default: ""
       update_modmyipa:
         description: "Update ModMyIpa"
         type: boolean
@@ -161,11 +217,16 @@ on:
       modmyipa_download_url:
         description: "ModMyIpa Download URL"
         default: "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1"
+      modmyipa_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # SuperMario64
       mario_header:
         description: "🍄 SuperMario64"
         required: false
+        default: ""
       update_supermario64:
         description: "Update SuperMario64"
         type: boolean
@@ -176,11 +237,16 @@ on:
       supermario64_download_url:
         description: "SuperMario64 Download URL"
         default: "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1"
+      mario_divider:
+        description: "────────────────"
+        required: false
+        default: ""
 
       # Options
       options_header:
         description: "⚙️ Options"
         required: false
+        default: ""
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -243,7 +309,7 @@ jobs:
               return 1
             fi
             
-            # Generate localized description with updated versions
+            # Use the exact localized descriptions from sidestore.json
             local localized_desc
             case "$app_name" in
               "EeveeSpotify")
@@ -255,8 +321,32 @@ jobs:
               "X (NeoFreeBird)")
                 localized_desc="Tweaked Twitter/X with premium features and more. X v$version, NeoFreeBird $tweak_version."
                 ;;
+              "InshotPro")
+                localized_desc="Pro video editor with premium filters, tools, and no watermark. App v$version."
+                ;;
+              "RefacePro (IOS 17+)")
+                localized_desc="Reface Premium Unloked."
+                ;;
+              "Amethyst")
+                localized_desc="Minecraft Java IOS Edition."
+                ;;
+              "Appstore++")
+                localized_desc="Appstore++ allows users to downgrade apps."
+                ;;
+              "iTorrent (IOS 17+)")
+                localized_desc="Lightweight torrent client for downloading and managing torrent files on-device."
+                ;;
+              "LiveContainer")
+                localized_desc="Runs live production containers for streaming apps and runtime isolation."
+                ;;
+              "ModMyIpa")
+                localized_desc="Tool for modifying .ipas and duplicating apps."
+                ;;
+              "SuperMario64 (60fps)")
+                localized_desc="Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay."
+                ;;
               *)
-                # For apps without version numbers in description, keep original text
+                # Fallback to reading from the file if app name doesn't match
                 localized_desc=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" \
                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // ""' "$file")
                 if [[ -z "$localized_desc" ]]; then
