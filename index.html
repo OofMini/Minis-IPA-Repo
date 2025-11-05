@@ -12,6 +12,11 @@
     <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
     <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     
+    <!-- Prevent caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
@@ -508,15 +513,18 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // Prevent caching by adding timestamp to requests
+        const timestamp = new Date().getTime();
+        
         const appsData = [
             {
                 id: 'eeveespotify',
                 name: 'EeveeSpotify',
                 developer: 'whoeevee',
                 description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v9.0.91, EeveeSpotify v6.2.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
                 version: '9.0.91',
-                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa',
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -525,9 +533,9 @@
                 name: 'YTLite',
                 developer: 'dayanch96',
                 description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.44.2, YTLite v5.2b4.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
                 version: '20.44.2',
-                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa',
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -536,9 +544,9 @@
                 name: 'X (NeoFreeBird)',
                 developer: 'NeoFreeBird',
                 description: 'Tweaked Twitter/X with premium features and more. X v11.36, NeoFreeBird v5.2.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
                 version: '11.36',
-                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa',
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -547,9 +555,9 @@
                 name: 'InShot Pro',
                 developer: 'IPAOMTK',
                 description: 'Pro video editor with premium filters, tools, and no watermark. App v1.90.2.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
                 version: '1.90.2',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -558,9 +566,9 @@
                 name: 'Amethyst',
                 developer: 'alexytomi',
                 description: 'Minecraft Java IOS Edition.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png?' + timestamp,
                 version: '1.0',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -569,9 +577,9 @@
                 name: 'Appstore++',
                 developer: 'cokernutx',
                 description: 'Appstore++ allows users to downgrade apps.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
                 version: '1.0.3',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -580,9 +588,9 @@
                 name: 'iTorrent (IOS 17+)',
                 developer: 'XITRIX',
                 description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
                 version: '2.0.15',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -591,9 +599,9 @@
                 name: 'LiveContainer',
                 developer: 'hugeBlack',
                 description: 'Runs live production containers for streaming apps and runtime isolation.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
                 version: '3.6.1',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -602,9 +610,9 @@
                 name: 'ModMyIpa',
                 developer: 'powenn',
                 description: 'Tool for modifying .ipas and duplicating apps.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png?' + timestamp,
                 version: '1.0.2',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -613,9 +621,9 @@
                 name: 'RefacePro (IOS 17+)',
                 developer: 'IPAOMTK',
                 description: 'Reface Premium Unlocked.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
                 version: '5.23.0',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -624,9 +632,9 @@
                 name: 'SuperMario64 (60fps)',
                 developer: 'Cypwn',
                 description: 'Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png?' + timestamp,
                 version: '1.2.1',
-                downloadUrl: 'https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1',
+                downloadUrl: 'https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1&timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             }
@@ -659,7 +667,7 @@
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
         }
 
-        // 7. Skeleton Loading Screens
+        // Skeleton Loading Screens
         function showSkeletonLoading() {
             const appGrid = document.getElementById('appGrid');
             appGrid.innerHTML = `
@@ -677,7 +685,7 @@
             }, 100);
         }
 
-        // 11. Error Handling & Offline Support
+        // Error Handling & Offline Support
         async function loadAppsWithFallback() {
             try {
                 showSkeletonLoading();
@@ -686,7 +694,7 @@
                     throw new Error('No internet connection');
                 }
 
-                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json');
+                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp);
                 if (!manifestAvailable) {
                     throw new Error('Repository temporarily unavailable');
                 }
@@ -717,7 +725,14 @@
 
         async function checkResourceAvailability(url) {
             try {
-                const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+                const response = await fetch(url, { 
+                    method: 'HEAD', 
+                    cache: 'no-cache',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 return response.ok;
             } catch (error) {
                 console.warn(`Resource unavailable: ${url}`, error);
@@ -741,7 +756,8 @@
 
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
-            const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
+            // Remove localStorage usage for downloads to prevent caching
+            const downloadStats = {};
             const filteredApps = appsData.filter(app => 
                 app.name.toLowerCase().includes(searchTerm) || 
                 app.description.toLowerCase().includes(searchTerm) ||
@@ -760,7 +776,7 @@
                 <div class="app-card fade-in stagger-${(index % 3) + 1}">
                     <div class="app-icon-container">
                         <img src="${app.icon}" alt="${app.name}" class="app-icon" 
-                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
+                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
                         ✅ Fully Working • v${app.version}
@@ -781,7 +797,7 @@
             }, 100);
         }
 
-        // 8. Real-time Download Counter
+        // Real-time Download Counter
         function trackDownload(appId) {
             try {
                 const app = appsData.find(a => a.id === appId);
@@ -795,17 +811,6 @@
                     return;
                 }
 
-                const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
-                
-                if (!downloadStats[appId]) {
-                    downloadStats[appId] = app.initialDownloads || 0;
-                }
-                
-                downloadStats[appId]++;
-                downloadStats.total = (downloadStats.total || 0) + 1;
-                localStorage.setItem('downloadStats', JSON.stringify(downloadStats));
-                
-                updateDownloadCounters();
                 showToast(`Downloading ${app.name}...`);
                 setTimeout(() => window.open(app.downloadUrl, '_blank'), 500);
                 
@@ -813,22 +818,6 @@
                 console.error('Download failed:', error);
                 showToast('Download failed: ' + error.message, 'error');
             }
-        }
-
-        function updateDownloadCounters() {
-            const downloadStats = JSON.parse(localStorage.getItem('downloadStats')) || {};
-            
-            appsData.forEach(app => {
-                const appDownloads = downloadStats[app.id] || app.initialDownloads || 0;
-                const appCard = document.querySelector(`[onclick="trackDownload('${app.id}')"]`);
-                
-                if (appCard) {
-                    const downloadCountElement = appCard.closest('.app-card').querySelector('.download-count');
-                    if (downloadCountElement) {
-                        downloadCountElement.textContent = `${formatNumber(appDownloads)} downloads`;
-                    }
-                }
-            });
         }
 
         function formatNumber(num) {
@@ -859,10 +848,10 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // 10. PWA Features
+        // PWA Features
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js?' + timestamp)
                     .then((registration) => {
                         console.log('SW registered: ', registration);
                     })
@@ -904,7 +893,7 @@
         }
 
         function addToTrollApps() {
-            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json';
+            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json?' + timestamp;
             window.location.href = trollAppsUrl;
             setTimeout(() => {
                 showToast('If TrollApps didn\'t open, make sure it\'s installed', 'info');
@@ -912,7 +901,7 @@
         }
 
         function addToSideStore() {
-            const sideStoreUrl = 'sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json';
+            const sideStoreUrl = 'sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp;
             window.location.href = sideStoreUrl;
             setTimeout(() => {
                 showToast('If SideStore didn\'t open, make sure it\'s installed', 'info');
@@ -920,7 +909,7 @@
         }
 
         function addToFeather() {
-            const featherUrl = 'feather://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/feather.json';
+            const featherUrl = 'feather://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/feather.json?' + timestamp;
             window.location.href = featherUrl;
             setTimeout(() => {
                 showToast('If Feather didn\'t open, make sure it\'s installed', 'info');
@@ -945,8 +934,15 @@
             }
         }
 
-        // Initialize download counters on load
-        updateDownloadCounters();
+        // Force reload to prevent caching
+        window.addEventListener('load', function() {
+            // Clear any cached data
+            if (window.performance && window.performance.navigation.type === 1) {
+                // Page was reloaded
+                localStorage.clear();
+                sessionStorage.clear();
+            }
+        });
     </script>
 </body>
 </html>
