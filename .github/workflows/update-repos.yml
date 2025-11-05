@@ -3,7 +3,6 @@ name: Bulk IPA Updates
 on:
   workflow_dispatch:
     inputs:
-      # Individual app toggles - exactly 9 inputs total
       update_spotify:
         description: "🎵 Update Spotify"
         type: boolean
@@ -37,7 +36,6 @@ on:
         description: "🐦 Twitter Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
       
-      # Options
       change_description:
         description: "📝 Custom commit message (optional)"
         default: ""
@@ -52,6 +50,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "📦 Install dependencies"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
       - name: "🔄 Update repository files"
         id: update-files
         run: |
@@ -59,26 +62,44 @@ jobs:
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
           echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
           
-          # Parse version strings (app_version/tweak_version)
+          # Parse version strings (app_version/tweak_version) with validation
           parse_version() {
             local version_string="$1"
+            local app_name="$2"
+            
+            # Validate version format contains separator
+            if [[ ! "$version_string" == *"/"* ]]; then
+              echo "❌ $app_name version format invalid: '$version_string'"
+              echo "   Expected format: 'app_version/tweak_version' (e.g., '9.0.91/v6.2')"
+              exit 1
+            fi
+            
             echo "$version_string" | cut -d'/' -f1
           }
           
           parse_tweak_version() {
             local version_string="$1"
+            local app_name="$2"
+            
+            # Re-validate format to ensure consistency
+            if [[ ! "$version_string" == *"/"* ]]; then
+              echo "❌ $app_name version format invalid: '$version_string'"
+              echo "   Expected format: 'app_version/tweak_version' (e.g., '9.0.91/v6.2')"
+              exit 1
+            fi
+            
             echo "$version_string" | cut -d'/' -f2
           }
           
-          # Function to validate JSON files
+          # Function to validate JSON syntax
           validate_json() {
             echo "🔍 Validating JSON file structure..."
             for file in sidestore.json feather.json trollapps.json; do
               if [ -f "$file" ]; then
                 if jq empty "$file" 2>/dev/null; then
-                  echo "✅ $file - Valid JSON"
+                  echo "✅ $file - Valid JSON syntax"
                 else
-                  echo "❌ $file - Invalid JSON"
+                  echo "❌ $file - Invalid JSON syntax"
                   exit 1
                 fi
               else
@@ -86,6 +107,61 @@ jobs:
                 exit 1
               fi
             done
+          }
+          
+          # Function to validate JSON structure requirements
+          validate_json_structure() {
+            echo "🔍 Validating JSON structure requirements..."
+            
+            for file in sidestore.json feather.json trollapps.json; do
+              if [ -f "$file" ]; then
+                echo "📋 Checking structure of $file..."
+                
+                # Check if file has required 'apps' array
+                if ! jq -e '.apps | type == "array"' "$file" > /dev/null; then
+                  echo "❌ $file - Missing required 'apps' array"
+                  exit 1
+                fi
+                
+                # Check if apps array is not empty
+                APP_COUNT=$(jq '.apps | length' "$file")
+                if [ "$APP_COUNT" -eq 0 ]; then
+                  echo "⚠️ $file - 'apps' array is empty"
+                else
+                  echo "✅ $file - Valid structure with $APP_COUNT apps"
+                  
+                  # Validate each app has required fields
+                  for ((i=0; i<APP_COUNT; i++)); do
+                    APP_NAME=$(jq -r ".apps[$i].name // \"\"" "$file")
+                    BUNDLE_ID=$(jq -r ".apps[$i].bundleIdentifier // \"\"" "$file")
+                    
+                    if [[ -z "$APP_NAME" && -z "$BUNDLE_ID" ]]; then
+                      echo "❌ $file - App at index $i missing both 'name' and 'bundleIdentifier'"
+                      exit 1
+                    fi
+                    
+                    # File-specific structure validation
+                    if [[ "$file" == "sidestore.json" ]]; then
+                      if ! jq -e ".apps[$i].versions" "$file" > /dev/null; then
+                        echo "❌ $file - App '$APP_NAME' missing 'versions' array (required for SideStore)"
+                        exit 1
+                      fi
+                    elif [[ "$file" == "feather.json" ]]; then
+                      if ! jq -e ".apps[$i].version" "$file" > /dev/null; then
+                        echo "❌ $file - App '$APP_NAME' missing 'version' field (required for Feather)"
+                        exit 1
+                      fi
+                    elif [[ "$file" == "trollapps.json" ]]; then
+                      if ! jq -e ".apps[$i].downloadURL" "$file" > /dev/null; then
+                        echo "❌ $file - App '$APP_NAME' missing 'downloadURL' field (required for TrollApps)"
+                        exit 1
+                      fi
+                    fi
+                  done
+                fi
+              fi
+            done
+            echo "✅ All JSON files have valid structure"
           }
           
           # Function to update app in JSON file
@@ -115,7 +191,7 @@ jobs:
             # Create temporary file for processing
             local temp_file="${file}.tmp"
             
-            # Update based on file structure with proper error handling
+            # Update based on file structure
             if [[ "$file" == "sidestore.json" ]]; then
               jq --arg app "$app_name" \
                  --arg bundle "$bundle_id" \
@@ -158,7 +234,7 @@ jobs:
                    .localizedDescription = $desc)' "$file" > "$temp_file"
             fi
             
-            # Verify the temp file was created successfully before replacing original
+            # Verify the temp file was created successfully
             if [ -f "$temp_file" ] && jq empty "$temp_file" 2>/dev/null; then
               mv "$temp_file" "$file"
               echo "✅ Successfully updated $app_name in $file"
@@ -171,16 +247,17 @@ jobs:
 
           # Validate files first
           validate_json
+          validate_json_structure
           
           # Initialize updated apps array
           UPDATED_APPS=()
           
-          # Update apps based on individual toggles with proper input referencing
+          # Update apps based on individual toggles with version validation
           if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
             echo "🎵 Processing Spotify update..."
-            SPOTIFY_VER=$(parse_version "${{ github.event.inputs.spotify_version }}")
-            SPOTIFY_TWEAK=$(parse_tweak_version "${{ github.event.inputs.spotify_version }}")
-            echo "Spotify Version: $SPOTIFY_VER, Tweak: $SPOTIFY_TWEAK"
+            SPOTIFY_VER=$(parse_version "${{ github.event.inputs.spotify_version }}" "Spotify")
+            SPOTIFY_TWEAK=$(parse_tweak_version "${{ github.event.inputs.spotify_version }}" "Spotify")
+            echo "✅ Spotify Version: $SPOTIFY_VER, Tweak: $SPOTIFY_TWEAK"
             
             UPDATED_APPS+=("EeveeSpotify")
             for file in sidestore.json feather.json trollapps.json; do
@@ -193,9 +270,9 @@ jobs:
 
           if [[ "${{ github.event.inputs.update_youtube }}" == "true" ]]; then
             echo "📺 Processing YouTube update..."
-            YOUTUBE_VER=$(parse_version "${{ github.event.inputs.youtube_version }}")
-            YOUTUBE_TWEAK=$(parse_tweak_version "${{ github.event.inputs.youtube_version }}")
-            echo "YouTube Version: $YOUTUBE_VER, Tweak: $YOUTUBE_TWEAK"
+            YOUTUBE_VER=$(parse_version "${{ github.event.inputs.youtube_version }}" "YouTube")
+            YOUTUBE_TWEAK=$(parse_tweak_version "${{ github.event.inputs.youtube_version }}" "YouTube")
+            echo "✅ YouTube Version: $YOUTUBE_VER, Tweak: $YOUTUBE_TWEAK"
             
             UPDATED_APPS+=("YTLite")
             for file in sidestore.json feather.json trollapps.json; do
@@ -208,9 +285,9 @@ jobs:
 
           if [[ "${{ github.event.inputs.update_twitter }}" == "true" ]]; then
             echo "🐦 Processing Twitter update..."
-            TWITTER_VER=$(parse_version "${{ github.event.inputs.twitter_version }}")
-            TWITTER_TWEAK=$(parse_tweak_version "${{ github.event.inputs.twitter_version }}")
-            echo "Twitter Version: $TWITTER_VER, Tweak: $TWITTER_TWEAK"
+            TWITTER_VER=$(parse_version "${{ github.event.inputs.twitter_version }}" "Twitter")
+            TWITTER_TWEAK=$(parse_tweak_version "${{ github.event.inputs.twitter_version }}" "Twitter")
+            echo "✅ Twitter Version: $TWITTER_VER, Tweak: $TWITTER_TWEAK"
             
             UPDATED_APPS+=("X (NeoFreeBird)")
             for file in sidestore.json feather.json trollapps.json; do
@@ -223,7 +300,8 @@ jobs:
 
           # Output updated apps for subsequent steps
           if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
+            APPS_STR=$(printf "%s " "${UPDATED_APPS[@]}")
+            echo "updated_apps=${APPS_STR% }" >> $GITHUB_OUTPUT
             echo "📋 Apps to be updated: ${UPDATED_APPS[*]}"
           else
             echo "ℹ️ No apps selected for update"
@@ -275,7 +353,7 @@ jobs:
             echo "⚠️ No changes to commit - files are already up to date"
           else
             git commit -m "$(echo -e "$COMMIT_MSG")"
-            git push
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
             echo "✅ Changes committed and pushed successfully"
           fi
 
