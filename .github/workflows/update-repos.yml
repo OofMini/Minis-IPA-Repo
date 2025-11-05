@@ -11,7 +11,7 @@ on:
       spotify_header:
         description: "‎"
         required: false
-        default: "      🎵 Spotify"
+        default: "🎵 Spotify"
       update_eeveespotify:
         description: "Update"
         type: boolean
@@ -34,7 +34,7 @@ on:
       youtube_header:
         description: "‎"
         required: false
-        default: "      📺 YouTube"
+        default: "📺 YouTube"
       update_ytlite:
         description: "Update"
         type: boolean
@@ -57,7 +57,7 @@ on:
       twitter_header:
         description: "‎"
         required: false
-        default: "    🐦 Twitter/X"
+        default: "🐦 Twitter/X"
       update_x_neofreebird:
         description: "Update"
         type: boolean
@@ -80,7 +80,7 @@ on:
       inshot_header:
         description: "‎"
         required: false
-        default: "     🎬 InshotPro"
+        default: "🎬 InshotPro"
       update_inshotpro:
         description: "Update"
         type: boolean
@@ -100,7 +100,7 @@ on:
       reface_header:
         description: "‎"
         required: false
-        default: "     🤖 RefacePro"
+        default: "🤖 RefacePro"
       update_refacepro:
         description: "Update"
         type: boolean
@@ -120,7 +120,7 @@ on:
       amethyst_header:
         description: "‎"
         required: false
-        default: "      ⚡ Amethyst"
+        default: "⚡ Amethyst"
       update_amethyst:
         description: "Update"
         type: boolean
@@ -140,7 +140,7 @@ on:
       appstore_header:
         description: "‎"
         required: false
-        default: "    📱 Appstore++"
+        default: "📱 Appstore++"
       update_appstoreplus:
         description: "Update"
         type: boolean
@@ -160,7 +160,7 @@ on:
       itorrent_header:
         description: "‎"
         required: false
-        default: "      📥 iTorrent"
+        default: "📥 iTorrent"
       update_itorrent:
         description: "Update"
         type: boolean
@@ -180,7 +180,7 @@ on:
       livecontainer_header:
         description: "‎"
         required: false
-        default: "   📦 LiveContainer"
+        default: "📦 LiveContainer"
       update_livecontainer:
         description: "Update"
         type: boolean
@@ -200,7 +200,7 @@ on:
       modmyipa_header:
         description: "‎"
         required: false
-        default: "      🔧 ModMyIpa"
+        default: "🔧 ModMyIpa"
       update_modmyipa:
         description: "Update"
         type: boolean
@@ -220,7 +220,7 @@ on:
       mario_header:
         description: "‎"
         required: false
-        default: "  🍄 SuperMario64"
+        default: "🍄 SuperMario64"
       update_supermario64:
         description: "Update"
         type: boolean
@@ -240,7 +240,7 @@ on:
       options_header:
         description: "‎"
         required: false
-        default: "       ⚙️ Options"
+        default: "⚙️ Options"
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -413,8 +413,8 @@ jobs:
           echo "Verifying updated files..."
           for file in sidestore.json feather.json trollapps.json; do
             if jq empty "$file" 2>/dev/null; then
-              echo "✅ $file - Still valid after updates"
-            else
+              echo "✅ $file - Valid JSON"
+              else
               echo "❌ $file - Became invalid after updates"
               exit 1
             fi
@@ -474,4 +474,4 @@ jobs:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY 
+          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY
