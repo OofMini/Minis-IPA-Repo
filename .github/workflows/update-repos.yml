@@ -5,11 +5,11 @@ on:
     inputs:
       # Spotify
       spotify_divider:
-        description: "‎‎ "
+        description: "‎"
         required: false
         default: "────────────────"
       spotify_header:
-        description: "‎‎‎ "
+        description: "‎"
         required: false
         default: "      🎵 Spotify"
       update_eeveespotify:
@@ -71,166 +71,6 @@ on:
       x_neofreebird_download_url:
         description: "Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-
-      # InshotPro
-      inshot_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      inshot_header:
-        description: "‎"
-        required: false
-        default: "     🎬 InshotPro"
-      update_inshotpro:
-        description: "Update"
-        type: boolean
-        default: false
-      inshotpro_version:
-        description: "Version"
-        default: "1.90.2"
-      inshotpro_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1"
-
-      # RefacePro
-      reface_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      reface_header:
-        description: "‎"
-        required: false
-        default: "     🤖 RefacePro"
-      update_refacepro:
-        description: "Update"
-        type: boolean
-        default: false
-      refacepro_version:
-        description: "Version"
-        default: "5.23.0"
-      refacepro_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1"
-
-      # Amethyst
-      amethyst_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      amethyst_header:
-        description: "‎"
-        required: false
-        default: "      ⚡ Amethyst"
-      update_amethyst:
-        description: "Update"
-        type: boolean
-        default: false
-      amethyst_version:
-        description: "Version"
-        default: "1.0"
-      amethyst_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1"
-
-      # Appstore++
-      appstore_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      appstore_header:
-        description: "‎"
-        required: false
-        default: "    📱 Appstore++"
-      update_appstoreplus:
-        description: "Update"
-        type: boolean
-        default: false
-      appstoreplus_version:
-        description: "Version"
-        default: "1.0.3"
-      appstoreplus_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1"
-
-      # iTorrent
-      itorrent_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      itorrent_header:
-        description: "‎"
-        required: false
-        default: "      📥 iTorrent"
-      update_itorrent:
-        description: "Update"
-        type: boolean
-        default: false
-      itorrent_version:
-        description: "Version"
-        default: "2.0.15"
-      itorrent_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1"
-
-      # LiveContainer
-      livecontainer_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      livecontainer_header:
-        description: "‎"
-        required: false
-        default: "   📦 LiveContainer"
-      update_livecontainer:
-        description: "Update"
-        type: boolean
-        default: false
-      livecontainer_version:
-        description: "Version"
-        default: "3.6.1"
-      livecontainer_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1"
-
-      # ModMyIpa
-      modmyipa_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      modmyipa_header:
-        description: "‎"
-        required: false
-        default: "      🔧 ModMyIpa"
-      update_modmyipa:
-        description: "Update"
-        type: boolean
-        default: false
-      modmyipa_version:
-        description: "Version"
-        default: "1.0.2"
-      modmyipa_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1"
-
-      # SuperMario64
-      mario_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      mario_header:
-        description: "‎"
-        required: false
-        default: "  🍄 SuperMario64"
-      update_supermario64:
-        description: "Update"
-        type: boolean
-        default: false
-      supermario64_version:
-        description: "Version"
-        default: "1.2.1"
-      supermario64_download_url:
-        description: "Download URL"
-        default: "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1"
 
       # Options
       options_divider:
@@ -363,47 +203,6 @@ jobs:
           [[ "${{ inputs.update_x_neofreebird }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
               "${{ inputs.x_neofreebird_version }}" "${{ inputs.x_neofreebird_download_url }}" "${{ inputs.x_neofreebird_tweak_version }}"
-          done
-
-          # Apps without version numbers in description
-          [[ "${{ inputs.update_inshotpro }}" == "true" ]] && UPDATED_APPS+=("InshotPro") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "InshotPro" "com.camerasideas.InstaShot" \
-              "${{ inputs.inshotpro_version }}" "${{ inputs.inshotpro_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_refacepro }}" == "true" ]] && UPDATED_APPS+=("RefacePro") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "RefacePro (IOS 17+)" "com.neocortext.doublicatapp" \
-              "${{ inputs.refacepro_version }}" "${{ inputs.refacepro_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_amethyst }}" == "true" ]] && UPDATED_APPS+=("Amethyst") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "Amethyst" "com.angelauramc.amethyst" \
-              "${{ inputs.amethyst_version }}" "${{ inputs.amethyst_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_appstoreplus }}" == "true" ]] && UPDATED_APPS+=("Appstore++") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "Appstore++" "com.cokepokes.AppStorePlus" \
-              "${{ inputs.appstoreplus_version }}" "${{ inputs.appstoreplus_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_itorrent }}" == "true" ]] && UPDATED_APPS+=("iTorrent") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "iTorrent (IOS 17+)" "org.xitrix.iTorrent2" \
-              "${{ inputs.itorrent_version }}" "${{ inputs.itorrent_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_livecontainer }}" == "true" ]] && UPDATED_APPS+=("LiveContainer") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "LiveContainer" "com.kdt.livecontainer" \
-              "${{ inputs.livecontainer_version }}" "${{ inputs.livecontainer_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_modmyipa }}" == "true" ]] && UPDATED_APPS+=("ModMyIpa") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "ModMyIpa" "com.powenn.ModMyIPA" \
-              "${{ inputs.modmyipa_version }}" "${{ inputs.modmyipa_download_url }}" ""
-          done
-
-          [[ "${{ inputs.update_supermario64 }}" == "true" ]] && UPDATED_APPS+=("SuperMario64") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "SuperMario64 (60fps)" "xyz.cypwn.sm64ios-60fps" \
-              "${{ inputs.supermario64_version }}" "${{ inputs.supermario64_download_url }}" ""
           done
 
           echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
