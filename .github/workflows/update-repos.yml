@@ -47,7 +47,7 @@ jobs:
     
     steps:
       - name: "Checkout repository"
-        uses: OofMini/actions/checkout@v4
+        uses: OofMini/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
