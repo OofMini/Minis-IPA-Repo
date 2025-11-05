@@ -1,4 +1,4 @@
-name: Bulk IPA Updates
+name: Bulk IPA Updates 
 
 on:
   workflow_dispatch:
