@@ -3,29 +3,40 @@ name: 🚀 Repository Manager - Bulk App Updates
 on:
   workflow_dispatch:
     inputs:
-      update_config:
-        description: "App Update Configuration (JSON)"
-        required: false
-        default: '{
-          "spotify": {
-            "update": false,
-            "version": "9.0.91",
-            "tweak_version": "v6.2",
-            "download_url": "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
-          },
-          "youtube": {
-            "update": false,
-            "version": "20.44.2", 
-            "tweak_version": "v5.2b4",
-            "download_url": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
-          },
-          "twitter": {
-            "update": false,
-            "version": "11.36",
-            "tweak_version": "v5.2",
-            "download_url": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-          }
-        }'
+      # App Selection
+      app_selection:
+        description: "Select Apps to Update"
+        type: choice
+        options:
+        - "────────────────"
+        - "🎵 Spotify"
+        - "📺 YouTube" 
+        - "🐦 Twitter/X"
+        - "────────────────"
+        - "🎵 Spotify only"
+        - "📺 YouTube only"
+        - "🐦 Twitter/X only"
+        - "────────────────"
+        - "🎵📺🐦 All three apps"
+        required: true
+        default: "────────────────"
+      
+      # Spotify
+      spotify_config:
+        description: "Spotify: version|tweak|url"
+        default: "9.0.91|v6.2|https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
+      
+      # YouTube
+      youtube_config:
+        description: "YouTube: version|tweak|url"
+        default: "20.44.2|v5.2b4|https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
+      
+      # Twitter/X
+      twitter_config:
+        description: "Twitter/X: version|tweak|url"
+        default: "11.36|v5.2|https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
+      
+      # Options
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -57,51 +68,63 @@ jobs:
             fi
           done
 
-      - name: "📋 Parse update configuration"
-        id: parse-config
+      - name: "🎯 Parse app selection"
+        id: parse-selection
         run: |
-          echo "Parsing update configuration..."
-          CONFIG='${{ inputs.update_config }}'
+          SELECTION="${{ inputs.app_selection }}"
+          echo "Selected: $SELECTION"
           
-          # Validate the JSON configuration
-          if ! echo "$CONFIG" | jq empty 2>/dev/null; then
-            echo "❌ Invalid JSON configuration"
-            exit 1
-          fi
+          # Determine which apps to update based on selection
+          case "$SELECTION" in
+            "🎵 Spotify"|"🎵 Spotify only")
+              echo "update_spotify=true" >> $GITHUB_OUTPUT
+              echo "update_youtube=false" >> $GITHUB_OUTPUT
+              echo "update_twitter=false" >> $GITHUB_OUTPUT
+              ;;
+            "📺 YouTube"|"📺 YouTube only")
+              echo "update_spotify=false" >> $GITHUB_OUTPUT
+              echo "update_youtube=true" >> $GITHUB_OUTPUT
+              echo "update_twitter=false" >> $GITHUB_OUTPUT
+              ;;
+            "🐦 Twitter/X"|"🐦 Twitter/X only")
+              echo "update_spotify=false" >> $GITHUB_OUTPUT
+              echo "update_youtube=false" >> $GITHUB_OUTPUT
+              echo "update_twitter=true" >> $GITHUB_OUTPUT
+              ;;
+            "🎵📺🐦 All three apps")
+              echo "update_spotify=true" >> $GITHUB_OUTPUT
+              echo "update_youtube=true" >> $GITHUB_OUTPUT
+              echo "update_twitter=true" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "update_spotify=false" >> $GITHUB_OUTPUT
+              echo "update_youtube=false" >> $GITHUB_OUTPUT
+              echo "update_twitter=false" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: "🔧 Parse app configurations"
+        id: parse-configs
+        run: |
+          # Parse Spotify config
+          IFS='|' read -r spotify_version spotify_tweak spotify_url <<< "${{ inputs.spotify_config }}"
+          echo "spotify_version=$spotify_version" >> $GITHUB_OUTPUT
+          echo "spotify_tweak=$spotify_tweak" >> $GITHUB_OUTPUT
+          echo "spotify_url=$spotify_url" >> $GITHUB_OUTPUT
           
-          # Extract values for each app
-          SPOTIFY_UPDATE=$(echo "$CONFIG" | jq -r '.spotify.update')
-          SPOTIFY_VERSION=$(echo "$CONFIG" | jq -r '.spotify.version')
-          SPOTIFY_TWEAK=$(echo "$CONFIG" | jq -r '.spotify.tweak_version')
-          SPOTIFY_URL=$(echo "$CONFIG" | jq -r '.spotify.download_url')
+          # Parse YouTube config
+          IFS='|' read -r youtube_version youtube_tweak youtube_url <<< "${{ inputs.youtube_config }}"
+          echo "youtube_version=$youtube_version" >> $GITHUB_OUTPUT
+          echo "youtube_tweak=$youtube_tweak" >> $GITHUB_OUTPUT
+          echo "youtube_url=$youtube_url" >> $GITHUB_OUTPUT
           
-          YOUTUBE_UPDATE=$(echo "$CONFIG" | jq -r '.youtube.update')
-          YOUTUBE_VERSION=$(echo "$CONFIG" | jq -r '.youtube.version')
-          YOUTUBE_TWEAK=$(echo "$CONFIG" | jq -r '.youtube.tweak_version')
-          YOUTUBE_URL=$(echo "$CONFIG" | jq -r '.youtube.download_url')
+          # Parse Twitter config
+          IFS='|' read -r twitter_version twitter_tweak twitter_url <<< "${{ inputs.twitter_config }}"
+          echo "twitter_version=$twitter_version" >> $GITHUB_OUTPUT
+          echo "twitter_tweak=$twitter_tweak" >> $GITHUB_OUTPUT
+          echo "twitter_url=$twitter_url" >> $GITHUB_OUTPUT
           
-          TWITTER_UPDATE=$(echo "$CONFIG" | jq -r '.twitter.update')
-          TWITTER_VERSION=$(echo "$CONFIG" | jq -r '.twitter.version')
-          TWITTER_TWEAK=$(echo "$CONFIG" | jq -r '.twitter.tweak_version')
-          TWITTER_URL=$(echo "$CONFIG" | jq -r '.twitter.download_url')
-          
-          # Set outputs
-          echo "spotify_update=$SPOTIFY_UPDATE" >> $GITHUB_OUTPUT
-          echo "spotify_version=$SPOTIFY_VERSION" >> $GITHUB_OUTPUT
-          echo "spotify_tweak=$SPOTIFY_TWEAK" >> $GITHUB_OUTPUT
-          echo "spotify_url=$SPOTIFY_URL" >> $GITHUB_OUTPUT
-          
-          echo "youtube_update=$YOUTUBE_UPDATE" >> $GITHUB_OUTPUT
-          echo "youtube_version=$YOUTUBE_VERSION" >> $GITHUB_OUTPUT
-          echo "youtube_tweak=$YOUTUBE_TWEAK" >> $GITHUB_OUTPUT
-          echo "youtube_url=$YOUTUBE_URL" >> $GITHUB_OUTPUT
-          
-          echo "twitter_update=$TWITTER_UPDATE" >> $GITHUB_OUTPUT
-          echo "twitter_version=$TWITTER_VERSION" >> $GITHUB_OUTPUT
-          echo "twitter_tweak=$TWITTER_TWEAK" >> $GITHUB_OUTPUT
-          echo "twitter_url=$TWITTER_URL" >> $GITHUB_OUTPUT
-          
-          echo "✅ Configuration parsed successfully"
+          echo "✅ Configurations parsed successfully"
 
       - name: "🔄 Update repository files"
         id: update-files
@@ -118,7 +141,7 @@ jobs:
             local download_url=$5
             local tweak_version=$6
             
-            echo "Updating $app_name in $file..."
+            echo "🔄 Updating $app_name in $file..."
             
             # Generate localized description with updated versions
             if [[ "$app_name" == "EeveeSpotify" ]]; then
@@ -180,26 +203,26 @@ jobs:
 
           UPDATED_APPS=()
           
-          # Update apps based on toggles from parsed config
-          [[ "${{ steps.parse-config.outputs.spotify_update }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
+          # Update apps based on selection
+          [[ "${{ steps.parse-selection.outputs.update_spotify }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
-              "${{ steps.parse-config.outputs.spotify_version }}" \
-              "${{ steps.parse-config.outputs.spotify_url }}" \
-              "${{ steps.parse-config.outputs.spotify_tweak }}"
+              "${{ steps.parse-configs.outputs.spotify_version }}" \
+              "${{ steps.parse-configs.outputs.spotify_url }}" \
+              "${{ steps.parse-configs.outputs.spotify_tweak }}"
           done
 
-          [[ "${{ steps.parse-config.outputs.youtube_update }}" == "true" ]] && UPDATED_APPS+=("YTLite") && for file in sidestore.json feather.json trollapps.json; do
+          [[ "${{ steps.parse-selection.outputs.update_youtube }}" == "true" ]] && UPDATED_APPS+=("YTLite") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
-              "${{ steps.parse-config.outputs.youtube_version }}" \
-              "${{ steps.parse-config.outputs.youtube_url }}" \
-              "${{ steps.parse-config.outputs.youtube_tweak }}"
+              "${{ steps.parse-configs.outputs.youtube_version }}" \
+              "${{ steps.parse-configs.outputs.youtube_url }}" \
+              "${{ steps.parse-configs.outputs.youtube_tweak }}"
           done
 
-          [[ "${{ steps.parse-config.outputs.twitter_update }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
+          [[ "${{ steps.parse-selection.outputs.update_twitter }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
-              "${{ steps.parse-config.outputs.twitter_version }}" \
-              "${{ steps.parse-config.outputs.twitter_url }}" \
-              "${{ steps.parse-config.outputs.twitter_tweak }}"
+              "${{ steps.parse-configs.outputs.twitter_version }}" \
+              "${{ steps.parse-configs.outputs.twitter_url }}" \
+              "${{ steps.parse-configs.outputs.twitter_tweak }}"
           done
 
           echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
@@ -253,21 +276,20 @@ jobs:
         run: |
           echo "## 🎯 Repository Update Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📁 Files Updated:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ sidestore.json" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ feather.json" >> $GITHUB_STEP_SUMMARY  
-          echo "- ✅ trollapps.json" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
+          echo "### 📱 Apps Updated:" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ steps.update-files.outputs.updated_apps }}" ]; then
-            echo "### 📱 Apps Updated:" >> $GITHUB_STEP_SUMMARY
             for app in ${{ steps.update-files.outputs.updated_apps }}; do
               echo "- 🎯 $app" >> $GITHUB_STEP_SUMMARY
             done
           else
-            echo "### ℹ️ No apps were updated (all toggles were off)" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No apps were updated" >> $GITHUB_STEP_SUMMARY
           fi
           
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📁 Files Updated:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ sidestore.json" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ feather.json" >> $GITHUB_STEP_SUMMARY  
+          echo "- ✅ trollapps.json" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY
