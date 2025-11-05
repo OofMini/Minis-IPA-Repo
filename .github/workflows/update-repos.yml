@@ -92,6 +92,9 @@ jobs:
           UPDATED_APPS=()
           APP_KEYS=("eeveespotify" "ytlite" "x_neofreebird" "inshotpro" "refacepro" "amethyst" "appstoreplus" "itorrent" "livecontainer" "modmyipa" "supermario64")
           
+          # Create a config file with all app data
+          CONFIG_DATA=""
+          
           for app_key in "${APP_KEYS[@]}"; do
             # Check if app exists in config
             if ! echo "$CONFIG_JSON" | jq -e ".[\"$app_key\"]" > /dev/null 2>&1; then
@@ -120,19 +123,17 @@ jobs:
                 exit 1
               fi
               
-              echo "app_${app_key}_name=$app_name" >> $GITHUB_OUTPUT
-              echo "app_${app_key}_bundle=$bundle_id" >> $GITHUB_OUTPUT
-              echo "app_${app_key}_version=$version" >> $GITHUB_OUTPUT
-              echo "app_${app_key}_url=$download_url" >> $GITHUB_OUTPUT
-              echo "app_${app_key}_tweak=$tweak_version" >> $GITHUB_OUTPUT
-              echo "app_${app_key}_update=true" >> $GITHUB_OUTPUT
-              
+              # Add to config data
+              CONFIG_DATA+="$app_key|$app_name|$bundle_id|$version|$download_url|$tweak_version"$'\n'
               echo "✅ $app_name queued for update (v$version)"
             else
-              echo "app_${app_key}_update=false" >> $GITHUB_OUTPUT
               echo "⏭️  $app_key update skipped"
             fi
           done
+          
+          # Save config data to file
+          echo "$CONFIG_DATA" > "app_updates.config"
+          echo "📁 Saved app update configuration to file"
           
           # Output updated apps as JSON array
           if [[ ${#UPDATED_APPS[@]} -gt 0 ]]; then
@@ -146,8 +147,6 @@ jobs:
 
       - name: "🔄 Update repository files"
         id: update-files
-        env:
-          CURRENT_DATE: ${{ steps.update-files.outputs.current_date }}
         run: |
           set -euo pipefail
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
@@ -285,26 +284,30 @@ jobs:
             echo "✅ Successfully updated $app_name in $file"
           }
 
-          # Update apps based on parsed configuration
-          APP_KEYS=("eeveespotify" "ytlite" "x_neofreebird" "inshotpro" "refacepro" "amethyst" "appstoreplus" "itorrent" "livecontainer" "modmyipa" "supermario64")
+          # Read app configurations from file and process updates
           UPDATE_COUNT=0
           
-          for app_key in "${APP_KEYS[@]}"; do
-            if [[ "${{ steps.parse-config.outputs.app_${app_key}_update }}" == "true" ]]; then
+          if [[ ! -f "app_updates.config" ]]; then
+            echo "ℹ️  No app updates configured"
+            echo "total_updates=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          while IFS='|' read -r app_key app_name bundle_id version download_url tweak_version; do
+            if [[ -n "$app_key" && -n "$app_name" ]]; then
+              echo "🔄 Processing update for $app_name..."
               for file in sidestore.json feather.json trollapps.json; do
-                if update_app_in_file "$file" \
-                  "${{ steps.parse-config.outputs.app_${app_key}_name }}" \
-                  "${{ steps.parse-config.outputs.app_${app_key}_bundle }}" \
-                  "${{ steps.parse-config.outputs.app_${app_key}_version }}" \
-                  "${{ steps.parse-config.outputs.app_${app_key}_url }}" \
-                  "${{ steps.parse-config.outputs.app_${app_key}_tweak }}"; then
+                if update_app_in_file "$file" "$app_name" "$bundle_id" "$version" "$download_url" "$tweak_version"; then
                   ((UPDATE_COUNT++))
                 else
                   exit 1
                 fi
               done
             fi
-          done
+          done < "app_updates.config"
+          
+          # Clean up config file
+          rm -f "app_updates.config"
           
           echo "total_updates=$UPDATE_COUNT" >> $GITHUB_OUTPUT
           echo "🎯 Completed $UPDATE_COUNT file updates across all apps"
