@@ -288,6 +288,69 @@ jobs:
             fi
           done
 
+      - name: "Update index.html with new versions"
+        if: steps.update-files.outputs.updated_versions
+        run: |
+          echo "Updating index.html with new app versions..."
+          
+          # Get the updated versions from previous step
+          UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+          IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+          
+          # Read current index.html
+          if [ -f "index.html" ]; then
+            # Create a temporary copy
+            cp "index.html" "index.html.tmp"
+            
+            # Update each app's version in index.html
+            for version_pair in "${VERSION_PAIRS[@]}"; do
+              IFS=':' read -ra PARTS <<< "$version_pair"
+              APP="${PARTS[0]}"
+              IPA_VERSION="${PARTS[1]}"
+              TWEAK_VERSION="${PARTS[2]}"
+              
+              echo "Updating $APP in index.html to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
+              
+              # Map app names to their IDs in the JavaScript array
+              case "$APP" in
+                "spotify")
+                  APP_ID="eeveespotify"
+                  APP_NAME_IN_JS="EeveeSpotify"
+                  ;;
+                "youtube")
+                  APP_ID="ytlite" 
+                  APP_NAME_IN_JS="YTLite"
+                  ;;
+                "twitter")
+                  APP_ID="neofreebird"
+                  APP_NAME_IN_JS="X (NeoFreeBird)"
+                  ;;
+                *)
+                  echo "Unknown app: $APP"
+                  continue
+                  ;;
+              esac
+              
+              # Update version in the appsData array
+              sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
+              
+              # Update description with new versions
+              if [[ "$APP" == "spotify" ]]; then
+                sed -i "s/description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback\. Spotify v[0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*\.',/description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION.',/" "index.html.tmp"
+              elif [[ "$APP" == "youtube" ]]; then
+                sed -i "s/description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture\. Youtube v[0-9][0-9.]*, YTLite v[0-9a-z.]*\.',/description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION.',/" "index.html.tmp"
+              elif [[ "$APP" == "twitter" ]]; then
+                sed -i "s/description: 'Tweaked Twitter\\\/X with premium features and more\. X v[0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*\.',/description: 'Tweaked Twitter\\\/X with premium features and more. Twitter IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION.',/" "index.html.tmp"
+              fi
+            done
+            
+            # Replace the original file
+            mv "index.html.tmp" "index.html"
+            echo "index.html updated with new app versions"
+          else
+            echo "Warning: Could not find index.html to update"
+          fi
+
       - name: "Update workflow with new versions"
         if: steps.update-files.outputs.updated_versions
         run: |
@@ -357,8 +420,8 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Add changed files (both JSON files and potentially the workflow file)
-          git add sidestore.json feather.json trollapps.json
+          # Add changed files (JSON files, index.html, and potentially the workflow file)
+          git add sidestore.json feather.json trollapps.json index.html
           if [[ -f ".github/workflows/${{ github.workflow }}.yml" ]]; then
             git add ".github/workflows/${{ github.workflow }}.yml"
           elif [[ -f ".github/workflows/main.yml" ]]; then
@@ -395,6 +458,7 @@ jobs:
           echo "- sidestore.json" >> $GITHUB_STEP_SUMMARY
           echo "- feather.json" >> $GITHUB_STEP_SUMMARY  
           echo "- trollapps.json" >> $GITHUB_STEP_SUMMARY
+          echo "- index.html" >> $GITHUB_STEP_SUMMARY
           
           # Check if workflow was updated
           if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
