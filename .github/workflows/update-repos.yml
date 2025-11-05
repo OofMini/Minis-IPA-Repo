@@ -3,84 +3,29 @@ name: 🚀 Repository Manager - Bulk App Updates
 on:
   workflow_dispatch:
     inputs:
-      # Spotify
-      spotify_divider:
-        description: "‎"
+      update_config:
+        description: "App Update Configuration (JSON)"
         required: false
-        default: "────────────────"
-      spotify_header:
-        description: "‎"
-        required: false
-        default: "      🎵 Spotify"
-      update_eeveespotify:
-        description: "Update"
-        type: boolean
-        default: false
-      eeveespotify_version:
-        description: "Version"
-        default: "9.0.91"
-      eeveespotify_tweak_version:
-        description: "Tweak Version"
-        default: "v6.2"
-      eeveespotify_download_url:
-        description: "Download URL"
-        default: "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
-
-      # YouTube
-      youtube_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      youtube_header:
-        description: "‎"
-        required: false
-        default: "      📺 YouTube"
-      update_ytlite:
-        description: "Update"
-        type: boolean
-        default: false
-      ytlite_version:
-        description: "Version"
-        default: "20.44.2"
-      ytlite_tweak_version:
-        description: "Tweak Version"
-        default: "v5.2b4"
-      ytlite_download_url:
-        description: "Download URL"
-        default: "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
-
-      # Twitter/X
-      twitter_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      twitter_header:
-        description: "‎"
-        required: false
-        default: "    🐦 Twitter/X"
-      update_x_neofreebird:
-        description: "Update"
-        type: boolean
-        default: false
-      x_neofreebird_version:
-        description: "Version"
-        default: "11.36"
-      x_neofreebird_tweak_version:
-        description: "Tweak Version"
-        default: "v5.2"
-      x_neofreebird_download_url:
-        description: "Download URL"
-        default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-
-      # Options
-      options_divider:
-        description: "‎"
-        required: false
-        default: "────────────────"
-      options_header:
-        description: "‎"
-        required: false
-        default: "       ⚙️ Options"
+        default: '{
+          "spotify": {
+            "update": false,
+            "version": "9.0.91",
+            "tweak_version": "v6.2",
+            "download_url": "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
+          },
+          "youtube": {
+            "update": false,
+            "version": "20.44.2", 
+            "tweak_version": "v5.2b4",
+            "download_url": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
+          },
+          "twitter": {
+            "update": false,
+            "version": "11.36",
+            "tweak_version": "v5.2",
+            "download_url": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
+          }
+        }'
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -111,6 +56,52 @@ jobs:
               exit 1
             fi
           done
+
+      - name: "📋 Parse update configuration"
+        id: parse-config
+        run: |
+          echo "Parsing update configuration..."
+          CONFIG='${{ inputs.update_config }}'
+          
+          # Validate the JSON configuration
+          if ! echo "$CONFIG" | jq empty 2>/dev/null; then
+            echo "❌ Invalid JSON configuration"
+            exit 1
+          fi
+          
+          # Extract values for each app
+          SPOTIFY_UPDATE=$(echo "$CONFIG" | jq -r '.spotify.update')
+          SPOTIFY_VERSION=$(echo "$CONFIG" | jq -r '.spotify.version')
+          SPOTIFY_TWEAK=$(echo "$CONFIG" | jq -r '.spotify.tweak_version')
+          SPOTIFY_URL=$(echo "$CONFIG" | jq -r '.spotify.download_url')
+          
+          YOUTUBE_UPDATE=$(echo "$CONFIG" | jq -r '.youtube.update')
+          YOUTUBE_VERSION=$(echo "$CONFIG" | jq -r '.youtube.version')
+          YOUTUBE_TWEAK=$(echo "$CONFIG" | jq -r '.youtube.tweak_version')
+          YOUTUBE_URL=$(echo "$CONFIG" | jq -r '.youtube.download_url')
+          
+          TWITTER_UPDATE=$(echo "$CONFIG" | jq -r '.twitter.update')
+          TWITTER_VERSION=$(echo "$CONFIG" | jq -r '.twitter.version')
+          TWITTER_TWEAK=$(echo "$CONFIG" | jq -r '.twitter.tweak_version')
+          TWITTER_URL=$(echo "$CONFIG" | jq -r '.twitter.download_url')
+          
+          # Set outputs
+          echo "spotify_update=$SPOTIFY_UPDATE" >> $GITHUB_OUTPUT
+          echo "spotify_version=$SPOTIFY_VERSION" >> $GITHUB_OUTPUT
+          echo "spotify_tweak=$SPOTIFY_TWEAK" >> $GITHUB_OUTPUT
+          echo "spotify_url=$SPOTIFY_URL" >> $GITHUB_OUTPUT
+          
+          echo "youtube_update=$YOUTUBE_UPDATE" >> $GITHUB_OUTPUT
+          echo "youtube_version=$YOUTUBE_VERSION" >> $GITHUB_OUTPUT
+          echo "youtube_tweak=$YOUTUBE_TWEAK" >> $GITHUB_OUTPUT
+          echo "youtube_url=$YOUTUBE_URL" >> $GITHUB_OUTPUT
+          
+          echo "twitter_update=$TWITTER_UPDATE" >> $GITHUB_OUTPUT
+          echo "twitter_version=$TWITTER_VERSION" >> $GITHUB_OUTPUT
+          echo "twitter_tweak=$TWITTER_TWEAK" >> $GITHUB_OUTPUT
+          echo "twitter_url=$TWITTER_URL" >> $GITHUB_OUTPUT
+          
+          echo "✅ Configuration parsed successfully"
 
       - name: "🔄 Update repository files"
         id: update-files
@@ -189,20 +180,26 @@ jobs:
 
           UPDATED_APPS=()
           
-          # Update apps based on toggles
-          [[ "${{ inputs.update_eeveespotify }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
+          # Update apps based on toggles from parsed config
+          [[ "${{ steps.parse-config.outputs.spotify_update }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
-              "${{ inputs.eeveespotify_version }}" "${{ inputs.eeveespotify_download_url }}" "${{ inputs.eeveespotify_tweak_version }}"
+              "${{ steps.parse-config.outputs.spotify_version }}" \
+              "${{ steps.parse-config.outputs.spotify_url }}" \
+              "${{ steps.parse-config.outputs.spotify_tweak }}"
           done
 
-          [[ "${{ inputs.update_ytlite }}" == "true" ]] && UPDATED_APPS+=("YTLite") && for file in sidestore.json feather.json trollapps.json; do
+          [[ "${{ steps.parse-config.outputs.youtube_update }}" == "true" ]] && UPDATED_APPS+=("YTLite") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
-              "${{ inputs.ytlite_version }}" "${{ inputs.ytlite_download_url }}" "${{ inputs.ytlite_tweak_version }}"
+              "${{ steps.parse-config.outputs.youtube_version }}" \
+              "${{ steps.parse-config.outputs.youtube_url }}" \
+              "${{ steps.parse-config.outputs.youtube_tweak }}"
           done
 
-          [[ "${{ inputs.update_x_neofreebird }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
+          [[ "${{ steps.parse-config.outputs.twitter_update }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
-              "${{ inputs.x_neofreebird_version }}" "${{ inputs.x_neofreebird_download_url }}" "${{ inputs.x_neofreebird_tweak_version }}"
+              "${{ steps.parse-config.outputs.twitter_version }}" \
+              "${{ steps.parse-config.outputs.twitter_url }}" \
+              "${{ steps.parse-config.outputs.twitter_tweak }}"
           done
 
           echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
