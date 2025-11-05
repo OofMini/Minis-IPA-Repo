@@ -3,49 +3,41 @@ name: 🚀 Repository Manager - Bulk App Updates
 on:
   workflow_dispatch:
     inputs:
-      # Spotify
-      update_spotify:
-        description: "🎵 Update Spotify"
-        type: boolean
-        default: false
+      # Consolidated app selection
+      apps_to_update:
+        description: "📱 Apps to Update (comma-separated)"
+        required: true
+        default: "spotify,youtube,twitter"
+        type: choice
+        options:
+        - spotify
+        - youtube  
+        - twitter
+        - spotify,youtube
+        - spotify,twitter
+        - youtube,twitter
+        - spotify,youtube,twitter
+
+      # Consolidated version inputs
       spotify_version:
-        description: "🎵 Spotify Version"
-        default: "9.0.91"
-      spotify_tweak:
-        description: "🎵 Spotify Tweak Version"  
-        default: "v6.2"
+        description: "🎵 Spotify v/Tweak v (format: 9.0.91/v6.2)"
+        default: "9.0.91/v6.2"
       spotify_url:
         description: "🎵 Spotify Download URL"
         default: "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
       
-      # YouTube
-      update_youtube:
-        description: "📺 Update YouTube"
-        type: boolean
-        default: false
       youtube_version:
-        description: "📺 YouTube Version"
-        default: "20.44.2"
-      youtube_tweak:
-        description: "📺 YouTube Tweak Version"
-        default: "v5.2b4"
+        description: "📺 YouTube v/Tweak v (format: 20.44.2/v5.2b4)"
+        default: "20.44.2/v5.2b4"
       youtube_url:
         description: "📺 YouTube Download URL"
         default: "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
       
-      # Twitter/X
-      update_twitter:
-        description: "🐦 Update Twitter/X"
-        type: boolean
-        default: false
       twitter_version:
-        description: "🐦 Twitter/X Version"
-        default: "11.36"
-      twitter_tweak:
-        description: "🐦 Twitter/X Tweak Version"
-        default: "v5.2"
+        description: "🐦 Twitter v/Tweak v (format: 11.36/v5.2)"
+        default: "11.36/v5.2"
       twitter_url:
-        description: "🐦 Twitter/X Download URL"
+        description: "🐦 Twitter Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
       
       # Options
@@ -69,6 +61,17 @@ jobs:
           set -e
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
           echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
+          
+          # Parse version strings (app_version/tweak_version)
+          parse_version() {
+            local version_string=$1
+            echo "$version_string" | cut -d'/' -f1
+          }
+          
+          parse_tweak_version() {
+            local version_string=$1
+            echo "$version_string" | cut -d'/' -f2
+          }
           
           # Function to validate JSON files
           validate_json() {
@@ -160,28 +163,44 @@ jobs:
           validate_json
           
           UPDATED_APPS=()
+          SELECTED_APPS="${{ inputs.apps_to_update }}"
           
-          # Update apps based on individual toggles
-          [[ "${{ inputs.update_spotify }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
-              "${{ inputs.spotify_version }}" \
-              "${{ inputs.spotify_url }}" \
-              "${{ inputs.spotify_tweak }}"
-          done
+          # Update apps based on selection
+          if [[ "$SELECTED_APPS" == *"spotify"* ]]; then
+            UPDATED_APPS+=("EeveeSpotify")
+            SPOTIFY_VER=$(parse_version "${{ inputs.spotify_version }}")
+            SPOTIFY_TWEAK=$(parse_tweak_version "${{ inputs.spotify_version }}")
+            for file in sidestore.json feather.json trollapps.json; do
+              update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
+                "$SPOTIFY_VER" \
+                "${{ inputs.spotify_url }}" \
+                "$SPOTIFY_TWEAK"
+            done
+          fi
 
-          [[ "${{ inputs.update_youtube }}" == "true" ]] && UPDATED_APPS+=("YTLite") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
-              "${{ inputs.youtube_version }}" \
-              "${{ inputs.youtube_url }}" \
-              "${{ inputs.youtube_tweak }}"
-          done
+          if [[ "$SELECTED_APPS" == *"youtube"* ]]; then
+            UPDATED_APPS+=("YTLite")
+            YOUTUBE_VER=$(parse_version "${{ inputs.youtube_version }}")
+            YOUTUBE_TWEAK=$(parse_tweak_version "${{ inputs.youtube_version }}")
+            for file in sidestore.json feather.json trollapps.json; do
+              update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
+                "$YOUTUBE_VER" \
+                "${{ inputs.youtube_url }}" \
+                "$YOUTUBE_TWEAK"
+            done
+          fi
 
-          [[ "${{ inputs.update_twitter }}" == "true" ]] && UPDATED_APPS+=("X (NeoFreeBird)") && for file in sidestore.json feather.json trollapps.json; do
-            update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
-              "${{ inputs.twitter_version }}" \
-              "${{ inputs.twitter_url }}" \
-              "${{ inputs.twitter_tweak }}"
-          done
+          if [[ "$SELECTED_APPS" == *"twitter"* ]]; then
+            UPDATED_APPS+=("X (NeoFreeBird)")
+            TWITTER_VER=$(parse_version "${{ inputs.twitter_version }}")
+            TWITTER_TWEAK=$(parse_tweak_version "${{ inputs.twitter_version }}")
+            for file in sidestore.json feather.json trollapps.json; do
+              update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
+                "$TWITTER_VER" \
+                "${{ inputs.twitter_url }}" \
+                "$TWITTER_TWEAK"
+            done
+          fi
 
           echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
           
@@ -239,7 +258,7 @@ jobs:
               echo "- 🎯 $app" >> $GITHUB_STEP_SUMMARY
             done
           else
-            echo "ℹ️ No apps were updated (all toggles were off)" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No apps were updated" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -249,4 +268,4 @@ jobs:
           echo "- ✅ trollapps.json" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY 
+          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY
