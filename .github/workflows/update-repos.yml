@@ -1,46 +1,43 @@
-name: 🚀 Repository Manager - Bulk App Updates
+name: Bulk IPA Updates
 
 on:
   workflow_dispatch:
     inputs:
-      # Consolidated app selection
-      apps_to_update:
-        description: "📱 Apps to Update (comma-separated)"
-        required: true
-        default: "spotify,youtube,twitter"
-        type: choice
-        options:
-        - spotify
-        - youtube  
-        - twitter
-        - spotify,youtube
-        - spotify,twitter
-        - youtube,twitter
-        - spotify,youtube,twitter
-
-      # Consolidated version inputs
+      # Individual app toggles - exactly 7 inputs
+      update_spotify:
+        description: "🎵 Update Spotify"
+        type: boolean
+        default: false
       spotify_version:
-        description: "🎵 Spotify v/Tweak v (format: 9.0.91/v6.2)"
+        description: "🎵 Spotify v/Tweak v (9.0.91/v6.2)"
         default: "9.0.91/v6.2"
       spotify_url:
         description: "🎵 Spotify Download URL"
         default: "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
       
+      update_youtube:
+        description: "📺 Update YouTube"
+        type: boolean
+        default: false
       youtube_version:
-        description: "📺 YouTube v/Tweak v (format: 20.44.2/v5.2b4)"
+        description: "📺 YouTube v/Tweak v (20.44.2/v5.2b4)"
         default: "20.44.2/v5.2b4"
       youtube_url:
         description: "📺 YouTube Download URL"
         default: "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
       
+      update_twitter:
+        description: "🐦 Update Twitter/X"
+        type: boolean
+        default: false
       twitter_version:
-        description: "🐦 Twitter v/Tweak v (format: 11.36/v5.2)"
+        description: "🐦 Twitter v/Tweak v (11.36/v5.2)"
         default: "11.36/v5.2"
       twitter_url:
         description: "🐦 Twitter Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
       
-      # Options
+      # Options - 2 inputs
       change_description:
         description: "📝 Custom commit message (optional)"
         default: ""
@@ -163,10 +160,9 @@ jobs:
           validate_json
           
           UPDATED_APPS=()
-          SELECTED_APPS="${{ inputs.apps_to_update }}"
           
-          # Update apps based on selection
-          if [[ "$SELECTED_APPS" == *"spotify"* ]]; then
+          # Update apps based on individual toggles
+          if [[ "${{ inputs.update_spotify }}" == "true" ]]; then
             UPDATED_APPS+=("EeveeSpotify")
             SPOTIFY_VER=$(parse_version "${{ inputs.spotify_version }}")
             SPOTIFY_TWEAK=$(parse_tweak_version "${{ inputs.spotify_version }}")
@@ -178,7 +174,7 @@ jobs:
             done
           fi
 
-          if [[ "$SELECTED_APPS" == *"youtube"* ]]; then
+          if [[ "${{ inputs.update_youtube }}" == "true" ]]; then
             UPDATED_APPS+=("YTLite")
             YOUTUBE_VER=$(parse_version "${{ inputs.youtube_version }}")
             YOUTUBE_TWEAK=$(parse_tweak_version "${{ inputs.youtube_version }}")
@@ -190,7 +186,7 @@ jobs:
             done
           fi
 
-          if [[ "$SELECTED_APPS" == *"twitter"* ]]; then
+          if [[ "${{ inputs.update_twitter }}" == "true" ]]; then
             UPDATED_APPS+=("X (NeoFreeBird)")
             TWITTER_VER=$(parse_version "${{ inputs.twitter_version }}")
             TWITTER_TWEAK=$(parse_tweak_version "${{ inputs.twitter_version }}")
@@ -258,7 +254,7 @@ jobs:
               echo "- 🎯 $app" >> $GITHUB_STEP_SUMMARY
             done
           else
-            echo "ℹ️ No apps were updated" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No apps were updated (all toggles were off)" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
