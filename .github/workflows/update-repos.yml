@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       # Spotify
+      spotify_section:
+        description: "🎵 Spotify"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_eeveespotify:
         description: "Update EeveeSpotify"
         type: boolean
@@ -19,6 +24,11 @@ on:
         default: "Premium unlocked, ads removed, enhanced playback"
 
       # YouTube
+      youtube_section:
+        description: "📺 YouTube"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_ytlite:
         description: "Update YTLite"
         type: boolean
@@ -34,6 +44,11 @@ on:
         default: "Background playback, ads removed, picture-in-picture support"
 
       # Twitter/X
+      twitter_section:
+        description: "🐦 Twitter/X"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_x_neofreebird:
         description: "Update X (NeoFreeBird)"
         type: boolean
@@ -49,6 +64,11 @@ on:
         default: "TrollStore/SideStore build 5.2, custom features, performance improvements"
 
       # InshotPro
+      inshot_section:
+        description: "🎬 InshotPro"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_inshotpro:
         description: "Update InshotPro"
         type: boolean
@@ -64,6 +84,11 @@ on:
         default: "All filters unlocked, watermark removed, premium tools enabled"
 
       # RefacePro
+      reface_section:
+        description: "🤖 RefacePro"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_refacepro:
         description: "Update RefacePro"
         type: boolean
@@ -79,6 +104,11 @@ on:
         default: "Reface Premium Unlocked."
 
       # Amethyst
+      amethyst_section:
+        description: "⚡ Amethyst"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_amethyst:
         description: "Update Amethyst"
         type: boolean
@@ -94,6 +124,11 @@ on:
         default: "Minecraft Java IOS."
 
       # Appstore++
+      appstore_section:
+        description: "📱 Appstore++"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_appstoreplus:
         description: "Update Appstore++"
         type: boolean
@@ -109,6 +144,11 @@ on:
         default: "Appstore++ allows users to downgrade apps."
 
       # iTorrent
+      itorrent_section:
+        description: "📥 iTorrent"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_itorrent:
         description: "Update iTorrent"
         type: boolean
@@ -124,6 +164,11 @@ on:
         default: "Lightweight torrent client for downloading and managing torrent files on-device."
 
       # LiveContainer
+      livecontainer_section:
+        description: "📦 LiveContainer"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_livecontainer:
         description: "Update LiveContainer"
         type: boolean
@@ -139,6 +184,11 @@ on:
         default: "Runs live production containers for streaming apps and runtime isolation."
 
       # ModMyIpa
+      modmyipa_section:
+        description: "🔧 ModMyIpa"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_modmyipa:
         description: "Update ModMyIpa"
         type: boolean
@@ -154,6 +204,11 @@ on:
         default: "Tool for modifying .ipas and duplicating apps."
 
       # SuperMario64
+      mario_section:
+        description: "🍄 SuperMario64"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       update_supermario64:
         description: "Update SuperMario64"
         type: boolean
@@ -169,6 +224,11 @@ on:
         default: "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay."
 
       # Options
+      options_section:
+        description: "⚙️ Options"
+        type: choice
+        options: ["─────────────", "─────────────"]
+        default: "─────────────"
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -265,7 +325,7 @@ jobs:
 
           UPDATED_APPS=()
           
-          # Update apps based on toggles - CORRECTED FOR EACH APP TYPE
+          # Update apps based on toggles
           [[ "${{ inputs.update_eeveespotify }}" == "true" ]] && UPDATED_APPS+=("EeveeSpotify") && for file in sidestore.json feather.json trollapps.json; do
             update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
               "${{ inputs.eeveespotify_version }}" "${{ inputs.eeveespotify_download_url }}" "${{ inputs.eeveespotify_localized_description }}"
