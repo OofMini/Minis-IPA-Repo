@@ -904,4 +904,49 @@
         }
 
         function addToTrollApps() {
-            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github
+            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json';
+            window.location.href = trollAppsUrl;
+            setTimeout(() => {
+                showToast('If TrollApps didn\'t open, make sure it\'s installed', 'info');
+            }, 1000);
+        }
+
+        function addToSideStore() {
+            const sideStoreUrl = 'sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json';
+            window.location.href = sideStoreUrl;
+            setTimeout(() => {
+                showToast('If SideStore didn\'t open, make sure it\'s installed', 'info');
+            }, 1000);
+        }
+
+        function addToFeather() {
+            const featherUrl = 'feather://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/feather.json';
+            window.location.href = featherUrl;
+            setTimeout(() => {
+                showToast('If Feather didn\'t open, make sure it\'s installed', 'info');
+            }, 1000);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('URL copied to clipboard');
+            }).catch(() => {
+                showToast('Failed to copy URL', 'error');
+            });
+        }
+
+        function setupEventListeners() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    searchTerm = e.target.value.toLowerCase().trim();
+                    renderAppGrid();
+                });
+            }
+        }
+
+        // Initialize download counters on load
+        updateDownloadCounters();
+    </script>
+</body>
+</html>
