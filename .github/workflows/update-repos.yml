@@ -1,4 +1,4 @@
-name: Bulk IPA Updates
+name: Repository Manager - Bulk App Updates
 
 on:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
     
     steps:
       - name: "Checkout repository"
-        uses: OofMini/checkout@v4
+        uses: OofMini/checkout@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
