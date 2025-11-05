@@ -3,26 +3,91 @@ name: 🚀 Repository Manager - Bulk App Updates
 on:
   workflow_dispatch:
     inputs:
-      apps_config:
-        description: 'App configurations as JSON (edit update: true/false for each app)'
-        required: true
-        default: '{
-          "eeveespotify": {"update": false, "version": "9.0.91", "tweak_version": "v6.2", "download_url": "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"},
-          "ytlite": {"update": false, "version": "20.44.2", "tweak_version": "v5.2b4", "download_url": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"},
-          "x_neofreebird": {"update": false, "version": "11.36", "tweak_version": "v5.2", "download_url": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"},
-          "inshotpro": {"update": false, "version": "1.90.2", "download_url": "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1"},
-          "refacepro": {"update": false, "version": "5.23.0", "download_url": "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1"},
-          "amethyst": {"update": false, "version": "1.0", "download_url": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1"},
-          "appstoreplus": {"update": false, "version": "1.0.3", "download_url": "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1"},
-          "itorrent": {"update": false, "version": "2.0.15", "download_url": "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1"},
-          "livecontainer": {"update": false, "version": "3.6.1", "download_url": "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1"},
-          "modmyipa": {"update": false, "version": "1.0.2", "download_url": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1"},
-          "supermario64": {"update": false, "version": "1.2.1", "download_url": "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1"}
-        }'
-      change_description:
-        description: 'Custom commit message (optional)'
+      # Main Header
+      main_header:
+        description: "🎯 Repository Manager - Bulk App Updates"
         required: false
-        default: ''
+      
+      # Spotify Section
+      spotify_header:
+        description: "🎵 Spotify"
+        required: false
+      update_eeveespotify:
+        description: "Update EeveeSpotify"
+        type: boolean
+        default: false
+
+      # YouTube Section  
+      youtube_header:
+        description: "📺 YouTube"
+        required: false
+      update_ytlite:
+        description: "Update YTLite"
+        type: boolean
+        default: false
+
+      # Twitter/X Section
+      twitter_header:
+        description: "🐦 Twitter/X"
+        required: false
+      update_x_neofreebird:
+        description: "Update X (NeoFreeBird)"
+        type: boolean
+        default: false
+
+      # InshotPro Section
+      inshot_header:
+        description: "🎬 InshotPro"
+        required: false
+      update_inshotpro:
+        description: "Update InshotPro"
+        type: boolean
+        default: false
+
+      # RefacePro Section
+      reface_header:
+        description: "🤖 RefacePro"
+        required: false
+      update_refacepro:
+        description: "Update RefacePro"
+        type: boolean
+        default: false
+
+      # Amethyst Section
+      amethyst_header:
+        description: "⚡ Amethyst"
+        required: false
+      update_amethyst:
+        description: "Update Amethyst"
+        type: boolean
+        default: false
+
+      # Appstore++ Section
+      appstore_header:
+        description: "📱 Appstore++"
+        required: false
+      update_appstoreplus:
+        description: "Update Appstore++"
+        type: boolean
+        default: false
+
+      # iTorrent Section
+      itorrent_header:
+        description: "📥 iTorrent"
+        required: false
+      update_itorrent:
+        description: "Update iTorrent"
+        type: boolean
+        default: false
+
+      # Options Section
+      options_header:
+        description: "⚙️ Options"
+        required: false
+      change_description:
+        description: "Custom commit message (optional)"
+        required: false
+        default: ""
 
 jobs:
   repository-sync:
@@ -59,92 +124,6 @@ jobs:
             fi
           done
 
-      - name: "📋 Parse app configurations"
-        id: parse-config
-        run: |
-          set -euo pipefail
-          
-          # Validate input JSON
-          if ! echo '${{ github.event.inputs.apps_config }}' | jq empty 2>/dev/null; then
-            echo "::error::Invalid apps_config JSON input"
-            exit 1
-          fi
-          
-          CONFIG_JSON='${{ github.event.inputs.apps_config }}'
-          echo "🔧 Parsing app configurations..."
-          
-          # Create a mapping for app names and bundle IDs
-          declare -A APP_MAPPING=(
-            ["eeveespotify"]="EeveeSpotify|com.spotify.client"
-            ["ytlite"]="YTLite|com.google.ios.youtube" 
-            ["x_neofreebird"]="X (NeoFreeBird)|com.atebits.Tweetie2"
-            ["inshotpro"]="InshotPro|com.camerasideas.InstaShot"
-            ["refacepro"]="RefacePro (IOS 17+)|com.neocortext.doublicatapp"
-            ["amethyst"]="Amethyst|com.angelauramc.amethyst"
-            ["appstoreplus"]="Appstore++|com.cokepokes.AppStorePlus"
-            ["itorrent"]="iTorrent (IOS 17+)|org.xitrix.iTorrent2"
-            ["livecontainer"]="LiveContainer|com.kdt.livecontainer"
-            ["modmyipa"]="ModMyIpa|com.powenn.ModMyIPA"
-            ["supermario64"]="SuperMario64 (60fps)|xyz.cypwn.sm64ios-60fps"
-          )
-          
-          # Process each app configuration
-          UPDATED_APPS=()
-          APP_KEYS=("eeveespotify" "ytlite" "x_neofreebird" "inshotpro" "refacepro" "amethyst" "appstoreplus" "itorrent" "livecontainer" "modmyipa" "supermario64")
-          
-          # Create a config file with all app data
-          CONFIG_DATA=""
-          
-          for app_key in "${APP_KEYS[@]}"; do
-            # Check if app exists in config
-            if ! echo "$CONFIG_JSON" | jq -e ".[\"$app_key\"]" > /dev/null 2>&1; then
-              echo "⚠️  App '$app_key' not found in configuration, skipping"
-              continue
-            fi
-            
-            update_flag=$(echo "$CONFIG_JSON" | jq -r --arg key "$app_key" '.[$key].update // false')
-            
-            if [[ "$update_flag" == "true" ]]; then
-              if [[ -z "${APP_MAPPING[$app_key]:-}" ]]; then
-                echo "::error::Unknown app key: $app_key"
-                exit 1
-              fi
-              
-              IFS='|' read -r app_name bundle_id <<< "${APP_MAPPING[$app_key]}"
-              UPDATED_APPS+=("$app_name")
-              
-              version=$(echo "$CONFIG_JSON" | jq -r --arg key "$app_key" '.[$key].version // ""')
-              download_url=$(echo "$CONFIG_JSON" | jq -r --arg key "$app_key" '.[$key].download_url // ""')
-              tweak_version=$(echo "$CONFIG_JSON" | jq -r --arg key "$app_key" '.[$key].tweak_version // ""')
-              
-              # Validate required fields
-              if [[ -z "$version" || -z "$download_url" ]]; then
-                echo "::error::Missing version or download_url for $app_name"
-                exit 1
-              fi
-              
-              # Add to config data
-              CONFIG_DATA+="$app_key|$app_name|$bundle_id|$version|$download_url|$tweak_version"$'\n'
-              echo "✅ $app_name queued for update (v$version)"
-            else
-              echo "⏭️  $app_key update skipped"
-            fi
-          done
-          
-          # Save config data to file
-          echo "$CONFIG_DATA" > "app_updates.config"
-          echo "📁 Saved app update configuration to file"
-          
-          # Output updated apps as JSON array
-          if [[ ${#UPDATED_APPS[@]} -gt 0 ]]; then
-            printf -v apps_json '"%s",' "${UPDATED_APPS[@]}"
-            echo "updated_apps=[${apps_json%,}]" >> $GITHUB_OUTPUT
-            echo "📦 Apps to update: ${UPDATED_APPS[*]}"
-          else
-            echo "updated_apps=[]" >> $GITHUB_OUTPUT
-            echo "ℹ️  No apps selected for update"
-          fi
-
       - name: "🔄 Update repository files"
         id: update-files
         run: |
@@ -153,14 +132,29 @@ jobs:
           echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
           echo "📅 Using date: $CURRENT_DATE"
           
+          # App configurations with versions and URLs
+          declare -A APP_CONFIGS=(
+            ["EeveeSpotify"]="com.spotify.client|9.0.91|v6.2|https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
+            ["YTLite"]="com.google.ios.youtube|20.44.2|v5.2b4|https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
+            ["X (NeoFreeBird)"]="com.atebits.Tweetie2|11.36|v5.2|https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
+            ["InshotPro"]="com.camerasideas.InstaShot|1.90.2||https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1"
+            ["RefacePro (IOS 17+)"]="com.neocortext.doublicatapp|5.23.0||https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1"
+            ["Amethyst"]="com.angelauramc.amethyst|1.0||https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1"
+            ["Appstore++"]="com.cokepokes.AppStorePlus|1.0.3||https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1"
+            ["iTorrent (IOS 17+)"]="org.xitrix.iTorrent2|2.0.15||https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1"
+            ["LiveContainer"]="com.kdt.livecontainer|3.6.1||https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1"
+            ["ModMyIpa"]="com.powenn.ModMyIPA|1.0.2||https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1"
+            ["SuperMario64 (60fps)"]="xyz.cypwn.sm64ios-60fps|1.2.1||https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1"
+          )
+          
           # Function to safely update app in JSON file
           update_app_in_file() {
             local file="$1"
             local app_name="$2"
             local bundle_id="$3"
             local version="$4"
-            local download_url="$5"
-            local tweak_version="$6"
+            local tweak_version="$5"
+            local download_url="$6"
             local temp_file="${file}.tmp.$$"
             
             echo "🔧 Updating $app_name in $file..."
@@ -282,38 +276,140 @@ jobs:
             fi
             
             echo "✅ Successfully updated $app_name in $file"
+            return 0
           }
 
-          # Read app configurations from file and process updates
+          # Process app updates based on toggles
+          UPDATED_APPS=()
           UPDATE_COUNT=0
           
-          if [[ ! -f "app_updates.config" ]]; then
-            echo "ℹ️  No app updates configured"
-            echo "total_updates=0" >> $GITHUB_OUTPUT
-            exit 0
+          # Spotify
+          if [[ "${{ github.event.inputs.update_eeveespotify }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[EeveeSpotify]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "EeveeSpotify" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("EeveeSpotify")
+            echo "✅ EeveeSpotify updated to v$version"
           fi
           
-          while IFS='|' read -r app_key app_name bundle_id version download_url tweak_version; do
-            if [[ -n "$app_key" && -n "$app_name" ]]; then
-              echo "🔄 Processing update for $app_name..."
-              for file in sidestore.json feather.json trollapps.json; do
-                if update_app_in_file "$file" "$app_name" "$bundle_id" "$version" "$download_url" "$tweak_version"; then
-                  ((UPDATE_COUNT++))
-                else
-                  exit 1
-                fi
-              done
-            fi
-          done < "app_updates.config"
+          # YouTube
+          if [[ "${{ github.event.inputs.update_ytlite }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[YTLite]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "YTLite" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("YTLite")
+            echo "✅ YTLite updated to v$version"
+          fi
           
-          # Clean up config file
-          rm -f "app_updates.config"
+          # Twitter/X
+          if [[ "${{ github.event.inputs.update_x_neofreebird }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[X (NeoFreeBird)]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "X (NeoFreeBird)" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("X (NeoFreeBird)")
+            echo "✅ X (NeoFreeBird) updated to v$version"
+          fi
           
-          echo "total_updates=$UPDATE_COUNT" >> $GITHUB_OUTPUT
-          echo "🎯 Completed $UPDATE_COUNT file updates across all apps"
+          # InshotPro
+          if [[ "${{ github.event.inputs.update_inshotpro }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[InshotPro]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "InshotPro" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("InshotPro")
+            echo "✅ InshotPro updated to v$version"
+          fi
+          
+          # RefacePro
+          if [[ "${{ github.event.inputs.update_refacepro }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[RefacePro (IOS 17+)]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "RefacePro (IOS 17+)" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("RefacePro")
+            echo "✅ RefacePro updated to v$version"
+          fi
+          
+          # Amethyst
+          if [[ "${{ github.event.inputs.update_amethyst }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[Amethyst]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "Amethyst" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("Amethyst")
+            echo "✅ Amethyst updated to v$version"
+          fi
+          
+          # Appstore++
+          if [[ "${{ github.event.inputs.update_appstoreplus }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[Appstore++]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "Appstore++" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("Appstore++")
+            echo "✅ Appstore++ updated to v$version"
+          fi
+          
+          # iTorrent
+          if [[ "${{ github.event.inputs.update_itorrent }}" == "true" ]]; then
+            IFS='|' read -r bundle_id version tweak_version download_url <<< "${APP_CONFIGS[iTorrent (IOS 17+)]}"
+            for file in sidestore.json feather.json trollapps.json; do
+              if update_app_in_file "$file" "iTorrent (IOS 17+)" "$bundle_id" "$version" "$tweak_version" "$download_url"; then
+                ((UPDATE_COUNT++))
+              else
+                exit 1
+              fi
+            done
+            UPDATED_APPS+=("iTorrent")
+            echo "✅ iTorrent updated to v$version"
+          fi
+          
+          # Output results
+          if [[ ${#UPDATED_APPS[@]} -gt 0 ]]; then
+            printf -v apps_json '"%s",' "${UPDATED_APPS[@]}"
+            echo "updated_apps=[${apps_json%,}]" >> $GITHUB_OUTPUT
+            echo "total_updates=$UPDATE_COUNT" >> $GITHUB_OUTPUT
+            echo "📦 Updated apps: ${UPDATED_APPS[*]}"
+            echo "🎯 Total file updates: $UPDATE_COUNT"
+          else
+            echo "updated_apps=[]" >> $GITHUB_OUTPUT
+            echo "total_updates=0" >> $GITHUB_OUTPUT
+            echo "ℹ️  No apps selected for update"
+          fi
 
       - name: "✅ Verify changes"
-        if: steps.parse-config.outputs.updated_apps != '[]'
+        if: steps.update-files.outputs.updated_apps != '[]'
         run: |
           set -euo pipefail
           echo "🔍 Verifying updated files..."
@@ -327,7 +423,7 @@ jobs:
           done
 
       - name: "📝 Commit and push changes"
-        if: steps.parse-config.outputs.updated_apps != '[]'
+        if: steps.update-files.outputs.updated_apps != '[]'
         run: |
           set -euo pipefail
           
@@ -340,7 +436,7 @@ jobs:
             COMMIT_MSG="${{ github.event.inputs.change_description }}"
           else
             # Parse updated apps from JSON output
-            UPDATED_APPS_JSON='${{ steps.parse-config.outputs.updated_apps }}'
+            UPDATED_APPS_JSON='${{ steps.update-files.outputs.updated_apps }}'
             UPDATED_APPS=$(echo "$UPDATED_APPS_JSON" | jq -r '.[]' 2>/dev/null || echo "")
             
             COMMIT_MSG="🔄 Repository Sync: Updated app versions across all sources"
@@ -384,7 +480,7 @@ jobs:
           echo "- ✅ trollapps.json" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          UPDATED_APPS_JSON='${{ steps.parse-config.outputs.updated_apps }}'
+          UPDATED_APPS_JSON='${{ steps.update-files.outputs.updated_apps }}'
           if [[ "$UPDATED_APPS_JSON" != "[]" ]]; then
             echo "### 📱 Apps Updated:" >> $GITHUB_STEP_SUMMARY
             echo "$UPDATED_APPS_JSON" | jq -r '.[]' | while read -r app; do
