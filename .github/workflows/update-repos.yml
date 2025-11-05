@@ -8,10 +8,10 @@ on:
         type: boolean
         default: false
       spotify_app_version:
-        description: "🎵 Spotify App Version (e.g., 9.0.91)"
+        description: "🎵 Spotify IPA Version"
         default: "9.0.91"
       spotify_tweak_version:
-        description: "🎵 Spotify Tweak Version (e.g., v6.2)"
+        description: "🎵 Spotify Tweak Version"
         default: "v6.2"
       
       update_youtube:
@@ -19,10 +19,10 @@ on:
         type: boolean
         default: false
       youtube_app_version:
-        description: "📺 YouTube App Version (e.g., 20.44.2)"
+        description: "📺 YouTube IPA Version"
         default: "20.44.2"
       youtube_tweak_version:
-        description: "📺 YouTube Tweak Version (e.g., v5.2b4)"
+        description: "📺 YouTube Tweak Version"
         default: "v5.2b4"
       
       update_twitter:
@@ -30,10 +30,10 @@ on:
         type: boolean
         default: false
       twitter_app_version:
-        description: "🐦 Twitter App Version (e.g., 11.36)"
+        description: "🐦 Twitter IPA Version"
         default: "11.36"
       twitter_tweak_version:
-        description: "🐦 Twitter Tweak Version (e.g., v5.2)"
+        description: "🐦 Twitter Tweak Version"
         default: "v5.2"
       
       change_description:
@@ -148,11 +148,11 @@ jobs:
             # Generate localized description with updated versions
             local LOCALIZED_DESC
             if [[ "$app_name" == "EeveeSpotify" ]]; then
-              LOCALIZED_DESC="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v$app_version, EeveeSpotify $tweak_version."
+              LOCALIZED_DESC="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $app_version, EeveeSpotify $tweak_version."
             elif [[ "$app_name" == "YTLite" ]]; then
-              LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v$app_version, YTLite $tweak_version."
+              LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $app_version, YTLite $tweak_version."
             elif [[ "$app_name" == "X (NeoFreeBird)" ]]; then
-              LOCALIZED_DESC="Tweaked Twitter/X with premium features and more. X v$app_version, NeoFreeBird $tweak_version."
+              LOCALIZED_DESC="Tweaked Twitter/X with premium features and more. Twitter IPA $app_version, NeoFreeBird $tweak_version."
             else
               # Fallback to existing description if app not recognized
               LOCALIZED_DESC=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // "Tweaked application with enhanced features."' "$file")
@@ -225,7 +225,7 @@ jobs:
           # Update apps based on individual toggles
           if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
             echo "🎵 Processing Spotify update..."
-            echo "✅ Spotify App Version: ${{ github.event.inputs.spotify_app_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
+            echo "✅ Spotify IPA Version: ${{ github.event.inputs.spotify_app_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
             
             UPDATED_APPS+=("EeveeSpotify")
             for file in sidestore.json feather.json trollapps.json; do
@@ -237,7 +237,7 @@ jobs:
 
           if [[ "${{ github.event.inputs.update_youtube }}" == "true" ]]; then
             echo "📺 Processing YouTube update..."
-            echo "✅ YouTube App Version: ${{ github.event.inputs.youtube_app_version }}, Tweak Version: ${{ github.event.inputs.youtube_tweak_version }}"
+            echo "✅ YouTube IPA Version: ${{ github.event.inputs.youtube_app_version }}, Tweak Version: ${{ github.event.inputs.youtube_tweak_version }}"
             
             UPDATED_APPS+=("YTLite")
             for file in sidestore.json feather.json trollapps.json; do
@@ -249,7 +249,7 @@ jobs:
 
           if [[ "${{ github.event.inputs.update_twitter }}" == "true" ]]; then
             echo "🐦 Processing Twitter update..."
-            echo "✅ Twitter App Version: ${{ github.event.inputs.twitter_app_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
+            echo "✅ Twitter IPA Version: ${{ github.event.inputs.twitter_app_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
             
             UPDATED_APPS+=("X (NeoFreeBird)")
             for file in sidestore.json feather.json trollapps.json; do
