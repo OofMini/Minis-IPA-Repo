@@ -4,59 +4,59 @@ on:
   workflow_dispatch:
     inputs:
       update_spotify:
-        description: "🎵 Update Spotify"
+        description: "Update Spotify"
         type: boolean
         default: false
-      spotify_app_version:
-        description: "🎵 Spotify IPA Version"
+      spotify_ipa_version:
+        description: "Spotify IPA Version:"
         default: "9.0.91"
       spotify_tweak_version:
-        description: "🎵 Spotify Tweak Version"
+        description: "Spotify Tweak Version:"
         default: "v6.2"
       
       update_youtube:
-        description: "📺 Update YouTube"
+        description: "Update YouTube"
         type: boolean
         default: false
-      youtube_app_version:
-        description: "📺 YouTube IPA Version"
+      youtube_ipa_version:
+        description: "YouTube IPA Version:"
         default: "20.44.2"
       youtube_tweak_version:
-        description: "📺 YouTube Tweak Version"
+        description: "YouTube Tweak Version:"
         default: "v5.2b4"
       
       update_twitter:
-        description: "🐦 Update Twitter/X"
+        description: "Update Twitter/X"
         type: boolean
         default: false
-      twitter_app_version:
-        description: "🐦 Twitter IPA Version"
+      twitter_ipa_version:
+        description: "Twitter IPA Version:"
         default: "11.36"
       twitter_tweak_version:
-        description: "🐦 Twitter Tweak Version"
+        description: "Twitter Tweak Version:"
         default: "v5.2"
       
       change_description:
-        description: "📝 Custom commit message (optional)"
+        description: "Custom commit message (optional)"
         default: ""
 
 jobs:
   repository-sync:
-    name: "🔄 Sync App Repository"
+    name: "Sync App Repository"
     runs-on: ubuntu-latest
     
     steps:
-      - name: "📥 Checkout repository"
+      - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "📦 Install dependencies"
+      - name: "Install dependencies"
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: "🔄 Update repository files"
+      - name: "Update repository files"
         id: update-files
         run: |
           set -e
@@ -88,7 +88,7 @@ jobs:
           
           # Function to validate JSON syntax
           validate_json() {
-            echo "🔍 Validating JSON file structure..."
+            echo "Validating JSON file structure..."
             for file in sidestore.json feather.json trollapps.json; do
               if [ -f "$file" ]; then
                 if jq empty "$file" 2>/dev/null; then
@@ -106,11 +106,11 @@ jobs:
           
           # Function to validate JSON structure requirements
           validate_json_structure() {
-            echo "🔍 Validating JSON structure requirements..."
+            echo "Validating JSON structure requirements..."
             
             for file in sidestore.json feather.json trollapps.json; do
               if [ -f "$file" ]; then
-                echo "📋 Checking structure of $file..."
+                echo "Checking structure of $file..."
                 
                 # Check if file has required 'apps' array
                 if ! jq -e '.apps | type == "array"' "$file" > /dev/null; then
@@ -135,24 +135,24 @@ jobs:
             local file="$1"
             local app_name="$2"
             local bundle_id="$3"
-            local app_version="$4"
+            local ipa_version="$4"
             local tweak_version="$5"
             
-            echo "🔄 Updating $app_name in $file..."
+            echo "Updating $app_name in $file..."
             
             # Build the complete download URL
             local download_url
             download_url=$(build_download_info "$app_name" "$tweak_version")
-            echo "📦 Download URL: $download_url"
+            echo "Download URL: $download_url"
             
             # Generate localized description with updated versions
             local LOCALIZED_DESC
             if [[ "$app_name" == "EeveeSpotify" ]]; then
-              LOCALIZED_DESC="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $app_version, EeveeSpotify $tweak_version."
+              LOCALIZED_DESC="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $ipa_version, EeveeSpotify $tweak_version."
             elif [[ "$app_name" == "YTLite" ]]; then
-              LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $app_version, YTLite $tweak_version."
+              LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $ipa_version, YTLite $tweak_version."
             elif [[ "$app_name" == "X (NeoFreeBird)" ]]; then
-              LOCALIZED_DESC="Tweaked Twitter/X with premium features and more. Twitter IPA $app_version, NeoFreeBird $tweak_version."
+              LOCALIZED_DESC="Tweaked Twitter/X with premium features and more. Twitter IPA $ipa_version, NeoFreeBird $tweak_version."
             else
               # Fallback to existing description if app not recognized
               LOCALIZED_DESC=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // "Tweaked application with enhanced features."' "$file")
@@ -165,7 +165,7 @@ jobs:
             if [[ "$file" == "sidestore.json" ]]; then
               jq --arg app "$app_name" \
                  --arg bundle "$bundle_id" \
-                 --arg version "$app_version" \
+                 --arg version "$ipa_version" \
                  --arg url "$download_url" \
                  --arg desc "$LOCALIZED_DESC" \
                  --arg date "$CURRENT_DATE" \
@@ -178,7 +178,7 @@ jobs:
             elif [[ "$file" == "feather.json" ]]; then
               jq --arg app "$app_name" \
                  --arg bundle "$bundle_id" \
-                 --arg version "$app_version" \
+                 --arg version "$ipa_version" \
                  --arg url "$download_url" \
                  --arg desc "$LOCALIZED_DESC" \
                  --arg date "$CURRENT_DATE" \
@@ -195,7 +195,7 @@ jobs:
             else  # trollapps.json
               jq --arg app "$app_name" \
                  --arg bundle "$bundle_id" \
-                 --arg version "$app_version" \
+                 --arg version "$ipa_version" \
                  --arg url "$download_url" \
                  --arg desc "$LOCALIZED_DESC" \
                  '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
@@ -224,37 +224,37 @@ jobs:
           
           # Update apps based on individual toggles
           if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
-            echo "🎵 Processing Spotify update..."
-            echo "✅ Spotify IPA Version: ${{ github.event.inputs.spotify_app_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
+            echo "Processing Spotify update..."
+            echo "Spotify IPA Version: ${{ github.event.inputs.spotify_ipa_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
             
             UPDATED_APPS+=("EeveeSpotify")
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" \
-                "${{ github.event.inputs.spotify_app_version }}" \
+                "${{ github.event.inputs.spotify_ipa_version }}" \
                 "${{ github.event.inputs.spotify_tweak_version }}"
             done
           fi
 
           if [[ "${{ github.event.inputs.update_youtube }}" == "true" ]]; then
-            echo "📺 Processing YouTube update..."
-            echo "✅ YouTube IPA Version: ${{ github.event.inputs.youtube_app_version }}, Tweak Version: ${{ github.event.inputs.youtube_tweak_version }}"
+            echo "Processing YouTube update..."
+            echo "YouTube IPA Version: ${{ github.event.inputs.youtube_ipa_version }}, Tweak Version: ${{ github.event.inputs.youtube_tweak_version }}"
             
             UPDATED_APPS+=("YTLite")
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "YTLite" "com.google.ios.youtube" \
-                "${{ github.event.inputs.youtube_app_version }}" \
+                "${{ github.event.inputs.youtube_ipa_version }}" \
                 "${{ github.event.inputs.youtube_tweak_version }}"
             done
           fi
 
           if [[ "${{ github.event.inputs.update_twitter }}" == "true" ]]; then
-            echo "🐦 Processing Twitter update..."
-            echo "✅ Twitter IPA Version: ${{ github.event.inputs.twitter_app_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
+            echo "Processing Twitter update..."
+            echo "Twitter IPA Version: ${{ github.event.inputs.twitter_ipa_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
             
             UPDATED_APPS+=("X (NeoFreeBird)")
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
-                "${{ github.event.inputs.twitter_app_version }}" \
+                "${{ github.event.inputs.twitter_ipa_version }}" \
                 "${{ github.event.inputs.twitter_tweak_version }}"
             done
           fi
@@ -263,13 +263,13 @@ jobs:
           if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
             APPS_STR=$(printf "%s " "${UPDATED_APPS[@]}")
             echo "updated_apps=${APPS_STR% }" >> $GITHUB_OUTPUT
-            echo "📋 Apps to be updated: ${UPDATED_APPS[*]}"
+            echo "Apps to be updated: ${UPDATED_APPS[*]}"
           else
-            echo "ℹ️ No apps selected for update"
+            echo "No apps selected for update"
           fi
           
           # Verify changes after updates
-          echo "✅ Verifying updated files..."
+          echo "Verifying updated files..."
           for file in sidestore.json feather.json trollapps.json; do
             if jq empty "$file" 2>/dev/null; then
               echo "✅ $file - Valid JSON after updates"
@@ -279,14 +279,14 @@ jobs:
             fi
           done
 
-      - name: "📝 Commit and push changes"
+      - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
         run: |
           # Generate commit message
           if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
             COMMIT_MSG="${{ github.event.inputs.change_description }}"
           else
-            COMMIT_MSG="🔄 Repository Sync: Updated app versions across all sources"
+            COMMIT_MSG="Repository Sync: Updated app versions across all sources"
             
             # Get updated apps from previous step
             UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
@@ -299,7 +299,7 @@ jobs:
               done
             fi
             
-            COMMIT_MSG+="\n\n🤖 Automated update via GitHub Actions"
+            COMMIT_MSG+="\n\nAutomated update via GitHub Actions"
           fi
           
           # Configure git
@@ -311,34 +311,34 @@ jobs:
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
-            echo "⚠️ No changes to commit - files are already up to date"
+            echo "No changes to commit - files are already up to date"
           else
             git commit -m "$(echo -e "$COMMIT_MSG")"
             git push
-            echo "✅ Changes committed and pushed successfully"
+            echo "Changes committed and pushed successfully"
           fi
 
-      - name: "📊 Update summary"
+      - name: "Update summary"
         run: |
-          echo "## 🎯 Repository Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Repository Update Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📱 Apps Updated:" >> $GITHUB_STEP_SUMMARY
+          echo "### Apps Updated:" >> $GITHUB_STEP_SUMMARY
           
           UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
           if [ -n "$UPDATED_APPS_STR" ]; then
             IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
             for app in "${UPDATED_APPS_ARR[@]}"; do
-              echo "- 🎯 $app" >> $GITHUB_STEP_SUMMARY
+              echo "- $app" >> $GITHUB_STEP_SUMMARY
             done
           else
-            echo "ℹ️ No apps were updated (all toggles were off or no changes detected)" >> $GITHUB_STEP_SUMMARY
+            echo "No apps were updated (all toggles were off or no changes detected)" >> $GITHUB_STEP_SUMMARY
           fi
           
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📁 Files Updated:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ sidestore.json" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ feather.json" >> $GITHUB_STEP_SUMMARY  
-          echo "- ✅ trollapps.json" >> $GITHUB_STEP_SUMMARY
+          echo "### Files Updated:" >> $GITHUB_STEP_SUMMARY
+          echo "- sidestore.json" >> $GITHUB_STEP_SUMMARY
+          echo "- feather.json" >> $GITHUB_STEP_SUMMARY  
+          echo "- trollapps.json" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY
+          echo "Automated repository management" >> $GITHUB_STEP_SUMMARY
