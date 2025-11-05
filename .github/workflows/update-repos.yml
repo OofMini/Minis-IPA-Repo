@@ -47,7 +47,7 @@ jobs:
     
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v4
+        uses: OofMini/actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -80,7 +80,7 @@ jobs:
                 echo "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
                 ;;
               *)
-                echo "❌ Unknown app: $app_name"
+                echo "Unknown app: $app_name"
                 exit 1
                 ;;
             esac
@@ -92,13 +92,13 @@ jobs:
             for file in sidestore.json feather.json trollapps.json; do
               if [ -f "$file" ]; then
                 if jq empty "$file" 2>/dev/null; then
-                  echo "✅ $file - Valid JSON syntax"
+                  echo "$file - Valid JSON syntax"
                 else
-                  echo "❌ $file - Invalid JSON syntax"
+                  echo "$file - Invalid JSON syntax"
                   exit 1
                 fi
               else
-                echo "❌ $file - File not found"
+                echo "$file - File not found"
                 exit 1
               fi
             done
@@ -114,20 +114,20 @@ jobs:
                 
                 # Check if file has required 'apps' array
                 if ! jq -e '.apps | type == "array"' "$file" > /dev/null; then
-                  echo "❌ $file - Missing required 'apps' array"
+                  echo "$file - Missing required 'apps' array"
                   exit 1
                 fi
                 
                 # Check if apps array is not empty
                 APP_COUNT=$(jq '.apps | length' "$file")
                 if [ "$APP_COUNT" -eq 0 ]; then
-                  echo "⚠️ $file - 'apps' array is empty"
+                  echo "$file - 'apps' array is empty"
                 else
-                  echo "✅ $file - Valid structure with $APP_COUNT apps"
+                  echo "$file - Valid structure with $APP_COUNT apps"
                 fi
               fi
             done
-            echo "✅ All JSON files have valid structure"
+            echo "All JSON files have valid structure"
           }
           
           # Function to update app in JSON file
@@ -207,9 +207,9 @@ jobs:
             # Verify the temp file was created successfully
             if [ -f "$temp_file" ] && jq empty "$temp_file" 2>/dev/null; then
               mv "$temp_file" "$file"
-              echo "✅ Successfully updated $app_name in $file"
+              echo "Successfully updated $app_name in $file"
             else
-              echo "❌ Failed to update $app_name in $file - temp file invalid"
+              echo "Failed to update $app_name in $file - temp file invalid"
               rm -f "$temp_file"
               exit 1
             fi
@@ -272,9 +272,9 @@ jobs:
           echo "Verifying updated files..."
           for file in sidestore.json feather.json trollapps.json; do
             if jq empty "$file" 2>/dev/null; then
-              echo "✅ $file - Valid JSON after updates"
+              echo "$file - Valid JSON after updates"
             else
-              echo "❌ $file - Invalid JSON after updates"
+              echo "$file - Invalid JSON after updates"
               exit 1
             fi
           done
