@@ -474,4 +474,4 @@ jobs:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY
+          echo "*Automated repository management* 🤖" >> $GITHUB_STEP_SUMMARY 
