@@ -1,4 +1,4 @@
-name: Repository Manager - Bulk App Updates
+name: Bulk IPA Updates
 
 on:
   workflow_dispatch:
@@ -312,49 +312,48 @@ jobs:
               echo "Updating $APP in index.html to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
               # Use a Python script for more reliable HTML/JS parsing
-              python3 <<EOF
+              python3 -c "
 import re
-import sys
 
-with open("index.html.tmp", "r") as f:
+with open('index.html.tmp', 'r') as f:
     content = f.read()
 
 # Map app names to their JavaScript object patterns
 app_patterns = {
-    "spotify": {
-        "id": "eeveespotify",
-        "version_pattern": r"(version: ')[0-9][0-9.]*(')",
-        "desc_pattern": r"(description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback\\. )Spotify v[0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*(\\.')"
+    'spotify': {
+        'id': 'eeveespotify',
+        'version_pattern': r\"(version: ')[0-9][0-9.]*(')\",
+        'desc_pattern': r\"(description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback\\. )Spotify v[0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*(\\.')\"
     },
-    "youtube": {
-        "id": "ytlite", 
-        "version_pattern": r"(version: ')[0-9][0-9.]*(')",
-        "desc_pattern": r"(description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture\\. )Youtube v[0-9][0-9.]*, YTLite v[0-9a-z.]*(\\.')"
+    'youtube': {
+        'id': 'ytlite', 
+        'version_pattern': r\"(version: ')[0-9][0-9.]*(')\",
+        'desc_pattern': r\"(description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture\\. )Youtube v[0-9][0-9.]*, YTLite v[0-9a-z.]*(\\.')\"
     },
-    "twitter": {
-        "id": "neofreebird",
-        "version_pattern": r"(version: ')[0-9][0-9.]*(')", 
-        "desc_pattern": r"(description: 'Tweaked Twitter/X with premium features and more\\. )X v[0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*(\\.')"
+    'twitter': {
+        'id': 'neofreebird',
+        'version_pattern': r\"(version: ')[0-9][0-9.]*(')\", 
+        'desc_pattern': r\"(description: 'Tweaked Twitter/X with premium features and more\\. )X v[0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*(\\.')\"
     }
 }
 
-if "$APP" in app_patterns:
-    patterns = app_patterns["$APP"]
+if '$APP' in app_patterns:
+    patterns = app_patterns['$APP']
     
     # Update version
-    content = re.sub(patterns["version_pattern"], r"\\1$IPA_VERSION\\2", content)
+    content = re.sub(patterns['version_pattern'], r'\\1$IPA_VERSION\\2', content)
     
     # Update description based on app type
-    if "$APP" == "spotify":
-        content = re.sub(patterns["desc_pattern"], r"\\1Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION\\2", content)
-    elif "$APP" == "youtube":
-        content = re.sub(patterns["desc_pattern"], r"\\1YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION\\2", content)
-    elif "$APP" == "twitter":
-        content = re.sub(patterns["desc_pattern"], r"\\1Twitter IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION\\2", content)
+    if '$APP' == 'spotify':
+        content = re.sub(patterns['desc_pattern'], r'\\1Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION\\2', content)
+    elif '$APP' == 'youtube':
+        content = re.sub(patterns['desc_pattern'], r'\\1YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION\\2', content)
+    elif '$APP' == 'twitter':
+        content = re.sub(patterns['desc_pattern'], r'\\1Twitter IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION\\2', content)
 
-with open("index.html.tmp", "w") as f:
+with open('index.html.tmp', 'w') as f:
     f.write(content)
-EOF
+"
             done
             
             # Replace the original file
