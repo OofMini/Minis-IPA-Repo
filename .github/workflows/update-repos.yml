@@ -5,242 +5,242 @@ on:
     inputs:
       # Spotify
       spotify_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       spotify_header:
-        description: "‎"
+        description: "🎵 Spotify"
         required: false
-        default: "      🎵 Spotify"
+        default: ""
       update_eeveespotify:
-        description: "Update"
+        description: "Update EeveeSpotify"
         type: boolean
         default: false
       eeveespotify_version:
-        description: "Version"
+        description: "EeveeSpotify Version"
         default: "9.0.91"
       eeveespotify_tweak_version:
-        description: "Tweak Version"
+        description: "EeveeSpotify Tweak Version"
         default: "v6.2"
       eeveespotify_download_url:
-        description: "Download URL"
+        description: "EeveeSpotify Download URL"
         default: "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
 
       # YouTube
       youtube_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       youtube_header:
-        description: "‎"
+        description: "📺 YouTube"
         required: false
-        default: "      📺 YouTube"
+        default: ""
       update_ytlite:
-        description: "Update"
+        description: "Update YTLite"
         type: boolean
         default: false
       ytlite_version:
-        description: "Version"
+        description: "YTLite Version"
         default: "20.44.2"
       ytlite_tweak_version:
-        description: "Tweak Version"
+        description: "YTLite Tweak Version"
         default: "v5.2b4"
       ytlite_download_url:
-        description: "Download URL"
+        description: "YTLite Download URL"
         default: "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa"
 
       # Twitter/X
       twitter_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       twitter_header:
-        description: "‎"
+        description: "🐦 Twitter/X"
         required: false
-        default: "    🐦 Twitter/X"
+        default: ""
       update_x_neofreebird:
-        description: "Update"
+        description: "Update X (NeoFreeBird)"
         type: boolean
         default: false
       x_neofreebird_version:
-        description: "Version"
+        description: "X Version"
         default: "11.36"
       x_neofreebird_tweak_version:
-        description: "Tweak Version"
+        description: "X Tweak Version"
         default: "v5.2"
       x_neofreebird_download_url:
-        description: "Download URL"
+        description: "X Download URL"
         default: "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
 
       # InshotPro
       inshot_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       inshot_header:
-        description: "‎"
+        description: "🎬 InshotPro"
         required: false
-        default: "     🎬 InshotPro"
+        default: ""
       update_inshotpro:
-        description: "Update"
+        description: "Update InshotPro"
         type: boolean
         default: false
       inshotpro_version:
-        description: "Version"
+        description: "InshotPro Version"
         default: "1.90.2"
       inshotpro_download_url:
-        description: "Download URL"
+        description: "InshotPro Download URL"
         default: "https://www.dropbox.com/scl/fi/z9pg3t8e5rkauyh51duud/InShot-ipaomtk.com.ipa?rlkey=whj0y0ex86tondgcdn9t7dxnv&st=nzcaijfi&dl=1"
 
       # RefacePro
       reface_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       reface_header:
-        description: "‎"
+        description: "🤖 RefacePro"
         required: false
-        default: "     🤖 RefacePro"
+        default: ""
       update_refacepro:
-        description: "Update"
+        description: "Update RefacePro"
         type: boolean
         default: false
       refacepro_version:
-        description: "Version"
+        description: "RefacePro Version"
         default: "5.23.0"
       refacepro_download_url:
-        description: "Download URL"
+        description: "RefacePro Download URL"
         default: "https://www.dropbox.com/scl/fi/kaffbspyr1672l2okzpv5/Reface.ipa?rlkey=fp1f4xhxl0j439s9ub0pkvrtt&st=iu6ldqpw&dl=1"
 
       # Amethyst
       amethyst_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       amethyst_header:
-        description: "‎"
+        description: "⚡ Amethyst"
         required: false
-        default: "      ⚡ Amethyst"
+        default: ""
       update_amethyst:
-        description: "Update"
+        description: "Update Amethyst"
         type: boolean
         default: false
       amethyst_version:
-        description: "Version"
+        description: "Amethyst Version"
         default: "1.0"
       amethyst_download_url:
-        description: "Download URL"
+        description: "Amethyst Download URL"
         default: "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1"
 
       # Appstore++
       appstore_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       appstore_header:
-        description: "‎"
+        description: "📱 Appstore++"
         required: false
-        default: "    📱 Appstore++"
+        default: ""
       update_appstoreplus:
-        description: "Update"
+        description: "Update Appstore++"
         type: boolean
         default: false
       appstoreplus_version:
-        description: "Version"
+        description: "Appstore++ Version"
         default: "1.0.3"
       appstoreplus_download_url:
-        description: "Download URL"
+        description: "Appstore++ Download URL"
         default: "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1"
 
       # iTorrent
       itorrent_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       itorrent_header:
-        description: "‎"
+        description: "📥 iTorrent"
         required: false
-        default: "      📥 iTorrent"
+        default: ""
       update_itorrent:
-        description: "Update"
+        description: "Update iTorrent"
         type: boolean
         default: false
       itorrent_version:
-        description: "Version"
+        description: "iTorrent Version"
         default: "2.0.15"
       itorrent_download_url:
-        description: "Download URL"
+        description: "iTorrent Download URL"
         default: "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1"
 
       # LiveContainer
       livecontainer_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       livecontainer_header:
-        description: "‎"
+        description: "📦 LiveContainer"
         required: false
-        default: "   📦 LiveContainer"
+        default: ""
       update_livecontainer:
-        description: "Update"
+        description: "Update LiveContainer"
         type: boolean
         default: false
       livecontainer_version:
-        description: "Version"
+        description: "LiveContainer Version"
         default: "3.6.1"
       livecontainer_download_url:
-        description: "Download URL"
+        description: "LiveContainer Download URL"
         default: "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1"
 
       # ModMyIpa
       modmyipa_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       modmyipa_header:
-        description: "‎"
+        description: "🔧 ModMyIpa"
         required: false
-        default: "      🔧 ModMyIpa"
+        default: ""
       update_modmyipa:
-        description: "Update"
+        description: "Update ModMyIpa"
         type: boolean
         default: false
       modmyipa_version:
-        description: "Version"
+        description: "ModMyIpa Version"
         default: "1.0.2"
       modmyipa_download_url:
-        description: "Download URL"
+        description: "ModMyIpa Download URL"
         default: "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1"
 
       # SuperMario64
       mario_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       mario_header:
-        description: "‎"
+        description: "🍄 SuperMario64"
         required: false
-        default: "  🍄 SuperMario64"
+        default: ""
       update_supermario64:
-        description: "Update"
+        description: "Update SuperMario64"
         type: boolean
         default: false
       supermario64_version:
-        description: "Version"
+        description: "SuperMario64 Version"
         default: "1.2.1"
       supermario64_download_url:
-        description: "Download URL"
+        description: "SuperMario64 Download URL"
         default: "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1"
 
       # Options
       options_divider:
-        description: "‎"
+        description: "────────────────"
         required: false
-        default: "────────────────"
+        default: ""
       options_header:
-        description: "‎"
+        description: "⚙️ Options"
         required: false
-        default: "       ⚙️ Options"
+        default: ""
       change_description:
         description: "Custom commit message (optional)"
         default: ""
