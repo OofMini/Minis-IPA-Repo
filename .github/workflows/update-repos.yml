@@ -1,4 +1,4 @@
-name: Repository Manager - Bulk App Updates
+name: Bulk IPA Updates
 
 on:
   workflow_dispatch:
