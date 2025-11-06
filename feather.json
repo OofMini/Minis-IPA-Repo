@@ -11,7 +11,7 @@
       "bundleIdentifier": "com.spotify.client",
       "developerName": "whoeevee",
       "subtitle": "Tweaked Spotify client",
-      "localizedDescription": "Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify v9.0.91, EeveeSpotify v6.2.",
+      "localizedDescription": "Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.0.94, EeveeSpotify v6.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png",
       "tintColor": "1DB954",
       "screenshotURLs": [
@@ -21,15 +21,15 @@
       ],
       "versions": [
         {
-          "version": "9.0.91",
-          "date": "2025-11-01",
+          "version": "9.0.94",
+          "date": "2025-11-06",
           "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa",
           "size": 87975526,
           "localizedDescription": "Premium unlocked, ads removed, enhanced playback"
         }
       ],
-      "version": "9.0.91",
-      "versionDate": "2025-11-01",
+      "version": "9.0.94",
+      "versionDate": "2025-11-06",
       "size": 87975526,
       "downloadURL": "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa",
       "appPermissions": {
@@ -75,7 +75,7 @@
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "subtitle": "Tweaked Twitter/X",
-      "localizedDescription": "Tweaked Twitter/X with premium features and more. Twitter IPA 11.37, NeoFreeBird v5.2.",
+      "localizedDescription": "Tweaked Twitter/X with premium features and more. Twitter IPA 11.37.1, NeoFreeBird v5.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "tintColor": "1DA1F2",
       "screenshotURLs": [
@@ -85,15 +85,15 @@
       ],
       "versions": [
         {
-          "version": "11.37",
-          "date": "2025-11-05",
+          "version": "11.37.1",
+          "date": "2025-11-06",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
         }
       ],
-      "version": "11.37",
-      "versionDate": "2025-11-05",
+      "version": "11.37.1",
+      "versionDate": "2025-11-06",
       "size": 142816051,
       "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
       "appPermissions": {
