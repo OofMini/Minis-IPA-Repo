@@ -6,17 +6,20 @@
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, Twitter clients and more.">
     <meta name="keywords" content="iOS apps, tweaked apps, SideStore, TrollApps, Feather, IPA repository, spotify, youtube, minecraft, torrent">
+    <meta name="author" content="Mini">
+    <meta name="robots" content="index, follow">
+
     <meta property="og:title" content="Mini's IPA Repo - Tweaked iOS Apps">
     <meta property="og:description" content="Premium tweaked applications for iOS 15+">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
     <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
-    
+
     <!-- Prevent caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
@@ -25,10 +28,11 @@
     <meta name="apple-mobile-web-app-title" content="Mini's IPA Repo">
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
-    
+
     <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"WebApplication","name":"Mini's IPA Repo","description":"Premium tweaked applications for iOS 15+","url":"https://oofmini.github.io/Minis-IPA-Repo/","applicationCategory":"Utilities","operatingSystem":"iOS"}
     </script>
+
     <style>
         :root {
             --bg-color: #000000;
@@ -57,6 +61,19 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
+
+        /* Motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        .fade-in, .fade-in-left, .app-card {
+            will-change: transform, opacity;
+        }
+
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
@@ -78,20 +95,13 @@
         .stagger-1 { transition-delay: 0.15s; }
         .stagger-2 { transition-delay: 0.3s; }
         .stagger-3 { transition-delay: 0.45s; }
-        
+
         /* Animated Gradient for Title */
         @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        
         .animated-gradient {
             background: linear-gradient(270deg, #8a2be2, #ffffff, #8a2be2);
             background-size: 400% 400%;
@@ -100,7 +110,7 @@
             background-clip: text;
             animation: gradientShift 4s ease infinite;
         }
-        
+
         /* Skeleton Loading Animation */
         .skeleton {
             background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
@@ -108,7 +118,6 @@
             animation: loading 1.5s infinite;
             border-radius: 8px;
         }
-        
         .skeleton-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -119,50 +128,26 @@
             flex-direction: column;
             align-items: center;
         }
-        
-        .skeleton-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            margin: 0 auto 15px;
-        }
-        
-        .skeleton-text {
-            height: 16px;
-            margin-bottom: 8px;
-            width: 100%;
-        }
-        
-        .skeleton-text.short {
-            width: 60%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .skeleton-text.medium {
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .skeleton-button {
-            height: 40px;
-            border-radius: 10px;
-            margin-top: auto;
-            width: 150px;
-        }
-        
+        .skeleton-icon { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 15px; }
+        .skeleton-text { height: 16px; margin-bottom: 8px; width: 100%; }
+        .skeleton-text.short { width: 60%; margin-left: auto; margin-right: auto; }
+        .skeleton-text.medium { width: 80%; margin-left: auto; margin-right: auto; }
+        .skeleton-button { height: 40px; border-radius: 10px; margin-top: auto; width: 150px; }
+
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-        
+
         .error-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 40px;
         }
-        
+        .error-emoji { font-size: 3em; margin-bottom: 20px; }
+        .error-title { margin-bottom: 10px; color: var(--text-color); }
+        .error-message { margin-bottom: 20px; opacity: 0.8; }
+
         .hero {
             background: var(--bg-color);
             padding: 20px 15px 15px;
@@ -176,16 +161,9 @@
             margin-bottom: 10px;
             border: 2px solid var(--card-border);
         }
-        .hero h1 {
-            font-size: 2em;
-            font-weight: 800;
-            margin: 0 0 5px;
-        }
-        .hero-subtitle {
-            font-size: 1em;
-            margin: 0 0 20px;
-            opacity: 0.9;
-        }
+        .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
+        .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
+
         .badges {
             display: flex;
             gap: 8px;
@@ -201,6 +179,7 @@
             font-weight: 600;
         }
         .badge.purple { background: var(--accent-color); }
+
         .cta-buttons {
             display: flex;
             gap: 10px;
@@ -220,31 +199,14 @@
             font-size: 0.9em;
             cursor: pointer;
         }
-        .cta-button.trollapps {
-            background: var(--trollapps-color);
-            border-color: var(--trollapps-color);
-        }
-        .cta-button.sidestore {
-            background: var(--sidestore-color);
-            border-color: var(--sidestore-color);
-        }
-        .cta-button.feather {
-            background: var(--feather-color);
-            border-color: var(--feather-color);
-        }
-        .cta-button:hover {
-            transform: translateY(-2px);
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px 15px;
-        }
-        .search-container {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
+        .cta-button.trollapps { background: var(--trollapps-color); border-color: var(--trollapps-color); }
+        .cta-button.sidestore { background: var(--sidestore-color); border-color: var(--sidestore-color); }
+        .cta-button.feather { background: var(--feather-color); border-color: var(--feather-color); }
+        .cta-button:hover { transform: translateY(-2px); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
+        .search-container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+
         .search-box {
             width: 100%;
             padding: 12px 16px;
@@ -255,14 +217,9 @@
             font-size: 1em;
             transition: all 0.3s ease;
         }
-        .search-box:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-        .search-box::placeholder {
-            color: var(--text-color);
-            opacity: 0.7;
-        }
+        .search-box:focus { outline: none; border-color: var(--accent-color); }
+        .search-box::placeholder { color: var(--text-color); opacity: 0.7; }
+
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -281,10 +238,8 @@
             flex-direction: column;
             align-items: center;
         }
-        .app-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
+        .app-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+
         .app-icon-container {
             width: 80px;
             height: 80px;
@@ -303,6 +258,7 @@
             object-fit: contain;
             border-radius: 16px;
         }
+
         .app-status {
             display: flex;
             align-items: center;
@@ -313,11 +269,8 @@
             color: var(--success-color);
             flex-wrap: wrap;
         }
-        .download-count {
-            font-size: 0.8em;
-            opacity: 0.8;
-            color: var(--text-color);
-        }
+        .download-count { font-size: 0.8em; opacity: 0.8; color: var(--text-color); }
+
         .app-card-content {
             width: 100%;
             display: flex;
@@ -343,6 +296,7 @@
             width: 100%;
             text-align: center;
         }
+
         .download-btn {
             display: inline-flex;
             align-items: center;
@@ -358,9 +312,8 @@
             border: none;
             cursor: pointer;
         }
-        .download-btn:hover {
-            transform: translateY(-2px);
-        }
+        .download-btn:hover { transform: translateY(-2px); }
+
         .repo-info {
             margin-top: 40px;
             padding: 25px;
@@ -390,9 +343,7 @@
             font-weight: 600;
             transition: color 0.3s ease;
         }
-        .repo-link a:hover {
-            color: var(--success-color);
-        }
+        .repo-link a:hover { color: var(--success-color); }
         .repo-link code {
             background: var(--card-bg);
             padding: 4px 10px;
@@ -401,6 +352,7 @@
             color: var(--text-color);
             font-size: 0.85em;
         }
+
         .toast {
             position: fixed;
             bottom: 15px;
@@ -416,106 +368,98 @@
             font-size: 0.9em;
             max-width: 300px;
         }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        .toast.show { transform: translateY(0); opacity: 1; }
         .toast.error { background: var(--error-color); }
         .toast.warning { background: var(--warning-color); }
         .toast.info { background: var(--info-color); }
-        
+        .toast.success { background: var(--success-color); }
+
         @media (max-width: 768px) {
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            .cta-button {
-                width: 180px;
-            }
-            .fade-in-left {
-                transform: translateY(30px);
-            }
-            .fade-in-left.visible {
-                transform: translateY(0);
-            }
-            .repo-link {
-                flex-direction: column;
-                gap: 5px;
-            }
+            .app-grid { grid-template-columns: 1fr; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .cta-button { width: 180px; }
+            .fade-in-left { transform: translateY(30px); }
+            .fade-in-left.visible { transform: translateY(0); }
+            .repo-link { flex-direction: column; gap: 5px; }
         }
     </style>
 </head>
 <body>
     <header class="hero">
-        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo Icon" class="repo-icon">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy">
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
         <p class="hero-subtitle">Tweaked IPAs</p>
-        
-        <div class="badges">
-            <span class="badge">✅ Active</span>
-            <span class="badge purple">📱 iOS 15+</span>
+
+        <div class="badges" role="status" aria-live="polite">
+            <span class="badge" aria-label="Repository status active">✅ Active</span>
+            <span class="badge purple" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
         </div>
 
-        <div class="cta-buttons">
-            <button class="cta-button trollapps" onclick="addToTrollApps()">
-                <span>📱</span> Add to TrollApps
+        <nav class="cta-buttons" aria-label="Add repository to app">
+            <button class="cta-button trollapps" onclick="addToTrollApps()" aria-label="Add repository to TrollApps">
+                <span aria-hidden="true">📱</span> Add to TrollApps
             </button>
-            <button class="cta-button sidestore" onclick="addToSideStore()">
-                <span>⚙️</span> Add to SideStore
+            <button class="cta-button sidestore" onclick="addToSideStore()" aria-label="Add repository to SideStore">
+                <span aria-hidden="true">⚙️</span> Add to SideStore
             </button>
-            <button class="cta-button feather" onclick="addToFeather()">
-                <span>🪶</span> Add to Feather
+            <button class="cta-button feather" onclick="addToFeather()" aria-label="Add repository to Feather">
+                <span aria-hidden="true">🪶</span> Add to Feather
             </button>
-        </div>
+        </nav>
     </header>
 
     <main class="container">
-        <!-- Search box starts immediately after hero -->
-        <div class="search-container fade-in">
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description...">
-        </div>
+        <!-- Search box -->
+        <section class="search-container fade-in" aria-labelledby="search-title">
+            <h2 id="search-title" class="visually-hidden">Search apps</h2>
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." aria-label="Search apps by name or description">
+        </section>
 
-        <!-- App grid starts immediately after search -->
-        <section class="app-grid" id="appGrid"></section>
+        <!-- App grid -->
+        <section class="app-grid" id="appGrid" aria-label="Available apps"></section>
 
-        <section class="repo-info fade-in">
-            <h3>📦 Repository Information</h3>
-            
+        <!-- Repo info -->
+        <section class="repo-info fade-in" aria-labelledby="repo-info-title">
+            <h3 id="repo-info-title">📦 Repository Information</h3>
+
             <div class="repo-link fade-in-left stagger-1">
-                <span>🌐</span>
-                <strong>Official Website:</strong> 
-                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank">https://oofmini.github.io/Minis-IPA-Repo/</a>
+                <span aria-hidden="true">🌐</span>
+                <strong>Official Website:</strong>
+                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
             </div>
-            
+
             <div class="repo-link fade-in-left stagger-2">
-                <span>📱</span>
-                <strong>SideStore Manifest:</strong> 
+                <span aria-hidden="true">📱</span>
+                <strong>SideStore Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
             </div>
-            
+
             <div class="repo-link fade-in-left stagger-3">
-                <span>🧌</span>
-                <strong>TrollApps Manifest:</strong> 
+                <span aria-hidden="true">🧌</span>
+                <strong>TrollApps Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
             </div>
-            
+
             <div class="repo-link fade-in-left stagger-3">
-                <span>🪶</span>
-                <strong>Feather Manifest:</strong> 
+                <span aria-hidden="true">🪶</span>
+                <strong>Feather Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
             </div>
         </section>
     </main>
 
-    <div class="toast" id="toast"></div>
+    <footer class="container" aria-label="Site footer">
+        <p style="opacity:0.6; text-align:center; font-size:0.85em; padding:15px 0;">
+            © Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+        </p>
+    </footer>
+
+    <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
     <script>
         // Prevent caching by adding timestamp to requests
         const timestamp = new Date().getTime();
-        
+
         const appsData = [
             {
                 id: 'eeveespotify',
@@ -642,6 +586,7 @@
 
         let searchTerm = '';
         let deferredPrompt;
+        let searchTimeout;
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -678,18 +623,31 @@
                     <div class="skeleton skeleton-text medium"></div>
                     <div class="skeleton skeleton-button"></div>
                 </div>
-            `.repeat(6); // Show 6 skeleton cards
-            
+            `.repeat(6);
+
             setTimeout(() => {
                 appGrid.querySelectorAll('.skeleton-card').forEach(card => observer.observe(card));
             }, 100);
+        }
+
+        // Fetch with timeout helper
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = 8000 } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(resource, { ...options, signal: controller.signal });
+                return response;
+            } finally {
+                clearTimeout(id);
+            }
         }
 
         // Error Handling & Offline Support
         async function loadAppsWithFallback() {
             try {
                 showSkeletonLoading();
-                
+
                 if (!navigator.onLine) {
                     throw new Error('No internet connection');
                 }
@@ -699,9 +657,10 @@
                     throw new Error('Repository temporarily unavailable');
                 }
 
+                // Simulate async loading
                 await new Promise(resolve => setTimeout(resolve, 800));
                 renderAppGrid();
-                
+
             } catch (error) {
                 console.error('Failed to load apps:', error);
                 showErrorState(error.message);
@@ -711,10 +670,10 @@
         function showErrorState(message) {
             const appGrid = document.getElementById('appGrid');
             appGrid.innerHTML = `
-                <div class="error-state fade-in" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                    <div style="font-size: 3em; margin-bottom: 20px;">😕</div>
-                    <h3 style="margin-bottom: 10px; color: var(--text-color);">Unable to Load Apps</h3>
-                    <p style="margin-bottom: 20px; opacity: 0.8;">${message}</p>
+                <div class="error-state fade-in" role="alert">
+                    <div class="error-emoji" aria-hidden="true">😕</div>
+                    <h3 class="error-title">Unable to Load Apps</h3>
+                    <p class="error-message">${message}</p>
                     <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
                         🔄 Retry
                     </button>
@@ -725,13 +684,11 @@
 
         async function checkResourceAvailability(url) {
             try {
-                const response = await fetch(url, { 
-                    method: 'HEAD', 
+                const response = await fetchWithTimeout(url, {
+                    method: 'HEAD',
                     cache: 'no-cache',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+                    timeout: 5000
                 });
                 return response.ok;
             } catch (error) {
@@ -756,48 +713,49 @@
 
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
-            // Remove localStorage usage for downloads to prevent caching
             const downloadStats = {};
-            const filteredApps = appsData.filter(app => 
-                app.name.toLowerCase().includes(searchTerm) || 
+            const filteredApps = appsData.filter(app =>
+                app.name.toLowerCase().includes(searchTerm) ||
                 app.description.toLowerCase().includes(searchTerm) ||
                 app.developer.toLowerCase().includes(searchTerm)
             );
-            
+
             if (filteredApps.length === 0) {
                 appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
                 setTimeout(() => observer.observe(appGrid.querySelector('.fade-in')), 100);
                 return;
             }
-            
+
             appGrid.innerHTML = filteredApps.map((app, index) => {
                 const appDownloads = downloadStats[app.id] || app.initialDownloads || 0;
+                const safeAlt = `Icon for ${app.name} by ${app.developer}`;
                 return `
-                <div class="app-card fade-in stagger-${(index % 3) + 1}">
+                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${app.name}">
                     <div class="app-icon-container">
-                        <img src="${app.icon}" alt="${app.name}" class="app-icon" 
+                        <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy"
                              onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
-                        ✅ Fully Working • v${app.version}
-                        <span class="download-count">${formatNumber(appDownloads)} downloads</span>
+                        <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
+                        <span class="download-count" aria-label="Download count">${formatNumber(appDownloads)} downloads</span>
                     </div>
                     <div class="app-card-content">
                         <h3>${app.name}</h3>
                         <p>By <b>${app.developer}</b><br>${app.description}</p>
-                        <button class="download-btn" onclick="trackDownload('${app.id}')">
+                        <button class="download-btn" onclick="trackDownload('${app.id}')" aria-label="Download ${app.name} IPA">
                             ⬇️ Download IPA
                         </button>
                     </div>
-                </div>
-            `}).join('');
-            
+                </article>
+                `;
+            }).join('');
+
             setTimeout(() => {
                 appGrid.querySelectorAll('.app-card').forEach(card => observer.observe(card));
             }, 100);
         }
 
-        // Real-time Download Counter
+        // Download handler
         function trackDownload(appId) {
             try {
                 const app = appsData.find(a => a.id === appId);
@@ -812,8 +770,8 @@
                 }
 
                 showToast(`Downloading ${app.name}...`);
-                setTimeout(() => window.open(app.downloadUrl, '_blank'), 500);
-                
+                setTimeout(() => window.open(app.downloadUrl, '_blank', 'noopener,noreferrer'), 500);
+
             } catch (error) {
                 console.error('Download failed:', error);
                 showToast('Download failed: ' + error.message, 'error');
@@ -821,11 +779,8 @@
         }
 
         function formatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
         }
 
@@ -833,17 +788,12 @@
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = 'toast';
-            
-            if (type === 'error') {
-                toast.classList.add('error');
-            } else if (type === 'warning') {
-                toast.classList.add('warning');
-            } else if (type === 'success') {
-                toast.classList.add('success');
-            } else {
-                toast.classList.add('info');
-            }
-            
+
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'warning') toast.classList.add('warning');
+            else if (type === 'success') toast.classList.add('success');
+            else toast.classList.add('info');
+
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
@@ -851,7 +801,8 @@
         // PWA Features
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js?' + timestamp)
+                // Use relative path for GitHub Pages compatibility
+                navigator.serviceWorker.register('./sw.js?' + timestamp)
                     .then((registration) => {
                         console.log('SW registered: ', registration);
                     })
@@ -863,21 +814,23 @@
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
+                // Show a subtle install toast rather than forcing
                 setTimeout(showInstallPrompt, 3000);
             });
         }
 
         function showInstallPrompt() {
             if (!deferredPrompt) return;
-            
+
             const toast = document.getElementById('toast');
             toast.innerHTML = `
-                Install Mini's IPA Repo? 
+                Install Mini's IPA Repo?
                 <button onclick="installApp()" style="margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
                     Install
                 </button>
             `;
-            toast.classList.add('show');
+            toast.classList.remove('error','warning','success','info');
+            toast.classList.add('toast','info','show');
         }
 
         function installApp() {
@@ -927,22 +880,41 @@
         function setupEventListeners() {
             const searchBox = document.getElementById('searchBox');
             if (searchBox) {
+                // Debounced search to reduce re-renders
                 searchBox.addEventListener('input', (e) => {
-                    searchTerm = e.target.value.toLowerCase().trim();
-                    renderAppGrid();
+                    clearTimeout(searchTimeout);
+                    const value = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = value.toLowerCase().trim();
+                        renderAppGrid();
+                    }, 300);
                 });
             }
         }
 
         // Force reload to prevent caching
         window.addEventListener('load', function() {
-            // Clear any cached data
-            if (window.performance && window.performance.navigation.type === 1) {
+            if (window.performance && window.performance.navigation && window.performance.navigation.type === 1) {
                 // Page was reloaded
-                localStorage.clear();
-                sessionStorage.clear();
+                try {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                } catch (e) {
+                    // Ignore storage errors
+                }
             }
         });
     </script>
+
+    <style>
+        /* Utility: visually hidden for accessible headings */
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px; width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+    </style>
 </body>
-</html> 
+</html>
