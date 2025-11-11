@@ -224,7 +224,7 @@ jobs:
           UPDATED_APPS=()
           UPDATED_VERSIONS=()
           
-          # Update apps based on individual toggles
+          # Update apps based on individual toggles - ONLY the toggled apps
           if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
             echo "Processing Spotify update..."
             echo "Spotify IPA Version: ${{ github.event.inputs.spotify_ipa_version }}, Tweak Version: ${{ github.event.inputs.spotify_tweak_version }}"
@@ -303,7 +303,7 @@ jobs:
             # Create a temporary copy
             cp "index.html" "index.html.tmp"
             
-            # Update each app's version in index.html using simple sed commands
+            # Update each app's version in index.html using targeted patterns
             for version_pair in "${VERSION_PAIRS[@]}"; do
               IFS=':' read -ra PARTS <<< "$version_pair"
               APP="${PARTS[0]}"
@@ -314,19 +314,19 @@ jobs:
               
               case "$APP" in
                 "spotify")
-                  # Update Spotify version and description
-                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|Spotify IPA [0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION|" "index.html.tmp"
+                  # Update Spotify - target ONLY the Spotify app object
+                  sed -i "/id: 'eeveespotify'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" "index.html.tmp"
+                  sed -i "/id: 'eeveespotify'/,/},/{s|Spotify IPA [0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION|}" "index.html.tmp"
                   ;;
                 "youtube")
-                  # Update YouTube version and description
-                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|YouTube IPA [0-9][0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION|" "index.html.tmp"
+                  # Update YouTube - target ONLY the YouTube app object
+                  sed -i "/id: 'ytlite'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" "index.html.tmp"
+                  sed -i "/id: 'ytlite'/,/},/{s|YouTube IPA [0-9][0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION|}" "index.html.tmp"
                   ;;
                 "x")
-                  # Update X version and description
-                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|X IPA [0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*|X IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION|" "index.html.tmp"
+                  # Update X - target ONLY the X app object
+                  sed -i "/id: 'neofreebird'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" "index.html.tmp"
+                  sed -i "/id: 'neofreebird'/,/},/{s|X IPA [0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*|X IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION|}" "index.html.tmp"
                   ;;
               esac
             done
