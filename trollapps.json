@@ -89,12 +89,12 @@
       ]
     },
     {
-      "name": "iTorrent (IOS 17+)",
+      "name": "iTorrent",
       "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
-      "version": "2.0.15",
+      "version": "2.1.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/01ai1w6kys71w9vwc1rwx/iTorrent.ipa?rlkey=4fv25wqm6gcr6r7qrai7bskcv&st=kmctvyqe&dl=1",
+      "downloadURL": "https://www.dropbox.com/scl/fi/sjafogm63g006h0arzrpr/iTorrent.ipa?rlkey=qblaqnzp9s71ge3gau8aqdrq9&st=gf2v2y9n&dl=1",
       "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent-1.png",
