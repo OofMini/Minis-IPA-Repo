@@ -43,7 +43,7 @@
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
       "subtitle": "Tweaked YouTube with premium features",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. Youtube v20.44.2, YTLite v5.2b4.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.45.3, YTLite v5.2b4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "tintColor": "FF0000",
       "screenshotURLs": [
@@ -53,17 +53,17 @@
       ],
       "versions": [
         {
-          "version": "20.44.2",
-          "date": "2025-11-04",
-          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
+          "version": "20.45.3",
+          "date": "2025-11-11",
+          "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_v5.2b4.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
       ],
-      "version": "20.44.2",
-      "versionDate": "2025-11-04",
+      "version": "20.45.3",
+      "versionDate": "2025-11-11",
       "size": 113351065,
-      "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
+      "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_v5.2b4.ipa",
       "appPermissions": {
         "background-audio": "Enables background video/audio playback",
         "pip": "Allows picture-in-picture mode for videos"
