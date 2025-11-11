@@ -25,15 +25,15 @@ on:
         description: "YouTube Tweak Version:"
         default: "v5.2b4"
       
-      update_twitter:
-        description: "Update Twitter/X"
+      update_x:
+        description: "Update X"
         type: boolean
         default: false
-      twitter_ipa_version:
-        description: "Twitter IPA Version:"
+      x_ipa_version:
+        description: "X IPA Version:"
         default: "11.36"
-      twitter_tweak_version:
-        description: "Twitter Tweak Version:"
+      x_tweak_version:
+        description: "X Tweak Version:"
         default: "v5.2"
       
       change_description:
@@ -63,7 +63,7 @@ jobs:
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
           echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
           
-          # Function to build download URL from tweak version
+          # Function to build download URL from tweak version (without 'v' prefix)
           build_download_info() {
             local app_name="$1"
             local tweak_version="$2"
@@ -73,8 +73,9 @@ jobs:
                 echo "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
                 ;;
               "YTLite")
-                # YouTube filename includes tweak version
-                echo "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_${tweak_version}.ipa"
+                # Remove 'v' prefix from tweak version for filename
+                local clean_tweak_version="${tweak_version#v}"
+                echo "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_${clean_tweak_version}.ipa"
                 ;;
               "X (NeoFreeBird)")
                 echo "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
@@ -140,7 +141,7 @@ jobs:
             
             echo "Updating $app_name in $file..."
             
-            # Build the complete download URL
+            # Build the complete download URL (without 'v' prefix for YouTube)
             local download_url
             download_url=$(build_download_info "$app_name" "$tweak_version")
             echo "Download URL: $download_url"
@@ -152,7 +153,7 @@ jobs:
             elif [[ "$app_name" == "YTLite" ]]; then
               LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $ipa_version, YTLite $tweak_version."
             elif [[ "$app_name" == "X (NeoFreeBird)" ]]; then
-              LOCALIZED_DESC="Tweaked Twitter/X with premium features and more. Twitter IPA $ipa_version, NeoFreeBird $tweak_version."
+              LOCALIZED_DESC="Tweaked X with premium features and more. X IPA $ipa_version, NeoFreeBird $tweak_version."
             else
               # Fallback to existing description if app not recognized
               LOCALIZED_DESC=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // "Tweaked application with enhanced features."' "$file")
@@ -252,17 +253,17 @@ jobs:
             done
           fi
 
-          if [[ "${{ github.event.inputs.update_twitter }}" == "true" ]]; then
-            echo "Processing Twitter update..."
-            echo "Twitter IPA Version: ${{ github.event.inputs.twitter_ipa_version }}, Tweak Version: ${{ github.event.inputs.twitter_tweak_version }}"
+          if [[ "${{ github.event.inputs.update_x }}" == "true" ]]; then
+            echo "Processing X update..."
+            echo "X IPA Version: ${{ github.event.inputs.x_ipa_version }}, Tweak Version: ${{ github.event.inputs.x_tweak_version }}"
             
             UPDATED_APPS+=("X (NeoFreeBird)")
-            UPDATED_VERSIONS+=("twitter:${{ github.event.inputs.twitter_ipa_version }}:${{ github.event.inputs.twitter_tweak_version }}")
+            UPDATED_VERSIONS+=("x:${{ github.event.inputs.x_ipa_version }}:${{ github.event.inputs.x_tweak_version }}")
             
             for file in sidestore.json feather.json trollapps.json; do
               update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" \
-                "${{ github.event.inputs.twitter_ipa_version }}" \
-                "${{ github.event.inputs.twitter_tweak_version }}"
+                "${{ github.event.inputs.x_ipa_version }}" \
+                "${{ github.event.inputs.x_tweak_version }}"
             done
           fi
 
@@ -314,18 +315,18 @@ jobs:
               case "$APP" in
                 "spotify")
                   # Update Spotify version and description
-                  sed -i "s/version: '9.[0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|Spotify v9.[0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION|" "index.html.tmp"
+                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
+                  sed -i "s|Spotify IPA [0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION|" "index.html.tmp"
                   ;;
                 "youtube")
                   # Update YouTube version and description
-                  sed -i "s/version: '20.[0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|Youtube v20.[0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION|" "index.html.tmp"
+                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
+                  sed -i "s|YouTube IPA [0-9][0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION|" "index.html.tmp"
                   ;;
-                "twitter")
-                  # Update Twitter version and description
-                  sed -i "s/version: '11.[0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
-                  sed -i "s|X v11.[0-9.]*, NeoFreeBird v[0-9a-z.]*|Twitter IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION|" "index.html.tmp"
+                "x")
+                  # Update X version and description
+                  sed -i "s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/" "index.html.tmp"
+                  sed -i "s|X IPA [0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*|X IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION|" "index.html.tmp"
                   ;;
               esac
             done
@@ -347,9 +348,9 @@ jobs:
           IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
           
           # Read current workflow file
-          WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          WORKFLOW_FILE=".github/workflows/main.yml"
           if [ ! -f "$WORKFLOW_FILE" ]; then
-            WORKFLOW_FILE=".github/workflows/main.yml"
+            WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
           fi
           
           if [ -f "$WORKFLOW_FILE" ]; then
@@ -365,10 +366,10 @@ jobs:
               
               echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
-              # Update IPA version default
+              # Update IPA version default - match the exact format
               sed -i "s|^      ${APP}_ipa_version:.*|      ${APP}_ipa_version:\n        description: \"${APP^} IPA Version:\"\n        default: \"$IPA_VERSION\"|" "${WORKFLOW_FILE}.tmp"
               
-              # Update tweak version default  
+              # Update tweak version default - match the exact format
               sed -i "s|^      ${APP}_tweak_version:.*|      ${APP}_tweak_version:\n        description: \"${APP^} Tweak Version:\"\n        default: \"$TWEAK_VERSION\"|" "${WORKFLOW_FILE}.tmp"
             done
             
@@ -408,10 +409,10 @@ jobs:
           
           # Add changed files (JSON files, index.html, and potentially the workflow file)
           git add sidestore.json feather.json trollapps.json index.html
-          if [[ -f ".github/workflows/${{ github.workflow }}.yml" ]]; then
-            git add ".github/workflows/${{ github.workflow }}.yml"
-          elif [[ -f ".github/workflows/main.yml" ]]; then
+          if [[ -f ".github/workflows/main.yml" ]]; then
             git add ".github/workflows/main.yml"
+          elif [[ -f ".github/workflows/${{ github.workflow }}.yml" ]]; then
+            git add ".github/workflows/${{ github.workflow }}.yml"
           fi
           
           # Check if there are changes to commit
