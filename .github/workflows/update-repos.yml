@@ -9,10 +9,10 @@ on:
         default: false
       spotify_ipa_version:
         description: "Spotify IPA Version:"
-        default: "9.0.94"
+        default: "9.0.96"
       spotify_tweak_version:
         description: "Spotify Tweak Version:"
-        default: "v6.2"
+        default: "v6.2.2"
       
       update_youtube:
         description: "Update YouTube"
