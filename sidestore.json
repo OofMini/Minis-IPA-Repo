@@ -280,7 +280,7 @@
     {
       "name": "SuperMario64 (60fps)",
       "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
-      "developerName": "Mario",
+      "developerName": "Cypwn",
       "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
       "screenshotURLs": [
