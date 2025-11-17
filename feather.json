@@ -43,7 +43,7 @@
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
       "subtitle": "Tweaked YouTube with premium features",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.45.3, YTLite v5.2b4.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.46.2, YTLite v5.2b4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "tintColor": "FF0000",
       "screenshotURLs": [
@@ -53,15 +53,15 @@
       ],
       "versions": [
         {
-          "version": "20.45.3",
-          "date": "2025-11-11",
+          "version": "20.46.2",
+          "date": "2025-11-17",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
       ],
-      "version": "20.45.3",
-      "versionDate": "2025-11-11",
+      "version": "20.46.2",
+      "versionDate": "2025-11-17",
       "size": 113351065,
       "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
       "appPermissions": {
@@ -75,7 +75,7 @@
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "subtitle": "Tweaked Twitter/X",
-      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.38.1, NeoFreeBird v5.2.",
+      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.40, NeoFreeBird v5.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "tintColor": "1DA1F2",
       "screenshotURLs": [
@@ -85,15 +85,15 @@
       ],
       "versions": [
         {
-          "version": "11.38.1",
-          "date": "2025-11-11",
+          "version": "11.40",
+          "date": "2025-11-17",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
         }
       ],
-      "version": "11.38.1",
-      "versionDate": "2025-11-11",
+      "version": "11.40",
+      "versionDate": "2025-11-17",
       "size": 142816051,
       "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
       "appPermissions": {
