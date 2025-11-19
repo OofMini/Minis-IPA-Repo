@@ -48,13 +48,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Debug workflow structure"
-        run: |
-          WORKFLOW_FILE=".github/workflows/main.yml"
-          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
-          echo "=== INPUTS SECTION ==="
-          sed -n '/workflow_dispatch:/,/^[^ ]/p' "$WORKFLOW_FILE" | grep -A 30 "inputs:"
-
       - name: "Update repository files"
         id: update-files
         env:
@@ -197,9 +190,12 @@ jobs:
             done
           fi
           
-          # Update workflow defaults - WAITING FOR DEBUG INFO
+          # Update workflow defaults - FIXED FILE PATH HANDLING
           WORKFLOW_FILE=".github/workflows/main.yml"
-          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          if [ ! -f "$WORKFLOW_FILE" ]; then
+            # Handle workflow files with spaces in the name
+            WORKFLOW_FILE=$(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -1)
+          fi
           
           if [ -f "$WORKFLOW_FILE" ]; then
             echo "Updating workflow defaults in $WORKFLOW_FILE..."
@@ -212,14 +208,15 @@ jobs:
               
               echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
-              # Try multiple patterns to find what works
-              # Pattern 1: Exact variable names
-              sed -i "s/\(${APP}_ipa_version:.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-              sed -i "s/\(${APP}_tweak_version:.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
+              # Use perl for reliable multi-line replacement
+              perl -i -pe "s/(${APP}_ipa_version:.*?default: \")[^\"]*(\")/\${1}${IPA_VERSION}\${2}/s" "$WORKFLOW_FILE"
+              perl -i -pe "s/(${APP}_tweak_version:.*?default: \")[^\"]*(\")/\${1}${TWEAK_VERSION}\${2}/s" "$WORKFLOW_FILE"
             done
             
             echo "Workflow file updated. New defaults:"
             grep -A 2 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
+          else
+            echo "⚠️ No workflow file found"
           fi
 
       - name: "Commit and push changes"
@@ -246,7 +243,9 @@ jobs:
           
           git add sidestore.json feather.json trollapps.json index.html
           WORKFLOW_FILE=".github/workflows/main.yml"
-          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          if [ ! -f "$WORKFLOW_FILE" ]; then
+            WORKFLOW_FILE=$(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -1)
+          fi
           [ -f "$WORKFLOW_FILE" ] && git add "$WORKFLOW_FILE"
           
           if ! git diff --staged --quiet; then
@@ -278,7 +277,13 @@ jobs:
             echo "- index.html"
             
             if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
-              echo "- workflow.yml (updated defaults)"
+              WORKFLOW_FILE=".github/workflows/main.yml"
+              if [ ! -f "$WORKFLOW_FILE" ]; then
+                WORKFLOW_FILE=$(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -1)
+              fi
+              if [ -f "$WORKFLOW_FILE" ]; then
+                echo "- $(basename "$WORKFLOW_FILE") (updated defaults)"
+              fi
               echo ""
               echo "### New Default Versions Set:"
               UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
