@@ -37,6 +37,11 @@ on:
         description: "Custom commit message (optional)"
         default: ""
 
+permissions:
+  contents: write
+  actions: write
+  workflows: write
+
 jobs:
   repository-sync:
     name: "Sync App Repository"
@@ -190,11 +195,14 @@ jobs:
             done
           fi
           
-          # Update workflow defaults - FIXED WITH EXACT PATH
+          # Update workflow defaults (but don't commit if we don't have permission)
           WORKFLOW_FILE=".github/workflows/update-repos.yml"
           
           if [ -f "$WORKFLOW_FILE" ]; then
             echo "Updating workflow defaults in $WORKFLOW_FILE..."
+            
+            # Backup the original workflow file
+            cp "$WORKFLOW_FILE" "${WORKFLOW_FILE}.backup"
             
             for version_pair in "${VERSION_PAIRS[@]}"; do
               IFS=':' read -ra PARTS <<< "$version_pair"
@@ -204,32 +212,17 @@ jobs:
               
               echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
-              # METHOD 1: Simple and direct - replace the entire default line
+              # Update workflow defaults
               sed -i "/${APP}_ipa_version:/,/default:/s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
               sed -i "/${APP}_tweak_version:/,/default:/s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
-              
-              # METHOD 2: More specific - only update if we find the exact pattern
-              sed -i "s/\(${APP}_ipa_version:.*\n.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-              sed -i "s/\(${APP}_tweak_version:.*\n.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
             done
             
-            # Verify the changes
-            echo "=== UPDATED WORKFLOW DEFAULTS ==="
-            grep -A 2 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
-            
-            # Show before/after for debugging
-            echo "=== BEFORE/AFTER COMPARISON ==="
-            echo "Spotify IPA:"
-            grep -A 1 "spotify_ipa_version" "$WORKFLOW_FILE" || true
-            echo "YouTube IPA:"
-            grep -A 1 "youtube_ipa_version" "$WORKFLOW_FILE" || true
-            echo "X IPA:"
-            grep -A 1 "x_ipa_version" "$WORKFLOW_FILE" || true
-          else
-            echo "❌ Workflow file not found at $WORKFLOW_FILE"
+            echo "✅ Workflow defaults updated locally"
+            echo "=== UPDATED DEFAULTS ==="
+            grep -A 1 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
           fi
 
-      - name: "Commit and push changes"
+      - name: "Commit repository changes"
         if: steps.update-files.outputs.updated_apps
         run: |
           set -e
@@ -251,13 +244,42 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
+          # Only commit the JSON files and index.html (skip workflow file due to permissions)
           git add sidestore.json feather.json trollapps.json index.html
-          WORKFLOW_FILE=".github/workflows/update-repos.yml"
-          [ -f "$WORKFLOW_FILE" ] && git add "$WORKFLOW_FILE"
           
           if ! git diff --staged --quiet; then
             git commit -m "$(echo -e "$COMMIT_MSG")"
             git push
+            echo "✅ Repository files committed successfully"
+          else
+            echo "ℹ️ No repository changes to commit"
+          fi
+
+      - name: "Try to commit workflow changes"
+        if: steps.update-files.outputs.updated_versions
+        continue-on-error: true  # This step won't fail the workflow if it errors
+        run: |
+          set -e
+          WORKFLOW_FILE=".github/workflows/update-repos.yml"
+          
+          if [ -f "$WORKFLOW_FILE" ]; then
+            echo "Attempting to commit workflow defaults update..."
+            git add "$WORKFLOW_FILE"
+            
+            if ! git diff --staged --quiet; then
+              git commit -m "Update workflow defaults to latest versions"
+              if git push; then
+                echo "✅ Workflow defaults committed successfully"
+              else
+                echo "⚠️ Workflow defaults updated locally but couldn't push (permissions issue)"
+                echo "The workflow will use the new defaults next time, but the file wasn't updated in the repository."
+                # Restore the backup since we can't push the changes
+                mv "${WORKFLOW_FILE}.backup" "$WORKFLOW_FILE"
+              fi
+            else
+              echo "ℹ️ No workflow changes to commit"
+              rm -f "${WORKFLOW_FILE}.backup"
+            fi
           fi
 
       - name: "Update summary"
@@ -284,10 +306,7 @@ jobs:
             echo "- index.html"
             
             if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
-              WORKFLOW_FILE=".github/workflows/update-repos.yml"
-              if [ -f "$WORKFLOW_FILE" ]; then
-                echo "- update-repos.yml (updated defaults)"
-              fi
+              echo "- update-repos.yml (defaults updated locally)"
               echo ""
               echo "### New Default Versions Set:"
               UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
@@ -299,6 +318,8 @@ jobs:
                 TWEAK_VERSION="${PARTS[2]}"
                 echo "- ${APP^}: IPA $IPA_VERSION, Tweak $TWEAK_VERSION"
               done
+              echo ""
+              echo "⚠️ *Workflow defaults were updated locally but may not be committed due to GitHub security restrictions*"
             fi
             
             echo ""
