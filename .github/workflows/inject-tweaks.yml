@@ -19,18 +19,6 @@ on:
         description: "📛 New App Name (optional)"
         required: false
         default: ""
-      create_release:
-        description: "🚀 Create draft release with IPA"
-        type: boolean
-        default: true
-      release_tag:
-        description: "🏷️ Release tag (e.g., v1.0.0)"
-        required: false
-        default: "v1.0.0"
-      release_title:
-        description: "📝 Release title"
-        required: false
-        default: "Tweaked IPA Release"
       tweak1_enable:
         description: "🔧 Enable Tweak 1"
         type: boolean
@@ -81,8 +69,6 @@ jobs:
     steps:
       - name: "🔁 Checkout repository"
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "⚙️ Setup environment and download files"
         id: setup
@@ -261,21 +247,7 @@ except Exception as e:
           echo "✅ Successfully created: ${{ github.event.inputs.output_filename }} ($FILE_SIZE)"
           echo "📊 Total files injected: $TOTAL_INJECTED_FILES"
 
-      - name: "🚀 Create draft release with IPA"
-        if: github.event.inputs.create_release == 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.event.inputs.release_tag }}
-          release_name: ${{ github.event.inputs.release_title }}
-          body: "Tweaked IPA: ${{ env.original_app_name }} | Size: ${{ steps.process.outputs.file_size }} | Tweaks: ${{ steps.setup.outputs.tweak_count }} | Files Injected: ${{ steps.process.outputs.total_injected_files }}"
-          draft: true
-          prerelease: false
-          files: ${{ github.event.inputs.output_filename }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "📤 Upload artifact (fallback)"
-        if: github.event.inputs.create_release != 'true'
+      - name: "📤 Upload tweaked IPA"
         uses: actions/upload-artifact@v4
         with:
           name: tweaked-ipa
@@ -300,12 +272,7 @@ except Exception as e:
             echo "**📦 Output File:** \`${{ github.event.inputs.output_filename }}\` (${{ steps.process.outputs.file_size }})" >> $GITHUB_STEP_SUMMARY
             echo "**📱 Original App:** \`${{ env.original_app_name }}\`" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
-            if [[ "${{ github.event.inputs.create_release }}" == "true" ]]; then
-              echo "**🚀 Release Created:** [${{ github.event.inputs.release_title }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.release_tag }})" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "**📥 Download:** Available in Artifacts section" >> $GITHUB_STEP_SUMMARY
-            fi
+            echo "**📥 Download:** Available in Artifacts section" >> $GITHUB_STEP_SUMMARY
           else
             echo "### ❌ **Injection Failed**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
