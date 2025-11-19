@@ -1,161 +1,4 @@
-name: Bulk IPA Updates
-
-on:
-  workflow_dispatch:
-    inputs:
-      update_spotify:
-        description: "Update Spotify"
-        type: boolean
-        default: false
-      spotify_ipa_version:
-        description: "Spotify IPA Version:"
-        default: "9.0.96"
-      spotify_tweak_version:
-        description: "Spotify Tweak Version:"
-        default: "v6.2.2"
-      update_youtube:
-        description: "Update YouTube"
-        type: boolean
-        default: false
-      youtube_ipa_version:
-        description: "YouTube IPA Version:"
-        default: "20.45.3"
-      youtube_tweak_version:
-        description: "YouTube Tweak Version:"
-        default: "v5.2b4"
-      update_x:
-        description: "Update X"
-        type: boolean
-        default: false
-      x_ipa_version:
-        description: "X IPA Version:"
-        default: "11.38.1"
-      x_tweak_version:
-        description: "X Tweak Version:"
-        default: "v5.2"
-      change_description:
-        description: "Custom commit message (optional)"
-        default: ""
-
-jobs:
-  repository-sync:
-    name: "Sync App Repository"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "Update repository files"
-        id: update-files
-        env:
-          UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
-          SPOTIFY_IPA: ${{ github.event.inputs.spotify_ipa_version }}
-          SPOTIFY_TWEAK: ${{ github.event.inputs.spotify_tweak_version }}
-          UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
-          YOUTUBE_IPA: ${{ github.event.inputs.youtube_ipa_version }}
-          YOUTUBE_TWEAK: ${{ github.event.inputs.youtube_tweak_version }}
-          UPDATE_X: ${{ github.event.inputs.update_x }}
-          X_IPA: ${{ github.event.inputs.x_ipa_version }}
-          X_TWEAK: ${{ github.event.inputs.x_tweak_version }}
-        run: |
-          set -e
-          sudo apt-get update && sudo apt-get install -y jq
-          CURRENT_DATE=$(date -u +"%Y-%m-%d")
-          echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
-          
-          # App configuration mapping
-          declare -A APP_CONFIG=(
-            ["spotify"]="EeveeSpotify:com.spotify.client:$UPDATE_SPOTIFY:$SPOTIFY_IPA:$SPOTIFY_TWEAK"
-            ["youtube"]="YTLite:com.google.ios.youtube:$UPDATE_YOUTUBE:$YOUTUBE_IPA:$YOUTUBE_TWEAK" 
-            ["x"]="X (NeoFreeBird):com.atebits.Tweetie2:$UPDATE_X:$X_IPA:$X_TWEAK"
-          )
-          
-          build_download_url() {
-            case "$1" in
-              "EeveeSpotify") echo "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa" ;;
-              "YTLite") echo "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_${2#v}.ipa" ;;
-              "X (NeoFreeBird)") echo "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa" ;;
-              *) echo "Unknown app: $1"; exit 1 ;;
-            esac
-          }
-          
-          # Combined validation
-          for file in sidestore.json feather.json trollapps.json; do
-            [ -f "$file" ] && jq -e '.apps' "$file" >/dev/null || { echo "❌ Invalid: $file"; exit 1; }
-          done
-          
-          update_json_file() {
-            local file="$1" app_name="$2" bundle_id="$3" ipa_version="$4" tweak_version="$5"
-            local download_url=$(build_download_url "$app_name" "$tweak_version")
-            local temp_file="${file}.tmp"
-            
-            # Generate description
-            case "$app_name" in
-              "EeveeSpotify") local desc="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $ipa_version, EeveeSpotify $tweak_version." ;;
-              "YTLite") local desc="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $ipa_version, YTLite $tweak_version." ;;
-              "X (NeoFreeBird)") local desc="Tweaked X with premium features and more. X IPA $ipa_version, NeoFreeBird $tweak_version." ;;
-              *) local desc=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // "Tweaked application with enhanced features."' "$file") ;;
-            esac
-            
-            case "$file" in
-              "sidestore.json")
-                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
-                   --arg url "$download_url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.versions[0].version = $version | .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-              "feather.json")
-                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
-                   --arg url "$download_url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | .downloadURL = $url | .versionDate = $date |
-                     .versions[0].version = $version | .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-              "trollapps.json")
-                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
-                   --arg url "$download_url" --arg desc "$desc" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-            esac
-            
-            [ -f "$temp_file" ] && jq empty "$temp_file" && mv "$temp_file" "$file"
-          }
-          
-          # Process updates
-          UPDATED_APPS=()
-          UPDATED_VERSIONS=()
-          
-          for app_key in "${!APP_CONFIG[@]}"; do
-            IFS=':' read -r app_name bundle_id should_update ipa_version tweak_version <<< "${APP_CONFIG[$app_key]}"
-            [[ "$should_update" != "true" ]] && continue
-            
-            for file in sidestore.json feather.json trollapps.json; do
-              update_json_file "$file" "$app_name" "$bundle_id" "$ipa_version" "$tweak_version"
-            done
-            UPDATED_APPS+=("$app_name")
-            UPDATED_VERSIONS+=("${app_key}:${ipa_version}:${tweak_version}")
-          done
-          
-          # Set outputs
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
-            echo "updated_versions=${UPDATED_VERSIONS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          # Final validation
-          for file in sidestore.json feather.json trollapps.json; do
-            jq empty "$file" || exit 1
-          done
-
-      - name: "Update web content and workflow defaults"
+- name: "Update web content and workflow defaults"
         if: steps.update-files.outputs.updated_versions
         run: |
           set -e
@@ -192,11 +35,14 @@ jobs:
             done
           fi
           
-          # Update workflow defaults
+          # Update workflow defaults - SIMPLIFIED AND DIRECT APPROACH
           WORKFLOW_FILE=".github/workflows/update-repos.yml"
           
           if [ -f "$WORKFLOW_FILE" ]; then
             echo "Updating workflow defaults in $WORKFLOW_FILE..."
+            
+            # Create a temporary copy
+            cp "$WORKFLOW_FILE" "${WORKFLOW_FILE}.tmp"
             
             for version_pair in "${VERSION_PAIRS[@]}"; do
               IFS=':' read -ra PARTS <<< "$version_pair"
@@ -206,109 +52,48 @@ jobs:
               
               echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
-              # Update workflow defaults
-              sed -i "/${APP}_ipa_version:/,/default:/s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-              sed -i "/${APP}_tweak_version:/,/default:/s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
+              # Use Python for reliable text processing
+              python3 -c "
+import re
+import sys
+
+filename = '.github/workflows/update-repos.yml.tmp'
+app = '$APP'
+ipa_version = '$IPA_VERSION'
+tweak_version = '$TWEAK_VERSION'
+
+with open(filename, 'r') as f:
+    content = f.read()
+
+# Replace IPA version - look for the exact pattern
+ipa_pattern = f'{app}_ipa_version:'
+if ipa_pattern in content:
+    # Find and replace the default value after the pattern
+    content = re.sub(
+        f'({app}_ipa_version:[\\s\\S]*?default: [\"\\'])([^\"\\']*)([\"\\'])',
+        f'\\\\g<1>{ipa_version}\\\\g<3>',
+        content
+    )
+
+# Replace tweak version - look for the exact pattern  
+tweak_pattern = f'{app}_tweak_version:'
+if tweak_pattern in content:
+    content = re.sub(
+        f'({app}_tweak_version:[\\s\\S]*?default: [\"\\'])([^\"\\']*)([\"\\'])',
+        f'\\\\g<1>{tweak_version}\\\\g<3>',
+        content
+    )
+
+with open(filename, 'w') as f:
+    f.write(content)
+"
             done
             
-            echo "✅ Workflow defaults updated locally"
-          fi
-
-      - name: "Commit repository changes"
-        if: steps.update-files.outputs.updated_apps
-        run: |
-          set -e
-          if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
-            COMMIT_MSG="${{ github.event.inputs.change_description }}"
-          else
-            COMMIT_MSG="Repository Sync: Updated app versions across all sources"
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG\n\nUpdated apps:"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG\n• $app"
-              done
-            fi
-            COMMIT_MSG="$COMMIT_MSG\n\nAutomated update via GitHub Actions"
-          fi
-          
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          # Only commit the JSON files and index.html
-          git add sidestore.json feather.json trollapps.json index.html
-          
-          if ! git diff --staged --quiet; then
-            git commit -m "$(echo -e "$COMMIT_MSG")"
-            git push
-            echo "✅ Repository files committed successfully"
-          else
-            echo "ℹ️ No repository changes to commit"
-          fi
-
-      - name: "Try to commit workflow changes"
-        if: steps.update-files.outputs.updated_versions
-        continue-on-error: true
-        run: |
-          set -e
-          WORKFLOW_FILE=".github/workflows/update-repos.yml"
-          
-          if [ -f "$WORKFLOW_FILE" ]; then
-            echo "Attempting to commit workflow defaults update..."
-            git add "$WORKFLOW_FILE"
+            # Replace the original file
+            mv "${WORKFLOW_FILE}.tmp" "$WORKFLOW_FILE"
+            echo "✅ Workflow defaults updated using Python"
             
-            if ! git diff --staged --quiet; then
-              git commit -m "Update workflow defaults to latest versions"
-              if git push; then
-                echo "✅ Workflow defaults committed successfully"
-              else
-                echo "⚠️ Workflow defaults updated locally but couldn't push (permissions issue)"
-              fi
-            else
-              echo "ℹ️ No workflow changes to commit"
-            fi
+            # Show the changes
+            echo "Updated defaults:"
+            grep -A 2 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
           fi
-
-      - name: "Update summary"
-        run: |
-          {
-            echo "## Repository Update Summary"
-            echo ""
-            echo "### Apps Updated:"
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                echo "- $app"
-              done
-            else
-              echo "No apps were updated"
-            fi
-            
-            echo ""
-            echo "### Files Updated:"
-            echo "- sidestore.json"
-            echo "- feather.json"  
-            echo "- trollapps.json"
-            echo "- index.html"
-            
-            if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
-              echo "- update-repos.yml (defaults updated locally)"
-              echo ""
-              echo "### New Default Versions Set:"
-              UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP="${PARTS[0]}"
-                IPA_VERSION="${PARTS[1]}"
-                TWEAK_VERSION="${PARTS[2]}"
-                echo "- ${APP^}: IPA $IPA_VERSION, Tweak $TWEAK_VERSION"
-              done
-            fi
-            
-            echo ""
-            echo "---"
-            echo "Automated repository management"
-          } >> $GITHUB_STEP_SUMMARY
