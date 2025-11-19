@@ -54,14 +54,14 @@
       "versions": [
         {
           "version": "20.46.2",
-          "date": "2025-11-17",
+          "date": "2025-11-19",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
         }
       ],
       "version": "20.46.2",
-      "versionDate": "2025-11-17",
+      "versionDate": "2025-11-19",
       "size": 113351065,
       "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
       "appPermissions": {
@@ -86,14 +86,14 @@
       "versions": [
         {
           "version": "11.40",
-          "date": "2025-11-17",
+          "date": "2025-11-19",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
         }
       ],
       "version": "11.40",
-      "versionDate": "2025-11-17",
+      "versionDate": "2025-11-19",
       "size": 142816051,
       "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
       "appPermissions": {
