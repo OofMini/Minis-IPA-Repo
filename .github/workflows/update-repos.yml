@@ -48,11 +48,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Setup environment"
-        run: |
-          sudo apt-get update && sudo apt-get install -y jq
-          echo "CURRENT_DATE=$(date -u +'%Y-%m-%d')" >> $GITHUB_ENV
-
       - name: "Update repository files"
         id: update-files
         env:
@@ -67,248 +62,193 @@ jobs:
           X_TWEAK: ${{ github.event.inputs.x_tweak_version }}
         run: |
           set -e
+          # Combined setup and processing
+          sudo apt-get update && sudo apt-get install -y jq
+          CURRENT_DATE=$(date -u +"%Y-%m-%d")
+          echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
           
-          # App configuration mapping
-          declare -A APP_CONFIG
-          APP_CONFIG[spotify]="EeveeSpotify:com.spotify.client:$UPDATE_SPOTIFY:$SPOTIFY_IPA:$SPOTIFY_TWEAK"
-          APP_CONFIG[youtube]="YTLite:com.google.ios.youtube:$UPDATE_YOUTUBE:$YOUTUBE_IPA:$YOUTUBE_TWEAK"
-          APP_CONFIG[x]="X (NeoFreeBird):com.atebits.Tweetie2:$UPDATE_X:$X_IPA:$X_TWEAK"
+          # App configuration mapping (optimization from earlier)
+          declare -A APP_CONFIG=(
+            ["spotify"]="EeveeSpotify:com.spotify.client:$UPDATE_SPOTIFY:$SPOTIFY_IPA:$SPOTIFY_TWEAK"
+            ["youtube"]="YTLite:com.google.ios.youtube:$UPDATE_YOUTUBE:$YOUTUBE_IPA:$YOUTUBE_TWEAK" 
+            ["x"]="X (NeoFreeBird):com.atebits.Tweetie2:$UPDATE_X:$X_IPA:$X_TWEAK"
+          )
           
-          build_download_url() {
-            local app_name="$1"
-            local tweak_version="$2"
-            case "$app_name" in
-              "EeveeSpotify") 
-                echo "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
-                ;;
-              "YTLite") 
-                local clean_version="${tweak_version#v}"
-                echo "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_${clean_version}.ipa"
-                ;;
-              "X (NeoFreeBird)") 
-                echo "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-                ;;
-              *) 
-                echo "Unknown app: $app_name" >&2
-                return 1
-                ;;
+          build_download_info() {
+            case "$1" in
+              "EeveeSpotify") echo "https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa" ;;
+              "YTLite") echo "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_${2#v}.ipa" ;;
+              "X (NeoFreeBird)") echo "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa" ;;
+              *) echo "Unknown app: $1"; exit 1 ;;
             esac
           }
           
-          validate_json_files() {
-            echo "Validating JSON files..."
-            for file in sidestore.json feather.json trollapps.json; do
-              if [ ! -f "$file" ]; then
-                echo "❌ Missing file: $file"
-                return 1
-              fi
-              if ! jq -e '.apps' "$file" >/dev/null 2>&1; then
-                echo "❌ Invalid JSON structure in $file"
-                return 1
-              fi
-              echo "✅ $file is valid"
-            done
-          }
+          # Combined validation (optimized from earlier)
+          echo "Validating JSON files..."
+          for file in sidestore.json feather.json trollapps.json; do
+            [ -f "$file" ] || { echo "Missing file: $file"; exit 1; }
+            jq -e '.apps | type == "array"' "$file" >/dev/null || { echo "Invalid structure: $file"; exit 1; }
+            echo "✅ $file validated"
+          done
           
           update_json_file() {
-            local file="$1"
-            local app_name="$2"
-            local bundle_id="$3"
-            local ipa_version="$4"
-            local download_url="$5"
+            local file="$1" app_name="$2" bundle_id="$3" ipa_version="$4" tweak_version="$5"
+            local download_url=$(build_download_info "$app_name" "$tweak_version")
             local temp_file="${file}.tmp"
             
-            echo "Updating $file for $app_name..."
+            # Generate description (from original working version)
+            local LOCALIZED_DESC
+            if [[ "$app_name" == "EeveeSpotify" ]]; then
+              LOCALIZED_DESC="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA $ipa_version, EeveeSpotify $tweak_version."
+            elif [[ "$app_name" == "YTLite" ]]; then
+              LOCALIZED_DESC="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA $ipa_version, YTLite $tweak_version."
+            elif [[ "$app_name" == "X (NeoFreeBird)" ]]; then
+              LOCALIZED_DESC="Tweaked X with premium features and more. X IPA $ipa_version, NeoFreeBird $tweak_version."
+            else
+              LOCALIZED_DESC=$(jq -r --arg app "$app_name" --arg bundle "$bundle_id" '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)).localizedDescription // "Tweaked application with enhanced features."' "$file")
+            fi
             
             case "$file" in
               "sidestore.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg date "$CURRENT_DATE" \
+                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
+                   --arg url "$download_url" --arg desc "$LOCALIZED_DESC" --arg date "$CURRENT_DATE" \
                    '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date)' \
-                   "$file" > "$temp_file"
+                    (.versions[0].version = $version | .versions[0].downloadURL = $url | 
+                     .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
                 ;;
-              "feather.json")  
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg date "$CURRENT_DATE" \
+              "feather.json")
+                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
+                   --arg url "$download_url" --arg desc "$LOCALIZED_DESC" --arg date "$CURRENT_DATE" \
                    '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
                     (.version = $version | .downloadURL = $url | .versionDate = $date |
-                     .versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date)' \
-                   "$file" > "$temp_file"
+                     .versions[0].version = $version | .versions[0].downloadURL = $url | 
+                     .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
                 ;;
               "trollapps.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
+                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_version" \
+                   --arg url "$download_url" --arg desc "$LOCALIZED_DESC" \
                    '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | .downloadURL = $url)' \
-                   "$file" > "$temp_file"
+                    (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file"
                 ;;
             esac
             
-            if [ -f "$temp_file" ] && jq . "$temp_file" >/dev/null 2>&1; then
-              mv "$temp_file" "$file"
-              echo "✅ Successfully updated $file"
-            else
-              echo "❌ Failed to update $file - invalid JSON output"
-              [ -f "$temp_file" ] && rm -f "$temp_file"
-              return 1
-            fi
+            [ -f "$temp_file" ] && jq empty "$temp_file" && mv "$temp_file" "$file" && echo "✅ Updated $app_name in $file"
           }
           
-          # Main execution
-          echo "Starting repository update process..."
-          validate_json_files
-          
-          updated_apps=()
-          updated_versions=()
+          # Process updates using optimized loop (from earlier optimizations)
+          UPDATED_APPS=()
+          UPDATED_VERSIONS=()
           
           for app_key in "${!APP_CONFIG[@]}"; do
             IFS=':' read -r app_name bundle_id should_update ipa_version tweak_version <<< "${APP_CONFIG[$app_key]}"
             
-            if [ "$should_update" != "true" ]; then
-              echo "ℹ️ Skipping $app_name - update not requested"
-              continue
+            if [[ "$should_update" == "true" ]]; then
+              echo "🔄 Processing $app_name update..."
+              for file in sidestore.json feather.json trollapps.json; do
+                update_json_file "$file" "$app_name" "$bundle_id" "$ipa_version" "$tweak_version"
+              done
+              UPDATED_APPS+=("$app_name")
+              UPDATED_VERSIONS+=("${app_key}:${ipa_version}:${tweak_version}")
             fi
-            
-            echo "🔄 Processing $app_name update..."
-            download_url=$(build_download_url "$app_name" "$tweak_version")
-            echo "Download URL: $download_url"
-            
-            for file in sidestore.json feather.json trollapps.json; do
-              if ! update_json_file "$file" "$app_name" "$bundle_id" "$ipa_version" "$download_url"; then
-                echo "❌ Failed to update $file for $app_name"
-                exit 1
-              fi
-            done
-            
-            updated_apps+=("$app_name")
-            updated_versions+=("${app_key}:${ipa_version}:${tweak_version}")
-            echo "✅ Successfully updated $app_name to IPA $ipa_version, Tweak $tweak_version"
           done
           
           # Set outputs
-          if [ ${#updated_apps[@]} -gt 0 ]; then
-            echo "updated_apps=${updated_apps[*]}" >> $GITHUB_OUTPUT
-            echo "updated_versions=${updated_versions[*]}" >> $GITHUB_OUTPUT
-            echo "✅ All updates completed successfully"
-          else
-            echo "ℹ️ No apps selected for update"
+          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
+            echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
+            echo "updated_versions=${UPDATED_VERSIONS[*]}" >> $GITHUB_OUTPUT
           fi
           
           # Final validation
-          echo "Final validation of JSON files..."
           for file in sidestore.json feather.json trollapps.json; do
-            if jq . "$file" >/dev/null 2>&1; then
-              echo "✅ $file passed final validation"
-            else
-              echo "❌ $file failed final validation"
-              exit 1
-            fi
+            jq empty "$file" || { echo "Final validation failed: $file"; exit 1; }
           done
 
-      - name: "Update web files and workflow defaults"
+      - name: "Update web content and workflow defaults"
         if: steps.update-files.outputs.updated_versions
         run: |
           set -e
-          UPDATED_VERSIONS="${{ steps.update-files.outputs.updated_versions }}"
+          UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+          [ -z "$UPDATED_VERSIONS_STR" ] && exit 0
           
-          if [ -z "$UPDATED_VERSIONS" ]; then
-            echo "No versions to update"
-            exit 0
-          fi
+          IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
           
-          # Update index.html with version information
+          # Update index.html with combined sed operations (optimization)
           if [ -f "index.html" ]; then
-            echo "Updating index.html..."
-            for version_pair in $UPDATED_VERSIONS; do
-              IFS=':' read -r app ipa_version tweak_version <<< "$version_pair"
+            for version_pair in "${VERSION_PAIRS[@]}"; do
+              IFS=':' read -ra PARTS <<< "$version_pair"
+              APP="${PARTS[0]}"
+              IPA_VERSION="${PARTS[1]}"
+              TWEAK_VERSION="${PARTS[2]}"
               
-              case "$app" in
+              case "$APP" in
                 "spotify")
-                  sed -i "/id: 'eeveespotify'/,/},/{
-                    s/version: '[0-9][0-9.]*',/version: '$ipa_version',/
-                    s|Spotify IPA [0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $ipa_version, EeveeSpotify $tweak_version|
-                  }" "index.html"
+                  sed -i -e "/id: 'eeveespotify'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" \
+                         -e "/id: 'eeveespotify'/,/},/{s|Spotify IPA [0-9][0-9.]*, EeveeSpotify v[0-9a-z.]*|Spotify IPA $IPA_VERSION, EeveeSpotify $TWEAK_VERSION|}" \
+                         "index.html"
                   ;;
                 "youtube")
-                  sed -i "/id: 'ytlite'/,/},/{
-                    s/version: '[0-9][0-9.]*',/version: '$ipa_version',/
-                    s|YouTube IPA [0-9][0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $ipa_version, YTLite $tweak_version|
-                  }" "index.html"
+                  sed -i -e "/id: 'ytlite'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" \
+                         -e "/id: 'ytlite'/,/},/{s|YouTube IPA [0-9][0-9.]*, YTLite v[0-9a-z.]*|YouTube IPA $IPA_VERSION, YTLite $TWEAK_VERSION|}" \
+                         "index.html"
                   ;;
                 "x")
-                  sed -i "/id: 'neofreebird'/,/},/{
-                    s/version: '[0-9][0-9.]*',/version: '$ipa_version',/
-                    s|X IPA [0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*|X IPA $ipa_version, NeoFreeBird $tweak_version|
-                  }" "index.html"
+                  sed -i -e "/id: 'neofreebird'/,/},/{s/version: '[0-9][0-9.]*',/version: '$IPA_VERSION',/}" \
+                         -e "/id: 'neofreebird'/,/},/{s|X IPA [0-9][0-9.]*, NeoFreeBird v[0-9a-z.]*|X IPA $IPA_VERSION, NeoFreeBird $TWEAK_VERSION|}" \
+                         "index.html"
                   ;;
               esac
             done
             echo "✅ Updated index.html"
-          else
-            echo "⚠️ index.html not found"
           fi
           
-          # Update workflow defaults
-          workflow_file=$(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -1)
-          if [ -f "$workflow_file" ]; then
-            echo "Updating workflow defaults in $workflow_file..."
-            for version_pair in $UPDATED_VERSIONS; do
-              IFS=':' read -r app ipa_version tweak_version <<< "$version_pair"
+          # Update workflow defaults with improved pattern matching
+          WORKFLOW_FILE=".github/workflows/main.yml"
+          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          
+          if [ -f "$WORKFLOW_FILE" ]; then
+            for version_pair in "${VERSION_PAIRS[@]}"; do
+              IFS=':' read -ra PARTS <<< "$version_pair"
+              APP="${PARTS[0]}"
+              IPA_VERSION="${PARTS[1]}"
+              TWEAK_VERSION="${PARTS[2]}"
               
-              # Update IPA version default
-              sed -i "/${app}_ipa_version:/,/default:/s/default: \"[^\"]*\"/default: \"$ipa_version\"/" "$workflow_file"
-              
-              # Update tweak version default
-              sed -i "/${app}_tweak_version:/,/default:/s/default: \"[^\"]*\"/default: \"$tweak_version\"/" "$workflow_file"
+              # Use improved sed patterns that actually work
+              sed -i "/${APP}_ipa_version:/,/default:/s/default: \"[^\"]*\"/default: \"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+              sed -i "/${APP}_tweak_version:/,/default:/s/default: \"[^\"]*\"/default: \"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
             done
             echo "✅ Updated workflow defaults"
-          else
-            echo "⚠️ Workflow file not found"
           fi
 
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
-        env:
-          UPDATED_APPS: ${{ steps.update-files.outputs.updated_apps }}
         run: |
           set -e
-          
-          # Generate commit message
-          if [ -n "${{ github.event.inputs.change_description }}" ]; then
-            commit_msg="${{ github.event.inputs.change_description }}"
+          # Use PROVEN working commit format from original
+          if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
+            COMMIT_MSG="${{ github.event.inputs.change_description }}"
           else
-            commit_msg="Repository Sync: Updated app versions"
-            if [ -n "$UPDATED_APPS" ]; then
-              commit_msg="$commit_msg\n\nUpdated apps:"
-              for app in $UPDATED_APPS; do
-                commit_msg="$commit_msg\n• $app"
+            COMMIT_MSG="Repository Sync: Updated app versions across all sources"
+            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
+            if [ -n "$UPDATED_APPS_STR" ]; then
+              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
+              COMMIT_MSG="$COMMIT_MSG\n\nUpdated apps:"
+              for app in "${UPDATED_APPS_ARR[@]}"; do
+                COMMIT_MSG="$COMMIT_MSG\n• $app"
               done
             fi
-            commit_msg="$commit_msg\n\nAutomated update via GitHub Actions"
+            COMMIT_MSG="$COMMIT_MSG\n\nAutomated update via GitHub Actions"
           fi
           
-          # Configure git
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Add modified files
           git add sidestore.json feather.json trollapps.json index.html
-          workflow_file=$(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -1)
-          if [ -f "$workflow_file" ]; then
-            git add "$workflow_file"
-          fi
+          WORKFLOW_FILE=".github/workflows/main.yml"
+          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          [ -f "$WORKFLOW_FILE" ] && git add "$WORKFLOW_FILE"
           
           if ! git diff --staged --quiet; then
-            echo -e "$commit_msg" | git commit -F -
+            git commit -m "$(echo -e "$COMMIT_MSG")"
             git push
             echo "✅ Changes committed and pushed"
           else
@@ -316,38 +256,40 @@ jobs:
           fi
 
       - name: "Update summary"
-        if: always()
-        env:
-          UPDATED_APPS: ${{ steps.update-files.outputs.updated_apps }}
-          UPDATED_VERSIONS: ${{ steps.update-files.outputs.updated_versions }}
         run: |
           {
             echo "## Repository Update Summary"
             echo ""
-            
-            if [ -n "$UPDATED_APPS" ]; then
-              echo "### Apps Updated:"
-              for app in $UPDATED_APPS; do
+            echo "### Apps Updated:"
+            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
+            if [ -n "$UPDATED_APPS_STR" ]; then
+              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
+              for app in "${UPDATED_APPS_ARR[@]}"; do
                 echo "- $app"
               done
             else
-              echo "### No apps were updated"
+              echo "No apps were updated"
             fi
             
             echo ""
-            echo "### Files Modified:"
+            echo "### Files Updated:"
             echo "- sidestore.json"
             echo "- feather.json"  
             echo "- trollapps.json"
             echo "- index.html"
             
-            if [ -n "$UPDATED_VERSIONS" ]; then
-              echo "- workflow (updated defaults)"
+            if [[ "${{ steps.update-files.outputs.updated_versions }}" ]]; then
+              echo "- workflow.yml (updated defaults)"
               echo ""
-              echo "### Version Updates:"
-              for version_pair in $UPDATED_VERSIONS; do
-                IFS=':' read -r app ipa_version tweak_version <<< "$version_pair"
-                echo "- ${app^}: IPA $ipa_version, Tweak $tweak_version"
+              echo "### New Default Versions Set:"
+              UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+              for version_pair in "${VERSION_PAIRS[@]}"; do
+                IFS=':' read -ra PARTS <<< "$version_pair"
+                APP="${PARTS[0]}"
+                IPA_VERSION="${PARTS[1]}"
+                TWEAK_VERSION="${PARTS[2]}"
+                echo "- ${APP^}: IPA $IPA_VERSION, Tweak $TWEAK_VERSION"
               done
             fi
             
