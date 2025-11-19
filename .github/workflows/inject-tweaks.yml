@@ -345,4 +345,4 @@ except Exception as e:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "⚡ Advanced IPA Injector v2.2 | $(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_STEP_SUMMARY 
+          echo "⚡ Advanced IPA Injector v2.2 | $(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_STEP_SUMMARY
