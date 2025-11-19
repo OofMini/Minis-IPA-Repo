@@ -48,6 +48,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "Debug workflow structure"
+        run: |
+          WORKFLOW_FILE=".github/workflows/main.yml"
+          [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
+          echo "=== INPUTS SECTION ==="
+          sed -n '/workflow_dispatch:/,/^[^ ]/p' "$WORKFLOW_FILE" | grep -A 30 "inputs:"
+
       - name: "Update repository files"
         id: update-files
         env:
@@ -190,7 +197,7 @@ jobs:
             done
           fi
           
-          # Update workflow defaults - COMPLETELY REWRITTEN
+          # Update workflow defaults - WAITING FOR DEBUG INFO
           WORKFLOW_FILE=".github/workflows/main.yml"
           [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
           
@@ -205,19 +212,13 @@ jobs:
               
               echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
               
-              # METHOD 1: Use perl for multi-line replacement (most reliable)
-              if command -v perl >/dev/null 2>&1; then
-                perl -i -pe "s/(${APP}_ipa_version:.*?default: \")[^\"]*(\")/\${1}${IPA_VERSION}\${2}/s" "$WORKFLOW_FILE"
-                perl -i -pe "s/(${APP}_tweak_version:.*?default: \")[^\"]*(\")/\${1}${TWEAK_VERSION}\${2}/s" "$WORKFLOW_FILE"
-              else
-                # METHOD 2: Use sed with explicit line patterns
-                sed -i "/${APP}_ipa_version:/,/default:/{s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/}" "$WORKFLOW_FILE"
-                sed -i "/${APP}_tweak_version:/,/default:/{s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/}" "$WORKFLOW_FILE"
-              fi
+              # Try multiple patterns to find what works
+              # Pattern 1: Exact variable names
+              sed -i "s/\(${APP}_ipa_version:.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+              sed -i "s/\(${APP}_tweak_version:.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
             done
             
-            # Verify the changes
-            echo "Updated workflow content:"
+            echo "Workflow file updated. New defaults:"
             grep -A 2 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
           fi
 
