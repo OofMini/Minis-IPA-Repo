@@ -1,0 +1,370 @@
+name: Advanced IPA Tweaks Injector
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: "📱 URL to the original IPA file"
+        required: true
+        default: ""
+      output_filename:
+        description: "💾 Output filename for tweaked IPA"
+        required: true
+        default: "TweakedApp.ipa"
+      bundle_id:
+        description: "🏷️ New Bundle ID (optional)"
+        required: false
+        default: ""
+      app_name:
+        description: "📛 New App Name (optional)"
+        required: false
+        default: ""
+      create_release:
+        description: "🚀 Create draft release with IPA"
+        type: boolean
+        default: true
+      release_tag:
+        description: "🏷️ Release tag (e.g., v1.0.0)"
+        required: false
+        default: "v1.0.0"
+      release_title:
+        description: "📝 Release title"
+        required: false
+        default: "Tweaked IPA Release"
+      tweak1_enable:
+        description: "🔧 Enable Tweak 1"
+        type: boolean
+        default: false
+      tweak1_url:
+        description: "📦 Tweak 1 .deb URL"
+        required: false
+        default: ""
+      tweak2_enable:
+        description: "🔧 Enable Tweak 2"
+        type: boolean
+        default: false
+      tweak2_url:
+        description: "📦 Tweak 2 .deb URL"
+        required: false
+        default: ""
+      tweak3_enable:
+        description: "🔧 Enable Tweak 3"
+        type: boolean
+        default: false
+      tweak3_url:
+        description: "📦 Tweak 3 .deb URL"
+        required: false
+        default: ""
+      tweak4_enable:
+        description: "🔧 Enable Tweak 4"
+        type: boolean
+        default: false
+      tweak4_url:
+        description: "📦 Tweak 4 .deb URL"
+        required: false
+        default: ""
+      tweak5_enable:
+        description: "🔧 Enable Tweak 5"
+        type: boolean
+        default: false
+      tweak5_url:
+        description: "📦 Tweak 5 .deb URL"
+        required: false
+        default: ""
+
+jobs:
+  inject-tweak:
+    name: "Inject Tweaks into IPA"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: "🔁 Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "⚙️ Setup environment and download files"
+        id: setup
+        run: |
+          set -e
+          echo "🔄 Setting up environment..."
+          sudo apt-get update && sudo apt-get install -y \
+            wget curl unzip zip file \
+            python3 python3-pip \
+            libplist-utils libxml2-utils \
+            dpkg
+          pip3 install biplist
+          
+          echo "📥 Downloading IPA..."
+          if ! wget -q -O original.ipa "${{ github.event.inputs.ipa_url }}"; then
+            echo "❌ Failed to download IPA from: ${{ github.event.inputs.ipa_url }}"
+            exit 1
+          fi
+          
+          IPA_SIZE=$(du -h original.ipa | cut -f1)
+          echo "✅ IPA downloaded successfully ($IPA_SIZE)"
+          
+          # Download enabled tweaks
+          TWEAK_COUNT=0
+          TWEAK_NAMES=()
+          for i in {1..5}; do
+            ENABLE_VAR="tweak${i}_enable"
+            URL_VAR="tweak${i}_url"
+            
+            if [[ "${{ github.event.inputs[ENABLE_VAR] }}" == "true" ]] && [[ -n "${{ github.event.inputs[URL_VAR] }}" ]]; then
+              echo "📥 Downloading tweak $i..."
+              if wget -q -O "tweak_${i}.deb" "${{ github.event.inputs[URL_VAR] }}"; then
+                TWEAK_COUNT=$((TWEAK_COUNT + 1))
+                # Try to get tweak name from filename or URL
+                TWEAK_NAME=$(basename "${{ github.event.inputs[URL_VAR] }}" .deb | sed 's/%20/ /g')
+                TWEAK_NAMES+=("$TWEAK_NAME")
+                echo "✅ Downloaded tweak_${i}.deb ($TWEAK_NAME)"
+              else
+                echo "❌ Failed to download tweak $i from: ${{ github.event.inputs[URL_VAR] }}"
+                exit 1
+              fi
+            fi
+          done
+          
+          echo "tweak_count=$TWEAK_COUNT" >> $GITHUB_OUTPUT
+          echo "tweak_names=${TWEAK_NAMES[*]}" >> $GITHUB_OUTPUT
+          echo "📊 Tweaks ready for injection: $TWEAK_COUNT"
+
+      - name: "🔧 Process IPA and inject tweaks"
+        id: process
+        run: |
+          set -e
+          echo "📂 Extracting IPA..."
+          mkdir -p extracted_ipa
+          if ! unzip -q original.ipa -d extracted_ipa/; then
+            echo "❌ Failed to extract IPA - file may be corrupted or invalid"
+            exit 1
+          fi
+          
+          APP_DIR=$(find extracted_ipa/Payload -name "*.app" -type d | head -1)
+          if [ -z "$APP_DIR" ]; then
+            echo "❌ No .app directory found in IPA - invalid IPA structure"
+            exit 1
+          fi
+          
+          APP_NAME=$(basename "$APP_DIR" .app)
+          PLIST_FILE="$APP_DIR/Info.plist"
+          
+          if [ ! -f "$PLIST_FILE" ]; then
+            echo "❌ Info.plist not found in app bundle"
+            exit 1
+          fi
+          
+          echo "🔍 Found app: $APP_NAME"
+          echo "📁 App directory: $(basename "$APP_DIR")"
+          
+          # Inject enabled tweaks
+          INJECTED_TWEAKS=()
+          TOTAL_INJECTED_FILES=0
+          mkdir -p extracted_tweaks
+          
+          for i in {1..5}; do
+            ENABLE_VAR="tweak${i}_enable"
+            if [[ "${{ github.event.inputs[ENABLE_VAR] }}" == "true" ]] && [ -f "tweak_${i}.deb" ]; then
+              TWEAK_DIR="extracted_tweaks/tweak_${i}"
+              mkdir -p "$TWEAK_DIR"
+              
+              echo "🛠️ Processing tweak $i..."
+              if ! dpkg-deb -R "tweak_${i}.deb" "$TWEAK_DIR/" 2>/dev/null; then
+                echo "⚠️ Failed to extract tweak_${i}.deb - may be invalid deb file"
+                continue
+              fi
+              
+              # Get tweak name from control file or use filename
+              TWEAK_NAME="Tweak $i"
+              if [ -f "$TWEAK_DIR/DEBIAN/control" ]; then
+                TWEAK_NAME=$(grep -i "^Name:" "$TWEAK_DIR/DEBIAN/control" | head -1 | cut -d: -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+                [ -z "$TWEAK_NAME" ] && TWEAK_NAME="Tweak $i"
+              fi
+              
+              # Inject files and count them
+              INJECTED_FILES=0
+              while IFS= read -r file; do
+                if cp "$file" "$APP_DIR/" 2>/dev/null; then
+                  INJECTED_FILES=$((INJECTED_FILES + 1))
+                  TOTAL_INJECTED_FILES=$((TOTAL_INJECTED_FILES + 1))
+                fi
+              done < <(find "$TWEAK_DIR" \( -name "*.dylib" -o -name "*.bundle" \) -type f 2>/dev/null)
+              
+              while IFS= read -r framework; do
+                if cp -r "$framework" "$APP_DIR/" 2>/dev/null; then
+                  INJECTED_FILES=$((INJECTED_FILES + 1))
+                  TOTAL_INJECTED_FILES=$((TOTAL_INJECTED_FILES + 1))
+                fi
+              done < <(find "$TWEAK_DIR" -name "*.framework" -type d 2>/dev/null)
+              
+              if [ $INJECTED_FILES -gt 0 ]; then
+                INJECTED_TWEAKS+=("$TWEAK_NAME ($INJECTED_FILES files)")
+                echo "✅ Injected $TWEAK_NAME - $INJECTED_FILES files"
+              else
+                echo "⚠️ No files injected from $TWEAK_NAME"
+                INJECTED_TWEAKS+=("$TWEAK_NAME (0 files - no injectables)")
+              fi
+            fi
+          done
+          
+          # Modify app metadata
+          MODIFICATIONS=()
+          if [ -n "${{ github.event.inputs.bundle_id }}" ]; then
+            echo "🏷️ Updating bundle ID to: ${{ github.event.inputs.bundle_id }}"
+            python3 -c "
+import biplist
+try:
+    plist = biplist.readPlist('$PLIST_FILE')
+    old_id = plist.get('CFBundleIdentifier', 'Unknown')
+    plist['CFBundleIdentifier'] = '${{ github.event.inputs.bundle_id }}'
+    biplist.writePlist(plist, '$PLIST_FILE')
+    print(f'✅ Bundle ID updated: {old_id} → ${{ github.event.inputs.bundle_id }}')
+except Exception as e:
+    print(f'❌ Error updating Bundle ID: {e}')
+    exit(1)
+"
+            MODIFICATIONS+=("Bundle ID: ${{ github.event.inputs.bundle_id }}")
+          fi
+          
+          if [ -n "${{ github.event.inputs.app_name }}" ]; then
+            echo "📛 Updating app name to: ${{ github.event.inputs.app_name }}"
+            python3 -c "
+import biplist
+try:
+    plist = biplist.readPlist('$PLIST_FILE')
+    old_name = plist.get('CFBundleDisplayName', plist.get('CFBundleName', 'Unknown'))
+    plist['CFBundleDisplayName'] = '${{ github.event.inputs.app_name }}'
+    biplist.writePlist(plist, '$PLIST_FILE')
+    print(f'✅ App name updated: {old_name} → ${{ github.event.inputs.app_name }}')
+except Exception as e:
+    print(f'❌ Error updating App Name: {e}')
+    exit(1)
+"
+            MODIFICATIONS+=("App Name: ${{ github.event.inputs.app_name }}")
+          fi
+          
+          # Repackage IPA
+          echo "📦 Repackaging IPA..."
+          cd extracted_ipa
+          if ! zip -qr "../${{ github.event.inputs.output_filename }}" .; then
+            echo "❌ Failed to repackage IPA"
+            exit 1
+          fi
+          cd ..
+          
+          FILE_SIZE=$(du -h "${{ github.event.inputs.output_filename }}" | cut -f1)
+          echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
+          echo "injected_tweaks=${INJECTED_TWEAKS[*]}" >> $GITHUB_OUTPUT
+          echo "modifications=${MODIFICATIONS[*]}" >> $GITHUB_OUTPUT
+          echo "total_injected_files=$TOTAL_INJECTED_FILES" >> $GITHUB_OUTPUT
+          echo "original_app_name=$APP_NAME" >> $GITHUB_ENV
+          
+          echo "✅ Successfully created: ${{ github.event.inputs.output_filename }} ($FILE_SIZE)"
+          echo "📊 Total files injected: $TOTAL_INJECTED_FILES"
+
+      - name: "🚀 Create draft release with IPA"
+        if: github.event.inputs.create_release == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          release_name: ${{ github.event.inputs.release_title }}
+          body: |
+            ## Tweaked IPA Release
+            
+            **App:** ${{ env.original_app_name }}
+            **Size:** ${{ steps.process.outputs.file_size }}
+            **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            
+            **Injected Tweaks (${{ steps.setup.outputs.tweak_count }}):**
+            ${{ join(fromJSON(steps.process.outputs.injected_tweaks), '\n• ') }}
+            
+            **Total Files Injected:** ${{ steps.process.outputs.total_injected_files }}
+            
+            **Modifications:**
+            ${{ join(fromJSON(steps.process.outputs.modifications), '\n• ') }}
+            
+            ---
+            *Automatically generated by IPA Tweaks Injector*
+          draft: true
+          prerelease: false
+          files: |
+            ${{ github.event.inputs.output_filename }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "📤 Upload artifact (fallback)"
+        if: github.event.inputs.create_release != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tweaked-ipa
+          path: ${{ github.event.inputs.output_filename }}
+          retention-days: 30
+
+      - name: "🧹 Cleanup"
+        if: always()
+        run: |
+          echo "🧹 Cleaning up temporary files..."
+          rm -rf extracted_ipa extracted_tweaks *.deb original.ipa
+
+      - name: "📊 Update summary"
+        if: always()
+        run: |
+          {
+            echo "## 🛠️ IPA Tweak Injection Complete"
+            echo ""
+            
+            if [ -f "${{ github.event.inputs.output_filename }}" ]; then
+              echo "### ✅ **Successfully Generated Tweaked IPA**"
+              echo ""
+              echo "**📦 Output File:** \`${{ github.event.inputs.output_filename }}\` (${{ steps.process.outputs.file_size }})"
+              echo "**📱 Original App:** \`${{ env.original_app_name }}\`"
+              echo ""
+              
+              if [[ "${{ github.event.inputs.create_release }}" == "true" ]]; then
+                echo "**🚀 Release Created:** [${{ github.event.inputs.release_title }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.release_tag }})"
+              else
+                echo "**📥 Download:** Available in Artifacts section"
+              fi
+            else
+              echo "### ❌ **Injection Failed**"
+              echo ""
+              echo "The tweaked IPA could not be generated. Check the workflow logs for detailed error information."
+            fi
+            
+            echo ""
+            echo "### 📊 Injection Summary"
+            echo ""
+            echo "**Source IPA:**"
+            echo "\`${{ github.event.inputs.ipa_url }}\`"
+            echo ""
+            
+            if [[ "${{ steps.setup.outputs.tweak_count }}" -gt 0 ]]; then
+              echo "**🔧 Injected Tweaks (${{ steps.setup.outputs.tweak_count }}):**"
+              IFS=' ' read -ra TWEAKS <<< "${{ steps.process.outputs.injected_tweaks }}"
+              for tweak in "${TWEAKS[@]}"; do
+                echo "• $tweak"
+              done
+              echo ""
+              echo "**📄 Total Files Injected:** ${{ steps.process.outputs.total_injected_files }}"
+            else
+              echo "**🔧 Injected Tweaks:** None"
+            fi
+            
+            echo ""
+            
+            if [[ -n "${{ steps.process.outputs.modifications }}" ]]; then
+              echo "**🏷️ Metadata Modifications:**"
+              IFS=' ' read -ra MODS <<< "${{ steps.process.outputs.modifications }}"
+              for mod in "${MODS[@]}"; do
+                echo "• $mod"
+              done
+            else
+              echo "**🏷️ Metadata Modifications:** None"
+            fi
+            
+            echo ""
+            echo "---"
+            echo "⚡ Advanced IPA Injector v2.2 | $(date -u +"%Y-%m-%d %H:%M UTC")"
+          } >> $GITHUB_STEP_SUMMARY
