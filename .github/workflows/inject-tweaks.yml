@@ -270,8 +270,7 @@ except Exception as e:
           body: "Tweaked IPA: ${{ env.original_app_name }} | Size: ${{ steps.process.outputs.file_size }} | Tweaks: ${{ steps.setup.outputs.tweak_count }} | Files Injected: ${{ steps.process.outputs.total_injected_files }}"
           draft: true
           prerelease: false
-          files: |
-            ${{ github.event.inputs.output_filename }}
+          files: ${{ github.event.inputs.output_filename }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
