@@ -190,21 +190,35 @@ jobs:
             done
           fi
           
-          # Update workflow defaults - FIXED
+          # Update workflow defaults - COMPLETELY REWRITTEN
           WORKFLOW_FILE=".github/workflows/main.yml"
           [ ! -f "$WORKFLOW_FILE" ] && WORKFLOW_FILE=".github/workflows/${{ github.workflow }}.yml"
           
           if [ -f "$WORKFLOW_FILE" ]; then
+            echo "Updating workflow defaults in $WORKFLOW_FILE..."
+            
             for version_pair in "${VERSION_PAIRS[@]}"; do
               IFS=':' read -ra PARTS <<< "$version_pair"
               APP="${PARTS[0]}"
               IPA_VERSION="${PARTS[1]}"
               TWEAK_VERSION="${PARTS[2]}"
               
-              # FIXED: Use proper YAML range matching with line numbers
-              sed -i "/${APP}_ipa_version:/,/default:/{/default:/s/\"[^\"]*\"/\"$IPA_VERSION\"/}" "$WORKFLOW_FILE"
-              sed -i "/${APP}_tweak_version:/,/default:/{/default:/s/\"[^\"]*\"/\"$TWEAK_VERSION\"/}" "$WORKFLOW_FILE"
+              echo "Updating $APP defaults to IPA: $IPA_VERSION, Tweak: $TWEAK_VERSION"
+              
+              # METHOD 1: Use perl for multi-line replacement (most reliable)
+              if command -v perl >/dev/null 2>&1; then
+                perl -i -pe "s/(${APP}_ipa_version:.*?default: \")[^\"]*(\")/\${1}${IPA_VERSION}\${2}/s" "$WORKFLOW_FILE"
+                perl -i -pe "s/(${APP}_tweak_version:.*?default: \")[^\"]*(\")/\${1}${TWEAK_VERSION}\${2}/s" "$WORKFLOW_FILE"
+              else
+                # METHOD 2: Use sed with explicit line patterns
+                sed -i "/${APP}_ipa_version:/,/default:/{s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/}" "$WORKFLOW_FILE"
+                sed -i "/${APP}_tweak_version:/,/default:/{s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/}" "$WORKFLOW_FILE"
+              fi
             done
+            
+            # Verify the changes
+            echo "Updated workflow content:"
+            grep -A 2 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
           fi
 
       - name: "Commit and push changes"
