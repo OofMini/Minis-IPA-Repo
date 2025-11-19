@@ -37,16 +37,13 @@ on:
         description: "Custom commit message (optional)"
         default: ""
 
-permissions:
-  contents: write
-  actions: write
-  workflows: write
-
 jobs:
   repository-sync:
     name: "Sync App Repository"
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write
+      actions: write
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
@@ -195,14 +192,11 @@ jobs:
             done
           fi
           
-          # Update workflow defaults (but don't commit if we don't have permission)
+          # Update workflow defaults
           WORKFLOW_FILE=".github/workflows/update-repos.yml"
           
           if [ -f "$WORKFLOW_FILE" ]; then
             echo "Updating workflow defaults in $WORKFLOW_FILE..."
-            
-            # Backup the original workflow file
-            cp "$WORKFLOW_FILE" "${WORKFLOW_FILE}.backup"
             
             for version_pair in "${VERSION_PAIRS[@]}"; do
               IFS=':' read -ra PARTS <<< "$version_pair"
@@ -218,8 +212,6 @@ jobs:
             done
             
             echo "✅ Workflow defaults updated locally"
-            echo "=== UPDATED DEFAULTS ==="
-            grep -A 1 -E "(spotify|youtube|x)_(ipa|tweak)_version" "$WORKFLOW_FILE" || true
           fi
 
       - name: "Commit repository changes"
@@ -244,7 +236,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Only commit the JSON files and index.html (skip workflow file due to permissions)
+          # Only commit the JSON files and index.html
           git add sidestore.json feather.json trollapps.json index.html
           
           if ! git diff --staged --quiet; then
@@ -257,7 +249,7 @@ jobs:
 
       - name: "Try to commit workflow changes"
         if: steps.update-files.outputs.updated_versions
-        continue-on-error: true  # This step won't fail the workflow if it errors
+        continue-on-error: true
         run: |
           set -e
           WORKFLOW_FILE=".github/workflows/update-repos.yml"
@@ -272,13 +264,9 @@ jobs:
                 echo "✅ Workflow defaults committed successfully"
               else
                 echo "⚠️ Workflow defaults updated locally but couldn't push (permissions issue)"
-                echo "The workflow will use the new defaults next time, but the file wasn't updated in the repository."
-                # Restore the backup since we can't push the changes
-                mv "${WORKFLOW_FILE}.backup" "$WORKFLOW_FILE"
               fi
             else
               echo "ℹ️ No workflow changes to commit"
-              rm -f "${WORKFLOW_FILE}.backup"
             fi
           fi
 
@@ -318,8 +306,6 @@ jobs:
                 TWEAK_VERSION="${PARTS[2]}"
                 echo "- ${APP^}: IPA $IPA_VERSION, Tweak $TWEAK_VERSION"
               done
-              echo ""
-              echo "⚠️ *Workflow defaults were updated locally but may not be committed due to GitHub security restrictions*"
             fi
             
             echo ""
