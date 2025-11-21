@@ -3,37 +3,35 @@ name: Bulk IPA Updates
 on:
   workflow_dispatch:
     inputs:
-      update_spotify:
-        description: "Update Spotify"
-        type: boolean
-        default: false
-      spotify_versions:
-        description: "Spotify versions (IPA:Tweak, e.g., 9.0.96:v6.2.2)"
-        default: "9.0.96:v6.2.2"
-      update_youtube:
-        description: "Update YouTube"
-        type: boolean
-        default: false
-      youtube_versions:
-        description: "YouTube versions (IPA:Tweak, e.g., 20.45.3:v5.2b4)"
-        default: "20.45.3:v5.2b4"
-      update_x:
-        description: "Update X"
-        type: boolean
-        default: false
-      x_versions:
-        description: "X versions (IPA:Tweak, e.g., 11.38.1:v5.2)"
-        default: "11.38.1:v5.2"
+      spotify_ipa_version:
+        description: "🎵 Spotify IPA Version"
+        default: "9.0.96"
+      spotify_tweak_version:
+        description: "🎵 Spotify Tweak Version"
+        default: "v6.2.2"
+      youtube_ipa_version:
+        description: "📺 YouTube IPA Version"
+        default: "20.45.3"
+      youtube_tweak_version:
+        description: "📺 YouTube Tweak Version"
+        default: "v5.2b4"
+      x_ipa_version:
+        description: "🐦 X IPA Version"
+        default: "11.38.1"
+      x_tweak_version:
+        description: "🐦 X Tweak Version"
+        default: "v5.2"
       change_description:
-        description: "Custom commit message (optional)"
+        description: "📝 Custom commit message (optional)"
         default: ""
       update_workflow_defaults:
-        description: "Update workflow default versions"
+        description: "⚙️ Update workflow default versions"
         type: boolean
         default: true
 
 permissions:
   contents: write
+  workflows: write
 
 jobs:
   repository-sync:
@@ -44,7 +42,7 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
 
       - name: "Setup dependencies"
@@ -57,31 +55,29 @@ jobs:
         run: |
           set -e
           
-          # Check that at least one app is selected
-          if [[ "${{ github.event.inputs.update_spotify }}" != "true" ]] && \
-             [[ "${{ github.event.inputs.update_youtube }}" != "true" ]] && \
-             [[ "${{ github.event.inputs.update_x }}" != "true" ]]; then
-            echo "::error::No apps selected for update. Please enable at least one app."
-            exit 1
-          fi
-          
-          # Parse and validate version pairs
-          validate_version_pair() {
-            local version_pair="$1"
+          # Validate version formats
+          validate_version() {
+            local version="$1"
             local app_name="$2"
+            local version_type="$3"
             
-            if [[ ! "$version_pair" =~ ^[0-9]+\.[0-9]+\.?[0-9]*:[v]?[0-9a-z.]+$ ]]; then
-              echo "::error::$app_name versions must be in format 'IPA:Tweak' (e.g., '9.0.96:v6.2.2')"
+            if [[ -z "$version" ]]; then
+              echo "::error::$app_name $version_type cannot be empty"
+              exit 1
+            fi
+            
+            if [[ ! "$version" =~ ^[v]?[0-9a-z.+-]+$ ]]; then
+              echo "::error::$app_name $version_type must be a valid version (e.g., '9.0.96' or 'v6.2.2'), got: $version"
               exit 1
             fi
           }
           
-          [[ "${{ github.event.inputs.update_spotify }}" == "true" ]] && \
-            validate_version_pair "${{ github.event.inputs.spotify_versions }}" "Spotify"
-          [[ "${{ github.event.inputs.update_youtube }}" == "true" ]] && \
-            validate_version_pair "${{ github.event.inputs.youtube_versions }}" "YouTube"
-          [[ "${{ github.event.inputs.update_x }}" == "true" ]] && \
-            validate_version_pair "${{ github.event.inputs.x_versions }}" "X"
+          validate_version "${{ github.event.inputs.spotify_ipa_version }}" "Spotify" "IPA version"
+          validate_version "${{ github.event.inputs.spotify_tweak_version }}" "Spotify" "Tweak version"
+          validate_version "${{ github.event.inputs.youtube_ipa_version }}" "YouTube" "IPA version"
+          validate_version "${{ github.event.inputs.youtube_tweak_version }}" "YouTube" "Tweak version"
+          validate_version "${{ github.event.inputs.x_ipa_version }}" "X" "IPA version"
+          validate_version "${{ github.event.inputs.x_tweak_version }}" "X" "Tweak version"
           
           echo "[OK] Input validation complete"
 
@@ -254,55 +250,55 @@ jobs:
           UPDATED_VERSIONS=()
           
           # Update Spotify
-          if [[ "${{ github.event.inputs.update_spotify }}" == "true" ]]; then
-            echo ""
-            echo "========================================"
-            echo "Processing Spotify update..."
-            echo "========================================"
-            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.spotify_versions }}"
-            
-            for file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" "$IPA" "$TWEAK"
-            done
-            
-            UPDATED_APPS+=("EeveeSpotify")
-            UPDATED_VERSIONS+=("spotify:$IPA:$TWEAK")
-            echo "[OK] Spotify processing complete"
-          fi
+          echo ""
+          echo "========================================"
+          echo "Processing Spotify update..."
+          echo "========================================"
+          
+          IPA="${{ github.event.inputs.spotify_ipa_version }}"
+          TWEAK="${{ github.event.inputs.spotify_tweak_version }}"
+          
+          for file in "${JSON_FILES[@]}"; do
+            update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" "$IPA" "$TWEAK"
+          done
+          
+          UPDATED_APPS+=("EeveeSpotify")
+          UPDATED_VERSIONS+=("spotify:$IPA:$TWEAK")
+          echo "[OK] Spotify processing complete"
 
           # Update YouTube
-          if [[ "${{ github.event.inputs.update_youtube }}" == "true" ]]; then
-            echo ""
-            echo "========================================"
-            echo "Processing YouTube update..."
-            echo "========================================"
-            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.youtube_versions }}"
-            
-            for file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$file" "YTLite" "com.google.ios.youtube" "$IPA" "$TWEAK"
-            done
-            
-            UPDATED_APPS+=("YTLite")
-            UPDATED_VERSIONS+=("youtube:$IPA:$TWEAK")
-            echo "[OK] YouTube processing complete"
-          fi
+          echo ""
+          echo "========================================"
+          echo "Processing YouTube update..."
+          echo "========================================"
+          
+          IPA="${{ github.event.inputs.youtube_ipa_version }}"
+          TWEAK="${{ github.event.inputs.youtube_tweak_version }}"
+          
+          for file in "${JSON_FILES[@]}"; do
+            update_app_in_file "$file" "YTLite" "com.google.ios.youtube" "$IPA" "$TWEAK"
+          done
+          
+          UPDATED_APPS+=("YTLite")
+          UPDATED_VERSIONS+=("youtube:$IPA:$TWEAK")
+          echo "[OK] YouTube processing complete"
 
           # Update X
-          if [[ "${{ github.event.inputs.update_x }}" == "true" ]]; then
-            echo ""
-            echo "========================================"
-            echo "Processing X update..."
-            echo "========================================"
-            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.x_versions }}"
-            
-            for file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" "$IPA" "$TWEAK"
-            done
-            
-            UPDATED_APPS+=("X (NeoFreeBird)")
-            UPDATED_VERSIONS+=("x:$IPA:$TWEAK")
-            echo "[OK] X processing complete"
-          fi
+          echo ""
+          echo "========================================"
+          echo "Processing X update..."
+          echo "========================================"
+          
+          IPA="${{ github.event.inputs.x_ipa_version }}"
+          TWEAK="${{ github.event.inputs.x_tweak_version }}"
+          
+          for file in "${JSON_FILES[@]}"; do
+            update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" "$IPA" "$TWEAK"
+          done
+          
+          UPDATED_APPS+=("X (NeoFreeBird)")
+          UPDATED_VERSIONS+=("x:$IPA:$TWEAK")
+          echo "[OK] X processing complete"
 
           # Output results
           echo ""
@@ -444,23 +440,20 @@ jobs:
             case "$APP" in
               "spotify")
                 echo "[INFO] Updating Spotify default versions..."
-                sed -i '/spotify_versions:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
-                }' "$WORKFLOW_FILE"
+                sed -i "s/\(spotify_ipa_version:.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "s/\(spotify_tweak_version:.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
                 
               "youtube")
                 echo "[INFO] Updating YouTube default versions..."
-                sed -i '/youtube_versions:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
-                }' "$WORKFLOW_FILE"
+                sed -i "s/\(youtube_ipa_version:.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "s/\(youtube_tweak_version:.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
                 
               "x")
                 echo "[INFO] Updating X default versions..."
-                sed -i '/x_versions:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
-                }' "$WORKFLOW_FILE"
+                sed -i "s/\(x_ipa_version:.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "s/\(x_tweak_version:.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
             esac
           done
@@ -470,24 +463,26 @@ jobs:
             echo "::warning::No changes made to workflow file - defaults may already be up to date"
           else
             echo "[OK] Workflow default versions updated successfully"
-            
-            # Show what changed (for debugging)
-            echo ""
-            echo "[INFO] Changes made to workflow file:"
-            diff -u "${WORKFLOW_FILE}.bak" "$WORKFLOW_FILE" || true
           fi
           
           # Cleanup backup
           rm -f "${WORKFLOW_FILE}.bak"
 
+      - name: "Configure Git for PAT"
+        if: steps.update-files.outputs.updated_apps
+        run: |
+          # Configure git to use PAT for authentication
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Set up remote URL with PAT authentication
+          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          echo "[OK] Git configured for PAT authentication"
+
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
         run: |
           set -e
-          
-          # Configure git
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
           
           # Build commit message
           if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
@@ -501,6 +496,20 @@ jobs:
               COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated apps:"
               for app in "${UPDATED_APPS_ARR[@]}"; do
                 COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
+              done
+            fi
+            
+            # Add version details
+            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+            if [ -n "$UPDATED_VERSIONS_STR" ]; then
+              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Version details:"
+              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+              for version_pair in "${VERSION_PAIRS[@]}"; do
+                IFS=':' read -ra PARTS <<< "$version_pair"
+                APP_NAME="${PARTS[0]}"
+                IPA_VER="${PARTS[1]}"
+                TWEAK_VER="${PARTS[2]}"
+                COMMIT_MSG="$COMMIT_MSG"$'\n'"- ${APP_NAME^}: IPA $IPA_VER, Tweak $TWEAK_VER"
               done
             fi
             
@@ -535,14 +544,14 @@ jobs:
             # Commit changes
             git commit -m "$COMMIT_MSG"
             
-            # Push with retry logic
-            echo "[INFO] Pushing changes to repository..."
+            # Push with retry logic using PAT authentication
+            echo "[INFO] Pushing changes to repository using PAT..."
             MAX_RETRIES=3
             RETRY_COUNT=0
             
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
               if git push origin HEAD; then
-                echo "[OK] Changes committed and pushed successfully"
+                echo "[OK] Changes committed and pushed successfully using PAT"
                 break
               else
                 RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -585,6 +594,22 @@ jobs:
             fi
             
             echo ""
+            echo "### 🔢 Version Details:"
+            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
+            if [ -n "$UPDATED_VERSIONS_STR" ]; then
+              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
+              for version_pair in "${VERSION_PAIRS[@]}"; do
+                IFS=':' read -ra PARTS <<< "$version_pair"
+                APP_NAME="${PARTS[0]}"
+                IPA_VER="${PARTS[1]}"
+                TWEAK_VER="${PARTS[2]}"
+                echo "- **${APP_NAME^}**:"
+                echo "  - IPA Version: \`$IPA_VER\`"
+                echo "  - Tweak Version: \`$TWEAK_VER\`"
+              done
+            fi
+            
+            echo ""
             echo "### 📄 Files Processed:"
             echo "- \`sidestore.json\`"
             echo "- \`feather.json\`"
@@ -595,22 +620,9 @@ jobs:
             fi
             
             echo ""
-            echo "### 🔢 Version Details:"
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_NAME="${PARTS[0]}"
-                IPA_VER="${PARTS[1]}"
-                TWEAK_VER="${PARTS[2]}"
-                echo "- **${APP_NAME^}**: IPA \`$IPA_VER\`, Tweak \`$TWEAK_VER\`"
-              done
-            fi
-            
-            echo ""
             echo "### ⚙️ Configuration:"
             echo "- Update workflow defaults: \`${{ github.event.inputs.update_workflow_defaults }}\`"
+            echo "- Authentication: PAT Token"
             
             echo ""
             echo "### ⏰ Execution Time:"
