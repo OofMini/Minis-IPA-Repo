@@ -7,32 +7,23 @@ on:
         description: "Update Spotify"
         type: boolean
         default: false
-      spotify_ipa_version:
-        description: "Spotify IPA Version (e.g., 9.0.96)"
-        default: "9.0.96"
-      spotify_tweak_version:
-        description: "Spotify Tweak Version (e.g., v6.2.2)"
-        default: "v6.2.2"
+      spotify_versions:
+        description: "Spotify versions (IPA:Tweak, e.g., 9.0.96:v6.2.2)"
+        default: "9.0.96:v6.2.2"
       update_youtube:
         description: "Update YouTube"
         type: boolean
         default: false
-      youtube_ipa_version:
-        description: "YouTube IPA Version (e.g., 20.45.3)"
-        default: "20.45.3"
-      youtube_tweak_version:
-        description: "YouTube Tweak Version (e.g., v5.2b4)"
-        default: "v5.2b4"
+      youtube_versions:
+        description: "YouTube versions (IPA:Tweak, e.g., 20.45.3:v5.2b4)"
+        default: "20.45.3:v5.2b4"
       update_x:
         description: "Update X"
         type: boolean
         default: false
-      x_ipa_version:
-        description: "X IPA Version (e.g., 11.38.1)"
-        default: "11.38.1"
-      x_tweak_version:
-        description: "X Tweak Version (e.g., v5.2)"
-        default: "v5.2"
+      x_versions:
+        description: "X versions (IPA:Tweak, e.g., 11.38.1:v5.2)"
+        default: "11.38.1:v5.2"
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -74,21 +65,23 @@ jobs:
             exit 1
           fi
           
-          # Validate version format (basic check)
-          validate_version() {
-            local version="$1"
-            local name="$2"
-            if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.?[0-9]*$ ]] && [[ ! "$version" =~ ^[0-9]+\.[0-9]+$ ]]; then
-              echo "::warning::$name version '$version' doesn't follow standard semantic versioning"
+          # Parse and validate version pairs
+          validate_version_pair() {
+            local version_pair="$1"
+            local app_name="$2"
+            
+            if [[ ! "$version_pair" =~ ^[0-9]+\.[0-9]+\.?[0-9]*:[v]?[0-9a-z.]+$ ]]; then
+              echo "::error::$app_name versions must be in format 'IPA:Tweak' (e.g., '9.0.96:v6.2.2')"
+              exit 1
             fi
           }
           
           [[ "${{ github.event.inputs.update_spotify }}" == "true" ]] && \
-            validate_version "${{ github.event.inputs.spotify_ipa_version }}" "Spotify IPA"
+            validate_version_pair "${{ github.event.inputs.spotify_versions }}" "Spotify"
           [[ "${{ github.event.inputs.update_youtube }}" == "true" ]] && \
-            validate_version "${{ github.event.inputs.youtube_ipa_version }}" "YouTube IPA"
+            validate_version_pair "${{ github.event.inputs.youtube_versions }}" "YouTube"
           [[ "${{ github.event.inputs.update_x }}" == "true" ]] && \
-            validate_version "${{ github.event.inputs.x_ipa_version }}" "X IPA"
+            validate_version_pair "${{ github.event.inputs.x_versions }}" "X"
           
           echo "[OK] Input validation complete"
 
@@ -266,8 +259,7 @@ jobs:
             echo "========================================"
             echo "Processing Spotify update..."
             echo "========================================"
-            IPA="${{ github.event.inputs.spotify_ipa_version }}"
-            TWEAK="${{ github.event.inputs.spotify_tweak_version }}"
+            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.spotify_versions }}"
             
             for file in "${JSON_FILES[@]}"; do
               update_app_in_file "$file" "EeveeSpotify" "com.spotify.client" "$IPA" "$TWEAK"
@@ -284,8 +276,7 @@ jobs:
             echo "========================================"
             echo "Processing YouTube update..."
             echo "========================================"
-            IPA="${{ github.event.inputs.youtube_ipa_version }}"
-            TWEAK="${{ github.event.inputs.youtube_tweak_version }}"
+            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.youtube_versions }}"
             
             for file in "${JSON_FILES[@]}"; do
               update_app_in_file "$file" "YTLite" "com.google.ios.youtube" "$IPA" "$TWEAK"
@@ -302,8 +293,7 @@ jobs:
             echo "========================================"
             echo "Processing X update..."
             echo "========================================"
-            IPA="${{ github.event.inputs.x_ipa_version }}"
-            TWEAK="${{ github.event.inputs.x_tweak_version }}"
+            IFS=':' read -r IPA TWEAK <<< "${{ github.event.inputs.x_versions }}"
             
             for file in "${JSON_FILES[@]}"; do
               update_app_in_file "$file" "X (NeoFreeBird)" "com.atebits.Tweetie2" "$IPA" "$TWEAK"
@@ -454,40 +444,22 @@ jobs:
             case "$APP" in
               "spotify")
                 echo "[INFO] Updating Spotify default versions..."
-                # Update spotify_ipa_version default
-                sed -i '/spotify_ipa_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION"'"/
-                }' "$WORKFLOW_FILE"
-                
-                # Update spotify_tweak_version default
-                sed -i '/spotify_tweak_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$TWEAK_VERSION"'"/
+                sed -i '/spotify_versions:/,/default:/ {
+                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
                 }' "$WORKFLOW_FILE"
                 ;;
                 
               "youtube")
                 echo "[INFO] Updating YouTube default versions..."
-                # Update youtube_ipa_version default
-                sed -i '/youtube_ipa_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION"'"/
-                }' "$WORKFLOW_FILE"
-                
-                # Update youtube_tweak_version default
-                sed -i '/youtube_tweak_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$TWEAK_VERSION"'"/
+                sed -i '/youtube_versions:/,/default:/ {
+                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
                 }' "$WORKFLOW_FILE"
                 ;;
                 
               "x")
                 echo "[INFO] Updating X default versions..."
-                # Update x_ipa_version default
-                sed -i '/x_ipa_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION"'"/
-                }' "$WORKFLOW_FILE"
-                
-                # Update x_tweak_version default
-                sed -i '/x_tweak_version:/,/default:/ {
-                  /default:/ s/default: "[^"]*"/default: "'"$TWEAK_VERSION"'"/
+                sed -i '/x_versions:/,/default:/ {
+                  /default:/ s/default: "[^"]*"/default: "'"$IPA_VERSION:$TWEAK_VERSION"'"/
                 }' "$WORKFLOW_FILE"
                 ;;
             esac
