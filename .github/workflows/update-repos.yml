@@ -28,10 +28,10 @@ on:
         default: "v5.2"
         required: false
       change_description:
-        description: "📝 Custom commit message (optional)"
+        description: "Custom commit message (optional)"
         default: ""
       update_workflow_defaults:
-        description: "⚙️ Update workflow default versions"
+        description: "Update workflow default versions"
         type: boolean
         default: true
 
@@ -445,21 +445,21 @@ jobs:
             case "$APP" in
               "spotify")
                 echo "[INFO] Updating Spotify default versions..."
-                # More specific sed patterns to avoid accidental matches
-                sed -i "s/\(description:.*Spotify IPA Version.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-                sed -i "s/\(description:.*Spotify Tweak Version.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
+                # Use exact line matching for more reliability
+                sed -i "/spotify_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "/spotify_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
                 
               "youtube")
                 echo "[INFO] Updating YouTube default versions..."
-                sed -i "s/\(description:.*YouTube IPA Version.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-                sed -i "s/\(description:.*YouTube Tweak Version.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "/youtube_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "/youtube_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
                 
               "x")
                 echo "[INFO] Updating X default versions..."
-                sed -i "s/\(description:.*X IPA Version.*default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
-                sed -i "s/\(description:.*X Tweak Version.*default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "/x_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$IPA_VERSION\"/" "$WORKFLOW_FILE"
+                sed -i "/x_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$TWEAK_VERSION\"/" "$WORKFLOW_FILE"
                 ;;
             esac
           done
