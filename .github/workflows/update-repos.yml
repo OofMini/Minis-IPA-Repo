@@ -5,7 +5,7 @@ on:
     inputs:
       spotify_ipa_version:
         description: "Spotify IPA Version"
-        default: "9.0.96"
+        default: "9.0.98"
         required: false
       spotify_tweak_version:
         description: "Spotify Tweak Version"
@@ -13,7 +13,7 @@ on:
         required: false
       youtube_ipa_version:
         description: "YouTube IPA Version"
-        default: "20.45.3"
+        default: "20.46.3"
         required: false
       youtube_tweak_version:
         description: "YouTube Tweak Version"
@@ -21,7 +21,7 @@ on:
         required: false
       x_ipa_version:
         description: "X IPA Version"
-        default: "11.38.1"
+        default: "11.41"
         required: false
       x_tweak_version:
         description: "X Tweak Version"
