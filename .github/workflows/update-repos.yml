@@ -34,6 +34,7 @@ on:
 
 permissions:
   contents: write
+  workflows: write 
 
 jobs:
   repository-sync:
