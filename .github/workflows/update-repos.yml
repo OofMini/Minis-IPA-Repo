@@ -4,27 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       spotify_ipa_version:
-        description: "🎵 Spotify IPA Version"
+        description: "Spotify IPA Version"
         default: "9.0.96"
         required: false
       spotify_tweak_version:
-        description: "🎵 Spotify Tweak Version"
+        description: "Spotify Tweak Version"
         default: "v6.2.2"
         required: false
       youtube_ipa_version:
-        description: "📺 YouTube IPA Version"
+        description: "YouTube IPA Version"
         default: "20.45.3"
         required: false
       youtube_tweak_version:
-        description: "📺 YouTube Tweak Version"
+        description: "YouTube Tweak Version"
         default: "v5.2b4"
         required: false
       x_ipa_version:
-        description: "🐦 X IPA Version"
+        description: "X IPA Version"
         default: "11.38.1"
         required: false
       x_tweak_version:
-        description: "🐦 X Tweak Version"
+        description: "X Tweak Version"
         default: "v5.2"
         required: false
       change_description:
