@@ -528,7 +528,7 @@ jobs:
               IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
               COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated apps:"
               for app in "${UPDATED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"• $app"
+                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
               done
             fi
             
