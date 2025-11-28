@@ -5,7 +5,7 @@ on:
     inputs:
       spotify_ipa_version:
         description: "Spotify IPA Version"
-        default: "9.0.98"
+        default: "9.1.0"
         required: false
       spotify_tweak_version:
         description: "Spotify Tweak Version"
@@ -21,7 +21,7 @@ on:
         required: false
       x_ipa_version:
         description: "X IPA Version"
-        default: "11.43"
+        default: "11.43.1"
         required: false
       x_tweak_version:
         description: "X Tweak Version"
