@@ -259,7 +259,7 @@
     },
     {
       "name": "ModMyIpa",
-      "bundleIdentifier": "com.powenn.ModMyIPA",
+      "bundleIdentifier": "com.powen.ModMyIPA",
       "developerName": "powenn",
       "subtitle": "IPA modification utilities",
       "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
