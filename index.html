@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, Twitter clients and more.">
     <meta name="keywords" content="iOS apps, tweaked apps, SideStore, TrollApps, Feather, IPA repository, spotify, youtube, minecraft, torrent">
@@ -47,7 +52,37 @@
             --trollapps-color: #8a2be2;
             --sidestore-color: #1db954;
             --feather-color: #ff6b35;
+            
+            /* Constants for animations */
+            --fade-duration: 1s;
+            --stagger-delay-1: 0.15s;
+            --stagger-delay-2: 0.3s;
+            --stagger-delay-3: 0.45s;
+            --toast-duration: 3000ms;
+            --fetch-timeout: 8000ms;
+            --skeleton-delay: 800ms;
         }
+        
+        /* Accessibility: Better focus indicators */
+        *:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        
+        .search-box:focus,
+        .download-btn:focus,
+        .cta-button:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 4px;
+        }
+        
+        /* Accessibility: Improve color contrast */
+        .hero-subtitle,
+        .app-card p,
+        .download-count {
+            color: #cccccc !important; /* Better contrast ratio */
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -77,7 +112,7 @@
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 1s ease;
+            transition: all var(--fade-duration) ease;
         }
         .fade-in.visible {
             opacity: 1;
@@ -86,15 +121,15 @@
         .fade-in-left {
             opacity: 0;
             transform: translateX(-30px);
-            transition: all 1s ease;
+            transition: all var(--fade-duration) ease;
         }
         .fade-in-left.visible {
             opacity: 1;
             transform: translateX(0);
         }
-        .stagger-1 { transition-delay: 0.15s; }
-        .stagger-2 { transition-delay: 0.3s; }
-        .stagger-3 { transition-delay: 0.45s; }
+        .stagger-1 { transition-delay: var(--stagger-delay-1); }
+        .stagger-2 { transition-delay: var(--stagger-delay-2); }
+        .stagger-3 { transition-delay: var(--stagger-delay-3); }
 
         /* Animated Gradient for Title */
         @keyframes gradientShift {
@@ -257,6 +292,7 @@
             height: 100%;
             object-fit: contain;
             border-radius: 16px;
+            max-width: 100%; /* Image optimization */
         }
 
         .app-status {
@@ -386,7 +422,7 @@
 </head>
 <body>
     <header class="hero">
-        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy" width="60" height="60">
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
         <p class="hero-subtitle">Tweaked IPAs</p>
 
@@ -396,14 +432,14 @@
         </div>
 
         <nav class="cta-buttons" aria-label="Add repository to app">
-            <button class="cta-button trollapps" onclick="addToTrollApps()" aria-label="Add repository to TrollApps">
-                <span aria-hidden="true">📱</span> Add to TrollApps
+            <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
+                <span role="img" aria-hidden="true">📱</span> Add to TrollApps
             </button>
-            <button class="cta-button sidestore" onclick="addToSideStore()" aria-label="Add repository to SideStore">
-                <span aria-hidden="true">⚙️</span> Add to SideStore
+            <button class="cta-button sidestore" onclick="addToApp('SideStore', 'sidestore.json')" aria-label="Add repository to SideStore">
+                <span role="img" aria-hidden="true">⚙️</span> Add to SideStore
             </button>
-            <button class="cta-button feather" onclick="addToFeather()" aria-label="Add repository to Feather">
-                <span aria-hidden="true">🪶</span> Add to Feather
+            <button class="cta-button feather" onclick="addToApp('Feather', 'feather.json')" aria-label="Add repository to Feather">
+                <span role="img" aria-hidden="true">🪶</span> Add to Feather
             </button>
         </nav>
     </header>
@@ -412,7 +448,8 @@
         <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." aria-label="Search apps by name or description">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
+                   aria-label="Search apps by name or description" autocomplete="off">
         </section>
 
         <!-- App grid -->
@@ -423,25 +460,25 @@
             <h3 id="repo-info-title">📦 Repository Information</h3>
 
             <div class="repo-link fade-in-left stagger-1">
-                <span aria-hidden="true">🌐</span>
+                <span role="img" aria-hidden="true">🌐</span>
                 <strong>Official Website:</strong>
                 <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
             </div>
 
             <div class="repo-link fade-in-left stagger-2">
-                <span aria-hidden="true">📱</span>
+                <span role="img" aria-hidden="true">📱</span>
                 <strong>SideStore Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span aria-hidden="true">🧌</span>
+                <span role="img" aria-hidden="true">🧌</span>
                 <strong>TrollApps Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span aria-hidden="true">🪶</span>
+                <span role="img" aria-hidden="true">🪶</span>
                 <strong>Feather Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
             </div>
@@ -457,6 +494,40 @@
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
     <script>
+        // Constants configuration
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
+        };
+
+        // Custom Error class
+        class AppError extends Error {
+            constructor(message, type) {
+                super(message);
+                this.type = type;
+                this.name = 'AppError';
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function isValidDownloadUrl(url) {
+            try {
+                const parsed = new URL(url);
+                return parsed.protocol === 'https:' && 
+                       parsed.hostname.includes('github.com');
+            } catch {
+                return false;
+            }
+        }
+
         // Prevent caching by adding timestamp to requests
         const timestamp = new Date().getTime();
 
@@ -468,7 +539,7 @@
                 description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
                 version: '9.1.0',
-                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -479,7 +550,7 @@
                 description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
                 version: '20.47.3',
-                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -490,7 +561,7 @@
                 description: 'Tweaked Twitter/X with premium features and more. X IPA 11.43.1, NeoFreeBird v5.2',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
                 version: '11.43.1',
-                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -501,7 +572,7 @@
                 description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
                 version: '1.91.1',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa&timestamp=' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -512,7 +583,7 @@
                 description: 'Appstore++ allows users to downgrade apps.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
                 version: '1.0.3',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa&timestamp=' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -523,7 +594,7 @@
                 description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
                 version: '2.1.0',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -534,7 +605,7 @@
                 description: 'Runs live production containers for streaming apps and runtime isolation.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
                 version: '3.6.1',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa&timestamp=' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             },
@@ -545,7 +616,7 @@
                 description: 'Reface Premium Unlocked.',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
                 version: '5.27.0',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa&timestamp=' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
                 initialDownloads: 0,
                 downloads: 0
             }
@@ -554,12 +625,8 @@
         let searchTerm = '';
         let deferredPrompt;
         let searchTimeout;
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+        let cachedApps = [...appsData]; // Cache for search
+        let observer = null;
 
         // Enhanced initialization with error handling
         document.addEventListener('DOMContentLoaded', () => {
@@ -568,16 +635,42 @@
                 setupEventListeners();
                 initializeScrollAnimations();
                 loadAppsWithFallback();
-                setupPWA();
+                // Defer service worker registration
+                setTimeout(setupPWA, 1000);
             } catch (error) {
-                console.error('Initialization failed:', error);
-                showErrorState('Failed to initialize app: ' + error.message);
+                handleError(error);
             }
         });
 
-        function initializeScrollAnimations() {
-            document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
+        function handleError(error) {
+            if (error instanceof AppError) {
+                showToast(error.message, error.type);
+            } else {
+                showToast('An unexpected error occurred', 'error');
+            }
+            console.error(error);
         }
+
+        function initializeScrollAnimations() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+
+            document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
+                if (observer) observer.observe(el);
+            });
+        }
+
+        // Clean up observer on page unload
+        window.addEventListener('beforeunload', () => {
+            if (observer) {
+                observer.disconnect();
+            }
+        });
 
         // Skeleton Loading Screens
         function showSkeletonLoading() {
@@ -593,13 +686,15 @@
             `.repeat(6);
 
             setTimeout(() => {
-                appGrid.querySelectorAll('.skeleton-card').forEach(card => observer.observe(card));
+                appGrid.querySelectorAll('.skeleton-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
             }, 100);
         }
 
         // Fetch with timeout helper
         async function fetchWithTimeout(resource, options = {}) {
-            const { timeout = 8000 } = options;
+            const { timeout = CONFIG.FETCH_TIMEOUT } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
             try {
@@ -616,16 +711,16 @@
                 showSkeletonLoading();
 
                 if (!navigator.onLine) {
-                    throw new Error('No internet connection');
+                    throw new AppError('No internet connection', 'warning');
                 }
 
                 const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp);
                 if (!manifestAvailable) {
-                    throw new Error('Repository temporarily unavailable');
+                    throw new AppError('Repository temporarily unavailable', 'warning');
                 }
 
                 // Simulate async loading
-                await new Promise(resolve => setTimeout(resolve, 800));
+                await new Promise(resolve => setTimeout(resolve, CONFIG.SKELETON_DELAY));
                 renderAppGrid();
 
             } catch (error) {
@@ -640,13 +735,16 @@
                 <div class="error-state fade-in" role="alert">
                     <div class="error-emoji" aria-hidden="true">😕</div>
                     <h3 class="error-title">Unable to Load Apps</h3>
-                    <p class="error-message">${message}</p>
+                    <p class="error-message">${escapeHtml(message)}</p>
                     <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
                         🔄 Retry
                     </button>
                 </div>
             `;
-            setTimeout(() => observer.observe(appGrid.querySelector('.fade-in')), 100);
+            setTimeout(() => {
+                const element = appGrid.querySelector('.fade-in');
+                if (element && observer) observer.observe(element);
+            }, 100);
         }
 
         async function checkResourceAvailability(url) {
@@ -680,7 +778,6 @@
 
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
-            const downloadStats = {};
             const filteredApps = appsData.filter(app =>
                 app.name.toLowerCase().includes(searchTerm) ||
                 app.description.toLowerCase().includes(searchTerm) ||
@@ -689,27 +786,34 @@
 
             if (filteredApps.length === 0) {
                 appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
-                setTimeout(() => observer.observe(appGrid.querySelector('.fade-in')), 100);
+                setTimeout(() => {
+                    const element = appGrid.querySelector('.fade-in');
+                    if (element && observer) observer.observe(element);
+                }, 100);
                 return;
             }
 
             appGrid.innerHTML = filteredApps.map((app, index) => {
-                const appDownloads = downloadStats[app.id] || app.initialDownloads || 0;
-                const safeAlt = `Icon for ${app.name} by ${app.developer}`;
+                const safeId = escapeHtml(app.id);
+                const safeName = escapeHtml(app.name);
+                const safeDeveloper = escapeHtml(app.developer);
+                const safeDescription = escapeHtml(app.description);
+                const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
+                
                 return `
-                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${app.name}">
+                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}">
                     <div class="app-icon-container">
-                        <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy"
+                        <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
                              onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
                         <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
-                        <span class="download-count" aria-label="Download count">${formatNumber(appDownloads)} downloads</span>
+                        <span class="download-count" aria-label="Download count">${formatNumber(app.downloads)} downloads</span>
                     </div>
                     <div class="app-card-content">
-                        <h3>${app.name}</h3>
-                        <p>By <b>${app.developer}</b><br>${app.description}</p>
-                        <button class="download-btn" onclick="trackDownload('${app.id}')" aria-label="Download ${app.name} IPA">
+                        <h3>${safeName}</h3>
+                        <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                        <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
                             ⬇️ Download IPA
                         </button>
                     </div>
@@ -718,16 +822,48 @@
             }).join('');
 
             setTimeout(() => {
-                appGrid.querySelectorAll('.app-card').forEach(card => observer.observe(card));
+                appGrid.querySelectorAll('.app-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
             }, 100);
         }
 
-        // Download handler
+        // Consolidated add function
+        function addToApp(appName, manifestPath) {
+            try {
+                const schemes = {
+                    'TrollApps': 'trollapps',
+                    'SideStore': 'sidestore',
+                    'Feather': 'feather'
+                };
+                
+                const scheme = schemes[appName];
+                if (!scheme) {
+                    throw new AppError(`Unknown app: ${appName}`, 'error');
+                }
+                
+                const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${timestamp}`;
+                window.location.href = url;
+                
+                setTimeout(() => {
+                    showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
+                }, 1000);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        // Download handler with security validation
         function trackDownload(appId) {
             try {
                 const app = appsData.find(a => a.id === appId);
                 if (!app) {
-                    throw new Error('App not found');
+                    throw new AppError('App not found', 'error');
+                }
+
+                // Validate URL before opening
+                if (!isValidDownloadUrl(app.downloadUrl)) {
+                    throw new AppError('Invalid download URL', 'error');
                 }
 
                 if (!navigator.onLine) {
@@ -737,11 +873,13 @@
                 }
 
                 showToast(`Downloading ${app.name}...`);
-                setTimeout(() => window.open(app.downloadUrl, '_blank', 'noopener,noreferrer'), 500);
+                setTimeout(() => {
+                    // Security: Use noopener and noreferrer
+                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                }, 500);
 
             } catch (error) {
-                console.error('Download failed:', error);
-                showToast('Download failed: ' + error.message, 'error');
+                handleError(error);
             }
         }
 
@@ -762,7 +900,7 @@
             else toast.classList.add('info');
 
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
         // PWA Features
@@ -790,12 +928,15 @@
             if (!deferredPrompt) return;
 
             const toast = document.getElementById('toast');
-            toast.innerHTML = `
-                Install Mini's IPA Repo?
-                <button onclick="installApp()" style="margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
-                    Install
-                </button>
-            `;
+            // Security: Don't use innerHTML
+            toast.textContent = 'Install Mini\'s IPA Repo? ';
+            
+            const installButton = document.createElement('button');
+            installButton.textContent = 'Install';
+            installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
+            installButton.onclick = installApp;
+            
+            toast.appendChild(installButton);
             toast.classList.remove('error','warning','success','info');
             toast.classList.add('toast','info','show');
         }
@@ -812,56 +953,51 @@
             }
         }
 
-        function addToTrollApps() {
-            const trollAppsUrl = 'trollapps://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/trollapps.json?' + timestamp;
-            window.location.href = trollAppsUrl;
-            setTimeout(() => {
-                showToast('If TrollApps didn\'t open, make sure it\'s installed', 'info');
-            }, 1000);
-        }
-
-        function addToSideStore() {
-            const sideStoreUrl = 'sidestore://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp;
-            window.location.href = sideStoreUrl;
-            setTimeout(() => {
-                showToast('If SideStore didn\'t open, make sure it\'s installed', 'info');
-            }, 1000);
-        }
-
-        function addToFeather() {
-            const featherUrl = 'feather://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/feather.json?' + timestamp;
-            window.location.href = featherUrl;
-            setTimeout(() => {
-                showToast('If Feather didn\'t open, make sure it\'s installed', 'info');
-            }, 1000);
-        }
-
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('URL copied to clipboard');
+                }).catch(() => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
                 showToast('URL copied to clipboard');
-            }).catch(() => {
+            } catch (err) {
                 showToast('Failed to copy URL', 'error');
-            });
+            }
+            document.body.removeChild(textArea);
         }
 
         function setupEventListeners() {
             const searchBox = document.getElementById('searchBox');
             if (searchBox) {
-                // Debounced search to reduce re-renders
+                // Debounced search with cache
                 searchBox.addEventListener('input', (e) => {
                     clearTimeout(searchTimeout);
                     const value = e.target.value;
                     searchTimeout = setTimeout(() => {
                         searchTerm = value.toLowerCase().trim();
                         renderAppGrid();
-                    }, 300);
+                    }, CONFIG.SEARCH_DEBOUNCE);
                 });
             }
         }
 
-        // Force reload to prevent caching
+        // Force reload to prevent caching (with browser compatibility)
         window.addEventListener('load', function() {
-            if (window.performance && window.performance.navigation && window.performance.navigation.type === 1) {
+            const perf = window.performance;
+            if (perf && perf.navigation && perf.navigation.type === 1) {
                 // Page was reloaded
                 try {
                     localStorage.clear();
