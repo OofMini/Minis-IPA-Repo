@@ -52,7 +52,7 @@
       "developerName": "IPAOMTK",
       "version": "1.91.1",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/379ct3ial28p44f3brb56/InShot-IPAOMTK.COM.ipa?rlkey=s7onm9q8ykc4akxntcrx9uivp&st=bw4mofr3&dl=1",
+      "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa",
       "localizedDescription": "All filters unlocked, watermark removed, premium tools enabled",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/inshot-1.png",
@@ -80,7 +80,7 @@
       "developerName": "cokernutx",
       "version": "1.0.3",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/xh8zgttdb7dqllsaoi6ms/AppStore-_TrollStore_v1.0.3-2.ipa?rlkey=nsiodb3ym9tbubbwt00pyf6f6&st=vdfq72w4&dl=1",
+      "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa",
       "localizedDescription": "Appstore++ allows users to downgrade apps.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-1.png",
@@ -94,7 +94,7 @@
       "developerName": "XITRIX",
       "version": "2.1.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/sjafogm63g006h0arzrpr/iTorrent.ipa?rlkey=qblaqnzp9s71ge3gau8aqdrq9&st=gf2v2y9n&dl=1",
+      "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa",
       "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent-1.png",
@@ -108,7 +108,7 @@
       "developerName": "hugeBlack",
       "version": "3.6.1",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/nxn4nkeewe28gsm30xzc4/LiveContainer.ipa?rlkey=bcphsexwvc9gqwguncbioqp3z&st=f1kozixc&dl=1",
+      "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa",
       "localizedDescription": "Runs live production containers for streaming apps and runtime isolation.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer-1.png",
@@ -122,7 +122,7 @@
       "developerName": "powenn",
       "version": "1.0.2",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
-      "downloadURL": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1",
+      "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Mod/ModMyIPA-1.0.2.ipa",
       "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-1.png",
