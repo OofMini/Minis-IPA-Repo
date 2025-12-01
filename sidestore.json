@@ -225,7 +225,7 @@
     },
     {
       "name": "ModMyIpa",
-      "bundleIdentifier": "com.powenn.ModMyIPA",
+      "bundleIdentifier": "com.powen.ModMyIPA",
       "developerName": "powenn",
       "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
