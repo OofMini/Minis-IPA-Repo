@@ -116,33 +116,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Amethyst",
-      "bundleIdentifier": "com.angelauramc.amethyst",
-      "developerName": "alexytomi",
-      "localizedDescription": "Minecraft Java IOS Edition.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.0",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1",
-          "size": 30094131,
-          "localizedDescription": "Minecraft Java IOS."
-        }
-      ],
-      "tintColor": "#6A00C9",
-      "subtitle": "System utility",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "Appstore++",
       "bundleIdentifier": "com.cokepokes.AppStorePlus",
       "developerName": "cokernutx",
@@ -224,33 +197,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "ModMyIpa",
-      "bundleIdentifier": "com.powen.ModMyIPA",
-      "developerName": "powenn",
-      "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.0.2",
-          "date": "2025-10-06",
-          "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Mod/ModMyIPA-1.0.2.ipa",
-          "size": 2936012,
-          "localizedDescription": "Tool for modifying .ipas and duplicating apps."
-        }
-      ],
-      "tintColor": "#5856D6",
-      "subtitle": "IPA modification utilities",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "RefacePro (IOS 17+)",
       "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
@@ -276,33 +222,6 @@
         "network"
       ],
       "minimumOSVersion": "17.0"
-    },
-    {
-      "name": "SuperMario64 (60fps)",
-      "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
-      "developerName": "Cypwn",
-      "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.2.1",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1",
-          "size": 9227468,
-          "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay."
-        }
-      ],
-      "tintColor": "#FFD700",
-      "subtitle": "Emulated game (60fps)",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
     }
   ]
 }
