@@ -1,7 +1,9 @@
 ### Apps
 - EeveeSpotify (by whoeevee)
 - YTLite (by dayanch96)
-- X (by NeoFreeBird)
+- YTMusicUltimate (by dayanch96)
+- NeoFreeBird (by NeoFreeBird)
+- SCInsta (by SoCuul)
 - InShotPro (by IPAOMTK)
 - Appstore++ (by cokernutx)
 - iTorrent (by XITRIX)
