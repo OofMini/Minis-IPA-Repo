@@ -3,13 +3,10 @@
 - YTLite (by dayanch96)
 - X (by NeoFreeBird)
 - InShotPro (by IPAOMTK)
-- Amethyst (by alexytomi)
 - Appstore++ (by cokernutx)
 - iTorrent (by XITRIX)
 - LiveContainer (by hugeBlack)
-- ModMyIpa (by powenn)
 - RefacePro (by IPAOMTK)
-- SuperMario64 (by Cypwn)
 
 ### 🔗 Repository Information
 - **Official Website**: https://oofmini.github.io/Minis-IPA-Repo/
