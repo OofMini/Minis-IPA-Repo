@@ -33,6 +33,20 @@
       ]
     },
     {
+      "name": "YouTube Music",
+      "bundleIdentifier": "google.ios.youtubemusic",
+      "developerName": "dayanch96",
+      "version": "8.44.2",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
+      "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
+      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads.",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-3.png"
+      ]
+    },
+    {
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
@@ -44,6 +58,20 @@
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-2.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-3.png"
+      ]
+    },
+    {
+      "name": "SCInsta",
+      "bundleIdentifier": "com.placeholder.scinsta",
+      "developerName": "Unknown",
+      "version": "1.0.0",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
+      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
+      "localizedDescription": "Tweaked app with enhanced features.",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-3.png"
       ]
     },
     {
