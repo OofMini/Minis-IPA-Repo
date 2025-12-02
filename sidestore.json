@@ -61,6 +61,34 @@
       "minimumOSVersion": "16.0"
     },
     {
+      "name": "YouTube Music",
+      "bundleIdentifier": "google.ios.youtubemusic",
+      "developerName": "dayanch96",
+      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-3.png"
+      ],
+      "versions": [
+        {
+          "version": "8.44.2",
+          "date": "2025-11-28",
+          "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
+          "size": 257425408,
+          "localizedDescription": "Premium unlocked, background playback, no ads"
+        }
+      ],
+      "tintColor": "#FF0000",
+      "subtitle": "Tweaked YouTube Music with premium features",
+      "permissions": [
+        "background-audio",
+        "media-access"
+      ],
+      "minimumOSVersion": "16.0"
+    },
+    {
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
@@ -82,6 +110,33 @@
       ],
       "tintColor": "#1DA1F2",
       "subtitle": "Tweaked Twitter/X",
+      "permissions": [
+        "network"
+      ],
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "SCInsta",
+      "bundleIdentifier": "com.placeholder.scinsta",
+      "developerName": "Unknown",
+      "localizedDescription": "Tweaked app with enhanced features.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-3.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2025-12-01",
+          "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
+          "size": 0,
+          "localizedDescription": "Placeholder description"
+        }
+      ],
+      "tintColor": "#000000",
+      "subtitle": "Tweaked app",
       "permissions": [
         "network"
       ],
