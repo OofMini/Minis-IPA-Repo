@@ -48,11 +48,11 @@ on:
       # YTMusicUltimate (New)
       ytmusicultimate_ipa_version:
         description: "YTMusicUltimate IPA Version"
-        default: "8.47.3"
+        default: "0.0.0"
         required: false
       ytmusicultimate_tweak_version:
         description: "YTMusicUltimate Tweak Version"
-        default: "v2.3.1"
+        default: "v0.0.0"
         required: false
       update_ytmusicultimate:
         description: "Update YTMusicUltimate"
@@ -62,11 +62,11 @@ on:
       # SCInsta (New)
       scinsta_ipa_version:
         description: "SCInsta IPA Version"
-        default: "408.0.0"
+        default: "0.0.0"
         required: false
       scinsta_tweak_version:
         description: "SCInsta Tweak Version"
-        default: "v0.8.0"
+        default: "v0.0.0"
         required: false
       update_scinsta:
         description: "Update SCInsta"
@@ -271,12 +271,12 @@ jobs:
             ["scinsta"]="scinsta"
           )
           
-          # All these apps need dynamic URLs with tweak version
+          # URL patterns - YTMusicUltimate uses static URL, others as before
           declare -A APP_URL_PATTERNS=(
             ["spotify"]="static:https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
             ["youtube"]="dynamic:https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_{version}.ipa"
             ["x"]="static:https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-            ["ytmusicultimate"]="dynamic:https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate_{version}.ipa"
+            ["ytmusicultimate"]="static:https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa"
             ["scinsta"]="dynamic:https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_{version}.ipa"
           )
           
@@ -458,7 +458,7 @@ jobs:
             local app_key="$1"
             local ipa_version="$2"
             local tweak_version="$3"
-            local workflow_file=".github/workflows/update-repos.yml"
+            local workflow_file=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
             
             if [ ! -f "$workflow_file" ]; then
               echo "::warning::Workflow file not found"
@@ -649,7 +649,7 @@ jobs:
           fi
           
           # Add workflow file if it was modified
-          WORKFLOW_FILE=".github/workflows/update-repos.yml"
+          WORKFLOW_FILE=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
           if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
             git add "$WORKFLOW_FILE"
             echo "⚙️ Workflow file changes staged"
@@ -758,7 +758,7 @@ jobs:
               echo "- \`index.html\`"
             fi
             if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              echo "- \`.github/workflows/update-repos.yml\` (workflow defaults)"
+              echo "- \`.github/workflows/bulk-ipa-updates-tweaked-apps.yml\` (workflow defaults)"
             fi
             
             echo ""
