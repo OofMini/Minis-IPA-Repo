@@ -103,7 +103,7 @@
       "minimumOSVersion": "16.0"
     },
     {
-      "name": "X (NeoFreeBird)",
+      "name": "NeoFreeBird",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "subtitle": "Tweaked Twitter/X",
@@ -137,7 +137,7 @@
       "name": "SCInsta",
       "bundleIdentifier": "com.burbn.instagram",
       "developerName": "SoCuul",
-      "subtitle": "Tweaked app",
+      "subtitle": "Tweaked Instagram with premium features",
       "localizedDescription": "Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta 0.8.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
       "tintColor": "000000",
