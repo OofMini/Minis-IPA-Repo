@@ -137,6 +137,42 @@ jobs:
 
       # STEP 2: Setup dependencies, validate inputs, and configure Git (merged 3 steps into 1)
       - name: "Setup dependencies and validate inputs"
+        env:
+          # Pass all inputs as environment variables
+          SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
+          SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
+          UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
+          
+          YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
+          YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
+          UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
+          
+          X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
+          X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
+          UPDATE_X: ${{ github.event.inputs.update_x }}
+          
+          INSHOT_IPA_VERSION: ${{ github.event.inputs.inshot_ipa_version }}
+          INSHOT_TWEAK_VERSION: ${{ github.event.inputs.inshot_tweak_version }}
+          UPDATE_INSHOT: ${{ github.event.inputs.update_inshot }}
+          
+          APPSTOREPP_IPA_VERSION: ${{ github.event.inputs.appstorepp_ipa_version }}
+          APPSTOREPP_TWEAK_VERSION: ${{ github.event.inputs.appstorepp_tweak_version }}
+          UPDATE_APPSTOREPP: ${{ github.event.inputs.update_appstorepp }}
+          
+          ITORRENT_IPA_VERSION: ${{ github.event.inputs.itorrent_ipa_version }}
+          ITORRENT_TWEAK_VERSION: ${{ github.event.inputs.itorrent_tweak_version }}
+          UPDATE_ITORRENT: ${{ github.event.inputs.update_itorrent }}
+          
+          LIVECONTAINER_IPA_VERSION: ${{ github.event.inputs.livecontainer_ipa_version }}
+          LIVECONTAINER_TWEAK_VERSION: ${{ github.event.inputs.livecontainer_tweak_version }}
+          UPDATE_LIVECONTAINER: ${{ github.event.inputs.update_livecontainer }}
+          
+          REFACE_IPA_VERSION: ${{ github.event.inputs.reface_ipa_version }}
+          REFACE_TWEAK_VERSION: ${{ github.event.inputs.reface_tweak_version }}
+          UPDATE_REFACE: ${{ github.event.inputs.update_reface }}
+          
+          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
+          CHANGE_DESCRIPTION: ${{ github.event.inputs.change_description }}
         run: |
           set -e
           
@@ -167,26 +203,28 @@ jobs:
           
           # Check if any app is enabled
           ANY_ENABLED=false
-          declare -A APP_TOGGLES=(
-            ["spotify"]="${{ github.event.inputs.update_spotify }}"
-            ["youtube"]="${{ github.event.inputs.update_youtube }}"
-            ["x"]="${{ github.event.inputs.update_x }}"
-            ["inshot"]="${{ github.event.inputs.update_inshot }}"
-            ["appstorepp"]="${{ github.event.inputs.update_appstorepp }}"
-            ["itorrent"]="${{ github.event.inputs.update_itorrent }}"
-            ["livecontainer"]="${{ github.event.inputs.update_livecontainer }}"
-            ["reface"]="${{ github.event.inputs.update_reface }}"
+          
+          # Define app configuration
+          declare -A APP_CONFIGS=(
+            ["spotify"]="Spotify:$SPOTIFY_IPA_VERSION:$SPOTIFY_TWEAK_VERSION:$UPDATE_SPOTIFY"
+            ["youtube"]="YouTube:$YOUTUBE_IPA_VERSION:$YOUTUBE_TWEAK_VERSION:$UPDATE_YOUTUBE"
+            ["x"]="X:$X_IPA_VERSION:$X_TWEAK_VERSION:$UPDATE_X"
+            ["inshot"]="InShot:$INSHOT_IPA_VERSION:$INSHOT_TWEAK_VERSION:$UPDATE_INSHOT"
+            ["appstorepp"]="AppStore++:$APPSTOREPP_IPA_VERSION:$APPSTOREPP_TWEAK_VERSION:$UPDATE_APPSTOREPP"
+            ["itorrent"]="iTorrent:$ITORRENT_IPA_VERSION:$ITORRENT_TWEAK_VERSION:$UPDATE_ITORRENT"
+            ["livecontainer"]="LiveContainer:$LIVECONTAINER_IPA_VERSION:$LIVECONTAINER_TWEAK_VERSION:$UPDATE_LIVECONTAINER"
+            ["reface"]="Reface:$REFACE_IPA_VERSION:$REFACE_TWEAK_VERSION:$UPDATE_REFACE"
           )
           
           # Validate only enabled apps and check if any are enabled
-          for app_key in "${!APP_TOGGLES[@]}"; do
-            if [[ "${APP_TOGGLES[$app_key]}" == "true" ]]; then
+          for app_key in "${!APP_CONFIGS[@]}"; do
+            IFS=':' read -r app_name ipa_version tweak_version update_toggle <<< "${APP_CONFIGS[$app_key]}"
+            
+            if [[ "$update_toggle" == "true" ]]; then
               ANY_ENABLED=true
               # Validate versions for this app
-              ipa_var="${app_key}_ipa_version"
-              tweak_var="${app_key}_tweak_version"
-              validate_version "${{ github.event.inputs[ipa_var] }}" "${app_key^}" "IPA version"
-              validate_version "${{ github.event.inputs[tweak_var] }}" "${app_key^}" "Tweak version"
+              validate_version "$ipa_version" "$app_name" "IPA version"
+              validate_version "$tweak_version" "$app_name" "Tweak version"
             fi
           done
           
@@ -207,6 +245,41 @@ jobs:
       # STEP 3: Process all repository updates (merged JSON, HTML, and workflow updates)
       - name: "Process all repository updates"
         id: update-files
+        env:
+          # Pass all inputs as environment variables
+          SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
+          SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
+          UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
+          
+          YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
+          YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
+          UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
+          
+          X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
+          X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
+          UPDATE_X: ${{ github.event.inputs.update_x }}
+          
+          INSHOT_IPA_VERSION: ${{ github.event.inputs.inshot_ipa_version }}
+          INSHOT_TWEAK_VERSION: ${{ github.event.inputs.inshot_tweak_version }}
+          UPDATE_INSHOT: ${{ github.event.inputs.update_inshot }}
+          
+          APPSTOREPP_IPA_VERSION: ${{ github.event.inputs.appstorepp_ipa_version }}
+          APPSTOREPP_TWEAK_VERSION: ${{ github.event.inputs.appstorepp_tweak_version }}
+          UPDATE_APPSTOREPP: ${{ github.event.inputs.update_appstorepp }}
+          
+          ITORRENT_IPA_VERSION: ${{ github.event.inputs.itorrent_ipa_version }}
+          ITORRENT_TWEAK_VERSION: ${{ github.event.inputs.itorrent_tweak_version }}
+          UPDATE_ITORRENT: ${{ github.event.inputs.update_itorrent }}
+          
+          LIVECONTAINER_IPA_VERSION: ${{ github.event.inputs.livecontainer_ipa_version }}
+          LIVECONTAINER_TWEAK_VERSION: ${{ github.event.inputs.livecontainer_tweak_version }}
+          UPDATE_LIVECONTAINER: ${{ github.event.inputs.update_livecontainer }}
+          
+          REFACE_IPA_VERSION: ${{ github.event.inputs.reface_ipa_version }}
+          REFACE_TWEAK_VERSION: ${{ github.event.inputs.reface_tweak_version }}
+          UPDATE_REFACE: ${{ github.event.inputs.update_reface }}
+          
+          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
         run: |
           set -e
           
@@ -274,6 +347,40 @@ jobs:
             ["itorrent"]="Feature-rich torrent client for iOS. iTorrent IPA %s, iTorrent %s."
             ["livecontainer"]="Run iOS apps in a containerized environment. LiveContainer IPA %s, LiveContainer %s."
             ["reface"]="Tweaked Reface with pro features unlocked. Reface IPA %s, Reface Tweak %s."
+          )
+          
+          # Map environment variables to app configurations
+          declare -A APP_TOGGLES=(
+            ["spotify"]="$UPDATE_SPOTIFY"
+            ["youtube"]="$UPDATE_YOUTUBE"
+            ["x"]="$UPDATE_X"
+            ["inshot"]="$UPDATE_INSHOT"
+            ["appstorepp"]="$UPDATE_APPSTOREPP"
+            ["itorrent"]="$UPDATE_ITORRENT"
+            ["livecontainer"]="$UPDATE_LIVECONTAINER"
+            ["reface"]="$UPDATE_REFACE"
+          )
+          
+          declare -A APP_IPA_VERSIONS=(
+            ["spotify"]="$SPOTIFY_IPA_VERSION"
+            ["youtube"]="$YOUTUBE_IPA_VERSION"
+            ["x"]="$X_IPA_VERSION"
+            ["inshot"]="$INSHOT_IPA_VERSION"
+            ["appstorepp"]="$APPSTOREPP_IPA_VERSION"
+            ["itorrent"]="$ITORRENT_IPA_VERSION"
+            ["livecontainer"]="$LIVECONTAINER_IPA_VERSION"
+            ["reface"]="$REFACE_IPA_VERSION"
+          )
+          
+          declare -A APP_TWEAK_VERSIONS=(
+            ["spotify"]="$SPOTIFY_TWEAK_VERSION"
+            ["youtube"]="$YOUTUBE_TWEAK_VERSION"
+            ["x"]="$X_TWEAK_VERSION"
+            ["inshot"]="$INSHOT_TWEAK_VERSION"
+            ["appstorepp"]="$APPSTOREPP_TWEAK_VERSION"
+            ["itorrent"]="$ITORRENT_TWEAK_VERSION"
+            ["livecontainer"]="$LIVECONTAINER_TWEAK_VERSION"
+            ["reface"]="$REFACE_TWEAK_VERSION"
           )
           
           # Function to build download URL
@@ -390,10 +497,13 @@ jobs:
               return 0
             fi
             
+            # Clean app name for regex (escape special characters)
+            local clean_app_name=$(echo "$app_name" | sed 's/[()]/\\&/g')
+            
             # Combine sed operations for efficiency
             sed -i \
               -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$ipa_version\2/ }" \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_version\2$tweak_version/ }" \
+              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${clean_app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_version\2$tweak_version/ }" \
               "index.html"
           }
           
@@ -445,9 +555,8 @@ jobs:
           
           # Process each app
           for app_key in "${APP_KEYS[@]}"; do
-            # Get toggle value from GitHub Actions input
-            toggle_var="update_${app_key}"
-            toggle_value="${{ github.event.inputs[toggle_var] }}"
+            # Get toggle value from environment variables
+            toggle_value="${APP_TOGGLES[$app_key]}"
             
             # Check if app is enabled
             if [[ "$toggle_value" != "true" ]]; then
@@ -456,11 +565,9 @@ jobs:
               continue
             fi
             
-            # Get versions from GitHub Actions inputs
-            ipa_var="${app_key}_ipa_version"
-            tweak_var="${app_key}_tweak_version"
-            IPA_VERSION="${{ github.event.inputs[ipa_var] }}"
-            TWEAK_VERSION="${{ github.event.inputs[tweak_var] }}"
+            # Get versions from environment variables
+            IPA_VERSION="${APP_IPA_VERSIONS[$app_key]}"
+            TWEAK_VERSION="${APP_TWEAK_VERSIONS[$app_key]}"
             
             # Get app metadata
             APP_NAME="${APP_NAMES[$app_key]}"
@@ -489,7 +596,7 @@ jobs:
             fi
             
             # Update workflow defaults (if enabled globally)
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
+            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then
               echo "⚙️ Updating workflow defaults for $APP_NAME..."
               update_workflow_defaults "$app_key" "$IPA_VERSION" "$TWEAK_VERSION"
             fi
