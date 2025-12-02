@@ -48,11 +48,11 @@ on:
       # YTMusicUltimate (New)
       ytmusicultimate_ipa_version:
         description: "YTMusicUltimate IPA Version"
-        default: "0.0.0"
+        default: "8.47.3"
         required: false
       ytmusicultimate_tweak_version:
         description: "YTMusicUltimate Tweak Version"
-        default: "v0.0.0"
+        default: "v2.3.1"
         required: false
       update_ytmusicultimate:
         description: "Update YTMusicUltimate"
@@ -62,11 +62,11 @@ on:
       # SCInsta (New)
       scinsta_ipa_version:
         description: "SCInsta IPA Version"
-        default: "0.0.0"
+        default: "408.0.0"
         required: false
       scinsta_tweak_version:
         description: "SCInsta Tweak Version"
-        default: "v0.0.0"
+        default: "v0.8.0"
         required: false
       update_scinsta:
         description: "Update SCInsta"
