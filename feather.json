@@ -71,6 +71,38 @@
       "minimumOSVersion": "16.0"
     },
     {
+      "name": "YouTube Music",
+      "bundleIdentifier": "google.ios.youtubemusic",
+      "developerName": "dayanch96",
+      "subtitle": "Tweaked YouTube Music with premium features",
+      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
+      "tintColor": "FF0000",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-3.png"
+      ],
+      "versions": [
+        {
+          "version": "8.44.2",
+          "date": "2025-11-28",
+          "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
+          "size": 257425408,
+          "localizedDescription": "Premium unlocked, background playback, no ads"
+        }
+      ],
+      "version": "8.44.2",
+      "versionDate": "2025-11-28",
+      "size": 257425408,
+      "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
+      "appPermissions": {
+        "background-audio": "Required for background music playback",
+        "media-access": "Needed for audio playback and library access"
+      },
+      "minimumOSVersion": "16.0"
+    },
+    {
       "name": "X (NeoFreeBird)",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
@@ -98,6 +130,37 @@
       "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
       "appPermissions": {
         "network": "Required for social media functionality"
+      },
+      "minimumOSVersion": "15.0"
+    },
+    {
+      "name": "SCInsta",
+      "bundleIdentifier": "com.placeholder.scinsta",
+      "developerName": "Unknown",
+      "subtitle": "Tweaked app",
+      "localizedDescription": "Tweaked app with enhanced features.",
+      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
+      "tintColor": "000000",
+      "screenshotURLs": [
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-1.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-2.png",
+        "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-3.png"
+      ],
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2025-12-01",
+          "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
+          "size": 0,
+          "localizedDescription": "Placeholder description"
+        }
+      ],
+      "version": "1.0.0",
+      "versionDate": "2025-12-01",
+      "size": 0,
+      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
+      "appPermissions": {
+        "network": "Required for app functionality"
       },
       "minimumOSVersion": "15.0"
     },
@@ -130,37 +193,6 @@
       "appPermissions": {
         "media-access": "Access to photo library for video editing",
         "camera": "Camera access for recording videos"
-      },
-      "minimumOSVersion": "15.0"
-    },
-    {
-      "name": "Amethyst",
-      "bundleIdentifier": "com.angelauramc.amethyst",
-      "developerName": "alexytomi",
-      "subtitle": "System utility",
-      "localizedDescription": "Minecraft Java IOS Edition.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst.png",
-      "tintColor": "6A00C9",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/amethyst-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.0",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1",
-          "size": 30094131,
-          "localizedDescription": "Minecraft Java IOS."
-        }
-      ],
-      "version": "1.0",
-      "versionDate": "2025-10-06",
-      "size": 30094131,
-      "downloadURL": "https://www.dropbox.com/scl/fi/j2pk7iaiodrtxefw2owm3/Amethyst_1.0.ipa?rlkey=1qcz9ymtvh4ok2u3qg10sv4jp&st=cuxsboop&dl=1",
-      "appPermissions": {
-        "network": "Required for Minecraft multiplayer and updates"
       },
       "minimumOSVersion": "15.0"
     },
@@ -258,37 +290,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "ModMyIpa",
-      "bundleIdentifier": "com.powen.ModMyIPA",
-      "developerName": "powenn",
-      "subtitle": "IPA modification utilities",
-      "localizedDescription": "Tool for modifying .ipas and duplicating apps.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa.png",
-      "tintColor": "5856D6",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/modmyipa-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.0.2",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1",
-          "size": 2936012,
-          "localizedDescription": "Tool for modifying .ipas and duplicating apps."
-        }
-      ],
-      "version": "1.0.2",
-      "versionDate": "2025-10-06",
-      "size": 2936012,
-      "downloadURL": "https://www.dropbox.com/scl/fi/pzuym7yzic75l686jb4n7/ModMyIPA-1.0.2.ipa?rlkey=fnxf3sk42qmf4zxhk0s90mqkh&st=x8funnj6&dl=1",
-      "appPermissions": {
-        "network": "Required for IPA downloads and updates"
-      },
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "RefacePro (IOS 17+)",
       "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
@@ -318,37 +319,6 @@
         "network": "Required for face swap processing and downloads"
       },
       "minimumOSVersion": "17.0"
-    },
-    {
-      "name": "SuperMario64 (60fps)",
-      "bundleIdentifier": "xyz.cypwn.sm64ios-60fps",
-      "developerName": "Cypwn",
-      "subtitle": "Emulated game (60fps)",
-      "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps.png",
-      "tintColor": "FFD700",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/supermario60fps-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.2.1",
-          "date": "2025-10-06",
-          "downloadURL": "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1",
-          "size": 9227468,
-          "localizedDescription": "Patched Super Mario 64 with unlocked 60 FPS rendering for smoother gameplay."
-        }
-      ],
-      "version": "1.2.1",
-      "versionDate": "2025-10-06",
-      "size": 9227468,
-      "downloadURL": "https://www.dropbox.com/scl/fi/b5yy47jalqfl71sqbig1z/SuperMario64_60FPS_1.2.1.ipa?rlkey=6kn7ltztrtcumf5fghqdwotrk&st=l6ks3vdw&dl=1",
-      "appPermissions": {
-        "network": "May be required for game features"
-      },
-      "minimumOSVersion": "15.0"
     }
   ],
   "news": []
