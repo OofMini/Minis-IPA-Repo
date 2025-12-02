@@ -71,11 +71,11 @@
       "minimumOSVersion": "16.0"
     },
     {
-      "name": "YouTube Music",
-      "bundleIdentifier": "google.ios.youtubemusic",
+      "name": "YTMusicUltimate",
+      "bundleIdentifier": "com.google.ios.youtubemusic",
       "developerName": "dayanch96",
       "subtitle": "Tweaked YouTube Music with premium features",
-      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads.",
+      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
       "tintColor": "FF0000",
       "screenshotURLs": [
@@ -87,7 +87,7 @@
         {
           "version": "8.44.2",
           "date": "2025-11-28",
-          "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
+          "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
           "size": 257425408,
           "localizedDescription": "Premium unlocked, background playback, no ads"
         }
@@ -95,7 +95,7 @@
       "version": "8.44.2",
       "versionDate": "2025-11-28",
       "size": 257425408,
-      "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
+      "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
       "appPermissions": {
         "background-audio": "Required for background music playback",
         "media-access": "Needed for audio playback and library access"
@@ -135,10 +135,10 @@
     },
     {
       "name": "SCInsta",
-      "bundleIdentifier": "com.placeholder.scinsta",
-      "developerName": "Unknown",
+      "bundleIdentifier": "com.burbn.instagram",
+      "developerName": "SoCuul",
       "subtitle": "Tweaked app",
-      "localizedDescription": "Tweaked app with enhanced features.",
+      "localizedDescription": "Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta 0.8.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
       "tintColor": "000000",
       "screenshotURLs": [
@@ -148,19 +148,19 @@
       ],
       "versions": [
         {
-          "version": "1.0.0",
+          "version": "408.0.0",
           "date": "2025-12-01",
-          "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
-          "size": 0,
-          "localizedDescription": "Placeholder description"
+          "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa",
+          "size": 407400000,
+          "localizedDescription": "Tweaked Instagram"
         }
       ],
-      "version": "1.0.0",
+      "version": "408.0.0",
       "versionDate": "2025-12-01",
-      "size": 0,
-      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
+      "size": 407400000,
+      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa",
       "appPermissions": {
-        "network": "Required for app functionality"
+        "network": "Required for social media functionality"
       },
       "minimumOSVersion": "15.0"
     },
