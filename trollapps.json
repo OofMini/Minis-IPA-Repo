@@ -33,13 +33,13 @@
       ]
     },
     {
-      "name": "YouTube Music",
-      "bundleIdentifier": "google.ios.youtubemusic",
+      "name": "YTMusicUltimate",
+      "bundleIdentifier": "com.google.ios.youtubemusic",
       "developerName": "dayanch96",
       "version": "8.44.2",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
-      "downloadURL": "https://github.com/OofMini/YouTubeMusic/releases/download/latest/YouTubeMusic.ipa",
-      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads.",
+      "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
+      "localizedDescription": "Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-1.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-2.png",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "name": "X (NeoFreeBird)",
+      "name": "NeoFreeBird",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "version": "11.43.1",
@@ -62,12 +62,12 @@
     },
     {
       "name": "SCInsta",
-      "bundleIdentifier": "com.placeholder.scinsta",
-      "developerName": "Unknown",
-      "version": "1.0.0",
+      "bundleIdentifier": "com.burbn.instagram",
+      "developerName": "SoCuul",
+      "version": "408.0.0",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
-      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/latest/SCInsta.ipa",
-      "localizedDescription": "Tweaked app with enhanced features.",
+      "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa",
+      "localizedDescription": "Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta 0.8.0.",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-1.png",
         "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-2.png",
