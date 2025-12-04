@@ -146,9 +146,10 @@ jobs:
               exit 1
             fi
             
-            # Stricter version validation: ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$ ]]; then
-              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4'), got: $version"
+            # FIXED: Updated regex to handle both 2-part (major.minor) AND 3-part (major.minor.patch) versions
+            # Allows: 11.45, 0.0, 0.0.0, v6.2.2, 5.2b4, 9.1.0
+            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
+              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4', '11.45', '0.0'), got: $version"
               exit 1
             fi
           }
@@ -229,7 +230,7 @@ jobs:
           
           SCINSTA_IPA_VERSION: ${{ github.event.inputs.scinsta_ipa_version }}
           SCINSTA_TWEAK_VERSION: ${{ github.event.inputs.scinsta_tweak_version }}
-          UPDATE_SCINSTA: ${{ github.event.inputs.update_scinsta }}
+          UPDATE_SCINSTa: ${{ github.event.inputs.update_scinsta }}
           
           # Global
           UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
