@@ -1,778 +1,1064 @@
-name: Bulk IPA Updates - Tweaked Apps
-
-on:
-  workflow_dispatch:
-    inputs:
-      # Spotify (EeveeSpotify)
-      spotify_ipa_version:
-        description: "Spotify IPA Version"
-        default: "9.1.0"
-        required: false
-      spotify_tweak_version:
-        description: "Spotify Tweak Version"
-        default: "v6.2.2"
-        required: false
-      update_spotify:
-        description: "Update Spotify"
-        type: boolean
-        default: true
-        
-      # YouTube (YTLite)
-      youtube_ipa_version:
-        description: "YouTube IPA Version"
-        default: "20.47.3"
-        required: false
-      youtube_tweak_version:
-        description: "YouTube Tweak Version"
-        default: "v5.2b4"
-        required: false
-      update_youtube:
-        description: "Update YouTube"
-        type: boolean
-        default: true
-        
-      # X (NeoFreeBird)
-      x_ipa_version:
-        description: "X IPA Version"
-        default: "11.43.1"
-        required: false
-      x_tweak_version:
-        description: "X Tweak Version"
-        default: "v5.2"
-        required: false
-      update_x:
-        description: "Update X"
-        type: boolean
-        default: true
-        
-      # YTMusicUltimate (New)
-      ytmusicultimate_ipa_version:
-        description: "YTMusicUltimate IPA Version"
-        default: "0.0.0"
-        required: false
-      ytmusicultimate_tweak_version:
-        description: "YTMusicUltimate Tweak Version"
-        default: "v0.0.0"
-        required: false
-      update_ytmusicultimate:
-        description: "Update YTMusicUltimate"
-        type: boolean
-        default: false
-        
-      # SCInsta (New)
-      scinsta_ipa_version:
-        description: "SCInsta IPA Version"
-        default: "0.0.0"
-        required: false
-      scinsta_tweak_version:
-        description: "SCInsta Tweak Version"
-        default: "v0.0.0"
-        required: false
-      update_scinsta:
-        description: "Update SCInsta"
-        type: boolean
-        default: false
-        
-      # Global Inputs
-      change_description:
-        description: "Custom commit message (optional)"
-        default: ""
-        required: false
-      update_workflow_defaults:
-        description: "Update workflow default versions"
-        type: boolean
-        default: true
-
-permissions:
-  contents: write
-
-jobs:
-  repository-sync:
-    name: "Sync Tweaked Apps"
-    runs-on: ubuntu-latest
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    steps:
-      # STEP 1: Checkout repository
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          fetch-depth: 0
+    <!-- Security: Content Security Policy (Improved) -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   img-src 'self' https://OofMini.github.io https://*.github.io https: data:; 
+                   script-src 'self'; 
+                   style-src 'self' 'unsafe-inline'; 
+                   connect-src 'self' https://OofMini.github.io https://*.github.io;
+                   manifest-src 'self';
+                   frame-ancestors 'none';">
+    
+    <title>Mini's IPA Repo - Tweaked iOS Apps</title>
+    <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
+    <meta name="keywords" content="iOS apps, tweaked apps, SideStore, TrollApps, Feather, IPA repository, spotify, youtube, youtube music, instagram, torrent">
+    <meta name="author" content="Mini">
+    <meta name="robots" content="index, follow">
 
-      # STEP 2: Setup dependencies and validate inputs
-      - name: "Setup dependencies and validate inputs"
-        env:
-          # Pass all inputs as environment variables
-          SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
-          SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
-          UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
-          
-          YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
-          YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
-          UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
-          
-          X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
-          X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
-          UPDATE_X: ${{ github.event.inputs.update_x }}
-          
-          YTMUSICULTIMATE_IPA_VERSION: ${{ github.event.inputs.ytmusicultimate_ipa_version }}
-          YTMUSICULTIMATE_TWEAK_VERSION: ${{ github.event.inputs.ytmusicultimate_tweak_version }}
-          UPDATE_YTMUSICULTIMATE: ${{ github.event.inputs.update_ytmusicultimate }}
-          
-          SCINSTA_IPA_VERSION: ${{ github.event.inputs.scinsta_ipa_version }}
-          SCINSTA_TWEAK_VERSION: ${{ github.event.inputs.scinsta_tweak_version }}
-          UPDATE_SCINSTA: ${{ github.event.inputs.update_scinsta }}
-          
-          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
-          CHANGE_DESCRIPTION: ${{ github.event.inputs.change_description }}
-        run: |
-          set -e
-          
-          echo "📦 Installing dependencies..."
-          sudo apt-get update -qq
-          sudo apt-get install -y jq
-          echo "✅ Dependencies installed"
-          
-          echo "🔍 Validating inputs..."
-          
-          # Function to validate version format
-          validate_version() {
-            local version="$1"
-            local app_name="$2"
-            local version_type="$3"
-            
-            if [[ -z "$version" ]]; then
-              echo "::error::$app_name $version_type cannot be empty"
-              exit 1
-            fi
-            
-            # FIXED: Updated regex to handle both 2-part (major.minor) AND 3-part (major.minor.patch) versions
-            # Allows: 11.45, 0.0, 0.0.0, v6.2.2, 5.2b4, 9.1.0
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
-              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4', '11.45', '0.0'), got: $version"
-              exit 1
-            fi
-          }
-          
-          # Check if any app is enabled
-          ANY_ENABLED=false
-          
-          # Check Spotify
-          if [[ "$UPDATE_SPOTIFY" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$SPOTIFY_IPA_VERSION" "Spotify" "IPA version"
-            validate_version "$SPOTIFY_TWEAK_VERSION" "Spotify" "Tweak version"
-          fi
-          
-          # Check YouTube
-          if [[ "$UPDATE_YOUTUBE" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$YOUTUBE_IPA_VERSION" "YouTube" "IPA version"
-            validate_version "$YOUTUBE_TWEAK_VERSION" "YouTube" "Tweak version"
-          fi
-          
-          # Check X
-          if [[ "$UPDATE_X" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$X_IPA_VERSION" "X" "IPA version"
-            validate_version "$X_TWEAK_VERSION" "X" "Tweak version"
-          fi
-          
-          # Check YTMusicUltimate
-          if [[ "$UPDATE_YTMUSICULTIMATE" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$YTMUSICULTIMATE_IPA_VERSION" "YTMusicUltimate" "IPA version"
-            validate_version "$YTMUSICULTIMATE_TWEAK_VERSION" "YTMusicUltimate" "Tweak version"
-          fi
-          
-          # Check SCInsta
-          if [[ "$UPDATE_SCINSTA" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$SCINSTA_IPA_VERSION" "SCInsta" "IPA version"
-            validate_version "$SCINSTA_TWEAK_VERSION" "SCInsta" "Tweak version"
-          fi
-          
-          if [[ "$ANY_ENABLED" == "false" ]]; then
-            echo "::notice::No apps enabled for update. Exiting."
-            exit 0
-          fi
-          
-          echo "✅ Input validation complete"
-          
-          # Configure Git for PAT authentication
-          echo "⚙️ Configuring Git..."
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
-          echo "✅ Git configured for PAT authentication"
+    <meta property="og:title" content="Mini's IPA Repo - Tweaked iOS Apps">
+    <meta property="og:description" content="Premium tweaked applications for iOS 15+">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
+    <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-      # STEP 3: Process all repository updates
-      - name: "Process all repository updates"
-        id: update-files
-        env:
-          # Existing apps
-          SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
-          SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
-          UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
-          
-          YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
-          YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
-          UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
-          
-          X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
-          X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
-          UPDATE_X: ${{ github.event.inputs.update_x }}
-          
-          # New apps
-          YTMUSICULTIMATE_IPA_VERSION: ${{ github.event.inputs.ytmusicultimate_ipa_version }}
-          YTMUSICULTIMATE_TWEAK_VERSION: ${{ github.event.inputs.ytmusicultimate_tweak_version }}
-          UPDATE_YTMUSICULTIMATE: ${{ github.event.inputs.update_ytmusicultimate }}
-          
-          SCINSTA_IPA_VERSION: ${{ github.event.inputs.scinsta_ipa_version }}
-          SCINSTA_TWEAK_VERSION: ${{ github.event.inputs.scinsta_tweak_version }}
-          UPDATE_SCINSTa: ${{ github.event.inputs.update_scinsta }}
-          
-          # Global
-          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
-        run: |
-          set -e
-          
-          # Setup error handling and cleanup
-          trap 'rm -f *.tmp *.bak' EXIT ERR
-          
-          # Get current date
-          CURRENT_DATE=$(date -u +"%Y-%m-%d")
-          echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
-          echo "📅 Processing date: $CURRENT_DATE"
-          
-          # Define app configuration for 5 tweaked apps
-          APP_KEYS=("spotify" "youtube" "x" "ytmusicultimate" "scinsta")
-          
-          declare -A APP_NAMES=(
-            ["spotify"]="EeveeSpotify"
-            ["youtube"]="YTLite"
-            ["x"]="X (NeoFreeBird)"
-            ["ytmusicultimate"]="YTMusicUltimate"
-            ["scinsta"]="SCInsta"
-          )
-          
-          declare -A APP_BUNDLES=(
-            ["spotify"]="com.spotify.client"
-            ["youtube"]="com.google.ios.youtube"
-            ["x"]="com.atebits.Tweetie2"
-            ["ytmusicultimate"]="com.google.ios.youtubemusic"
-            ["scinsta"]="com.burbn.instagram"
-          )
-          
-          declare -A APP_HTML_IDS=(
-            ["spotify"]="eeveespotify"
-            ["youtube"]="ytlite"
-            ["x"]="neofreebird"
-            ["ytmusicultimate"]="ytmusicultimate"
-            ["scinsta"]="scinsta"
-          )
-          
-          # URL patterns - YTMusicUltimate uses static URL, others as before
-          declare -A APP_URL_PATTERNS=(
-            ["spotify"]="static:https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
-            ["youtube"]="dynamic:https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_{version}.ipa"
-            ["x"]="static:https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa"
-            ["ytmusicultimate"]="static:https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa"
-            ["scinsta"]="dynamic:https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_{version}.ipa"
-          )
-          
-          # All these apps have tweak versions in descriptions
-          declare -A APP_DESCRIPTIONS=(
-            ["spotify"]="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA %s, EeveeSpotify %s."
-            ["youtube"]="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA %s, YTLite %s."
-            ["x"]="Tweaked X with premium features and more. X IPA %s, NeoFreeBird %s."
-            ["ytmusicultimate"]="Tweaked YouTube Music with enhanced features and no ads. YouTube Music IPA %s, YTMusicUltimate %s."
-            ["scinsta"]="Tweaked Instagram with additional features and enhanced privacy. Instagram IPA %s, SCInsta %s."
-          )
-          
-          # Map environment variables to app configurations
-          declare -A APP_TOGGLES=(
-            ["spotify"]="$UPDATE_SPOTIFY"
-            ["youtube"]="$UPDATE_YOUTUBE"
-            ["x"]="$UPDATE_X"
-            ["ytmusicultimate"]="$UPDATE_YTMUSICULTIMATE"
-            ["scinsta"]="$UPDATE_SCINSTA"
-          )
-          
-          declare -A APP_IPA_VERSIONS=(
-            ["spotify"]="$SPOTIFY_IPA_VERSION"
-            ["youtube"]="$YOUTUBE_IPA_VERSION"
-            ["x"]="$X_IPA_VERSION"
-            ["ytmusicultimate"]="$YTMUSICULTIMATE_IPA_VERSION"
-            ["scinsta"]="$SCINSTA_IPA_VERSION"
-          )
-          
-          declare -A APP_TWEAK_VERSIONS=(
-            ["spotify"]="$SPOTIFY_TWEAK_VERSION"
-            ["youtube"]="$YOUTUBE_TWEAK_VERSION"
-            ["x"]="$X_TWEAK_VERSION"
-            ["ytmusicultimate"]="$YTMUSICULTIMATE_TWEAK_VERSION"
-            ["scinsta"]="$SCINSTA_TWEAK_VERSION"
-          )
-          
-          # Function to build download URL
-          build_download_url() {
-            local app_key="$1"
-            local tweak_version="$2"
-            local pattern="${APP_URL_PATTERNS[$app_key]}"
-            
-            if [[ "$pattern" == static:* ]]; then
-              echo "${pattern#static:}"
-            elif [[ "$pattern" == dynamic:* ]]; then
-              local template="${pattern#dynamic:}"
-              local version_clean="${tweak_version#v}"
-              echo "${template//\{version\}/$version_clean}"
-            fi
-          }
-          
-          # Function to generate description
-          generate_description() {
-            local app_key="$1"
-            local ipa_version="$2"
-            local tweak_version="$3"
-            local template="${APP_DESCRIPTIONS[$app_key]}"
-            
-            printf "$template" "$ipa_version" "$tweak_version"
-          }
-          
-          # Function to update app in JSON file
-          update_app_in_file() {
-            local file="$1" 
-            local app_name="$2" 
-            local bundle_id="$3" 
-            local ipa_version="$4" 
-            local download_url="$5"
-            local description="$6"
-            local temp_file="${file}.tmp"
-            
-            # Check if app exists in file
-            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" \
-                 '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' \
-                 "$file" >/dev/null 2>&1; then
-              echo "::warning::$app_name not found in $file, skipping..."
-              return 0
-            fi
-            
-            # Update based on file structure
-            case "$file" in
-              "sidestore.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-              "feather.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .versionDate = $date |
-                     .versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-              "trollapps.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-            esac
-            
-            # Validate and move
-            if ! jq empty "$temp_file" 2>/dev/null; then
-              echo "::error::Generated invalid JSON for $file"
-              rm -f "$temp_file"
-              return 1
-            fi
-            
-            if cmp -s "$file" "$temp_file"; then
-              rm -f "$temp_file"
-            else
-              mv "$temp_file" "$file"
-              echo "✅ Updated $app_name in $file"
-            fi
-          }
-          
-          # Function to update HTML file
-          update_html_file() {
-            local html_id="$1"
-            local app_name="$2"
-            local ipa_version="$3"
-            local tweak_version="$4"
-            
-            if [ ! -f "index.html" ]; then
-              echo "::warning::index.html not found"
-              return 0
-            fi
-            
-            # Clean app name for regex (escape special characters)
-            local clean_app_name=$(echo "$app_name" | sed 's/[()]/\\&/g')
-            
-            # Update version number
-            sed -i \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$ipa_version\2/ }" \
-              "index.html"
-            
-            # Update description with both IPA and tweak versions
-            # Extract base app name for description update
-            local base_app_name=""
-            case "$html_id" in
-              "eeveespotify") base_app_name="Spotify" ;;
-              "ytlite") base_app_name="YouTube" ;;
-              "neofreebird") base_app_name="X" ;;
-              "ytmusicultimate") base_app_name="YouTube Music" ;;
-              "scinsta") base_app_name="Instagram" ;;
-            esac
-            
-            # Update the description line with both versions
-            sed -i \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${base_app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_version\2$tweak_version/ }" \
-              "index.html"
-          }
-          
-          # Function to update workflow defaults
-          update_workflow_defaults() {
-            local app_key="$1"
-            local ipa_version="$2"
-            local tweak_version="$3"
-            local workflow_file=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
-            
-            if [ ! -f "$workflow_file" ]; then
-              echo "::warning::Workflow file not found"
-              return 0
-            fi
-            
-            # Update both IPA and tweak version defaults
-            sed -i \
-              -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$ipa_version\"/" \
-              -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$tweak_version\"/" \
-              "$workflow_file"
-          }
-          
-          # Validate JSON files exist and are valid
-          echo "📄 Validating JSON files..."
-          JSON_FILES=("sidestore.json" "feather.json" "trollapps.json")
-          for file in "${JSON_FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "::error::$file not found"
-              exit 1
-            fi
-            
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::$file - Invalid JSON"
-              exit 1
-            fi
-            
-            if ! jq -e '.apps | type == "array"' "$file" >/dev/null 2>&1; then
-              echo "::error::$file - Missing or invalid apps array"
-              exit 1
-            fi
-            
-            echo "✅ $file - Valid JSON"
-          done
-          
-          # Initialize tracking arrays
-          UPDATED_APPS=()
-          UPDATED_VERSIONS=()
-          SKIPPED_APPS=()
-          
-          # Process each app
-          for app_key in "${APP_KEYS[@]}"; do
-            # Get toggle value
-            toggle_value="${APP_TOGGLES[$app_key]}"
-            
-            # Check if app is enabled
-            if [[ "$toggle_value" != "true" ]]; then
-              echo "::notice::Skipping ${APP_NAMES[$app_key]} (toggle disabled)"
-              SKIPPED_APPS+=("${APP_NAMES[$app_key]}")
-              continue
-            fi
-            
-            # Get versions
-            IPA_VERSION="${APP_IPA_VERSIONS[$app_key]}"
-            TWEAK_VERSION="${APP_TWEAK_VERSIONS[$app_key]}"
-            
-            # Get app metadata
-            APP_NAME="${APP_NAMES[$app_key]}"
-            BUNDLE_ID="${APP_BUNDLES[$app_key]}"
-            HTML_ID="${APP_HTML_IDS[$app_key]}"
-            DOWNLOAD_URL=$(build_download_url "$app_key" "$TWEAK_VERSION")
-            DESCRIPTION=$(generate_description "$app_key" "$IPA_VERSION" "$TWEAK_VERSION")
-            
-            echo ""
-            echo "========================================"
-            echo "🔄 Processing $APP_NAME..."
-            echo "========================================"
-            echo "📦 IPA Version: $IPA_VERSION"
-            echo "⚙️ Tweak Version: $TWEAK_VERSION"
-            echo "🔗 Download URL: $DOWNLOAD_URL"
-            
-            # Update JSON files
-            for json_file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$IPA_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
-            done
-            
-            # Update HTML (index.html)
-            if [ -f "index.html" ]; then
-              echo "🌐 Updating HTML for $APP_NAME..."
-              update_html_file "$HTML_ID" "$APP_NAME" "$IPA_VERSION" "$TWEAK_VERSION"
-            fi
-            
-            # Update workflow defaults (if enabled globally)
-            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then
-              echo "⚙️ Updating workflow defaults for $APP_NAME..."
-              update_workflow_defaults "$app_key" "$IPA_VERSION" "$TWEAK_VERSION"
-            fi
-            
-            # Track update
-            UPDATED_APPS+=("$APP_NAME")
-            UPDATED_VERSIONS+=("${app_key}:${IPA_VERSION}:${TWEAK_VERSION}")
-            
-            echo "✅ $APP_NAME processing complete"
-          done
-          
-          # Set outputs
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
-            echo "updated_versions=${UPDATED_VERSIONS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then
-            echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          # Final validation of all JSON files
-          echo ""
-          echo "🔍 Final validation..."
-          for file in "${JSON_FILES[@]}"; do
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::Final validation failed for $file"
-              exit 1
-            fi
-            echo "✅ $file validated"
-          done
-          
-          echo ""
-          echo "========================================"
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "✅ Successfully processed: ${UPDATED_APPS[*]}"
-          else
-            echo "::warning::No apps were updated"
-          fi
-          echo "========================================"
+    <!-- Prevent caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
-      # STEP 4: Commit and push changes
-      - name: "Commit and push changes"
-        if: steps.update-files.outputs.updated_apps
-        run: |
-          set -e
-          
-          # Build commit message
-          if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
-            COMMIT_MSG="${{ github.event.inputs.change_description }}"
-          else
-            COMMIT_MSG="Repository Sync: Updated tweaked app versions across all sources"
-            
-            # Add updated apps section
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated apps:"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add skipped apps section
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Skipped apps (toggle disabled):"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add version details section
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Version details:"
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                IPA_VER="${PARTS[1]}"
-                TWEAK_VER="${PARTS[2]}"
-                # Capitalize first letter of app key for display
-                APP_DISPLAY="${APP_KEY^}"
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- ${APP_DISPLAY}: IPA $IPA_VER, Tweak $TWEAK_VER"
-              done
-            fi
-            
-            # Add note about workflow defaults update
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated workflow default versions"
-            fi
-            
-            COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Automated update via GitHub Actions"
-          fi
-          
-          # Stage changed files
-          git add sidestore.json feather.json trollapps.json
-          
-          # Add index.html only if it was modified
-          if [ -f index.html ] && ! git diff --quiet index.html 2>/dev/null; then
-            git add index.html
-          fi
-          
-          # Add workflow file if it was modified
-          WORKFLOW_FILE=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
-          if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
-            git add "$WORKFLOW_FILE"
-            echo "⚙️ Workflow file changes staged"
-          fi
-          
-          # Check if there are staged changes
-          if git diff --staged --quiet; then
-            echo "::notice::No changes to commit - files are already up to date"
-            echo "no_changes=true" >> $GITHUB_OUTPUT
-          else
-            # Commit changes
-            git commit -m "$COMMIT_MSG"
-            
-            # Push with retry logic using PAT authentication
-            echo "🚀 Pushing changes to repository using PAT..."
-            MAX_RETRIES=3
-            RETRY_COUNT=0
-            
-            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              if git push origin HEAD; then
-                echo "✅ Changes committed and pushed successfully using PAT"
-                break
-              else
-                RETRY_COUNT=$((RETRY_COUNT + 1))
-                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                  echo "::warning::Push failed, pulling and retrying... (Attempt $RETRY_COUNT/$MAX_RETRIES)"
-                  git pull --rebase origin HEAD
-                else
-                  echo "::error::Failed to push after $MAX_RETRIES attempts"
-                  exit 1
-                fi
-              fi
-            done
-          fi
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mini's IPA Repo">
+    <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-      # STEP 5: Generate summary (always runs)
-      - name: "Generate summary"
-        if: always()
-        run: |
-          {
-            echo "## 📦 Tweaked Apps Update Summary"
-            echo ""
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Mini's IPA Repo",
+        "description": "Premium tweaked applications for iOS 15+",
+        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
+        "applicationCategory": "Utilities",
+        "operatingSystem": "iOS",
+        "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock"
+        }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            --card-border: rgba(255,255,255,0.15);
+            --accent-color: #a0a0ff;
+            --success-color: #1db954;
+            --info-color: #007AFF;
+            --warning-color: #ffaa00;
+            --error-color: #ff4444;
+            --trollapps-color: #8a2be2;
+            --sidestore-color: #1db954;
+            --feather-color: #ff6b35;
             
-            # Job status
-            if [ "${{ job.status }}" == "success" ]; then
-              echo "✅ **Status**: Success"
-            else
-              echo "❌ **Status**: Failed"
-            fi
-            echo ""
+            /* Constants for animations */
+            --fade-duration: 1s;
+            --stagger-delay-1: 0.15s;
+            --stagger-delay-2: 0.3s;
+            --stagger-delay-3: 0.45s;
+            --toast-duration: 3000ms;
+            --fetch-timeout: 8000ms;
+            --skeleton-delay: 800ms;
+        }
+        
+        /* Accessibility: Better focus indicators */
+        *:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        
+        .search-box:focus,
+        .download-btn:focus,
+        .cta-button:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 4px;
+        }
+        
+        /* Accessibility: Improve color contrast */
+        .hero-subtitle,
+        .app-card p,
+        .download-count {
+            color: #cccccc !important;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+        }
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        .fade-in, .fade-in-left, .app-card {
+            will-change: transform, opacity;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all var(--fade-duration) ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all var(--fade-duration) ease;
+        }
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .stagger-1 { transition-delay: var(--stagger-delay-1); }
+        .stagger-2 { transition-delay: var(--stagger-delay-2); }
+        .stagger-3 { transition-delay: var(--stagger-delay-3); }
+
+        /* Animated Gradient for Title */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(270deg, #8a2be2, #ffffff, #8a2be2);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        .skeleton-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .skeleton-icon { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 15px; }
+        .skeleton-text { height: 16px; margin-bottom: 8px; width: 100%; }
+        .skeleton-text.short { width: 60%; margin-left: auto; margin-right: auto; }
+        .skeleton-text.medium { width: 80%; margin-left: auto; margin-right: auto; }
+        .skeleton-button { height: 40px; border-radius: 10px; margin-top: auto; width: 150px; }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+        }
+        .error-emoji { font-size: 3em; margin-bottom: 20px; }
+        .error-title { margin-bottom: 10px; color: var(--text-color); }
+        .error-message { margin-bottom: 20px; opacity: 0.8; }
+
+        .hero {
+            background: var(--bg-color);
+            padding: 20px 15px 15px;
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
+        }
+        .repo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            border: 2px solid var(--card-border);
+        }
+        .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
+        .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .badge {
+            background: var(--success-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .badge.purple { background: var(--accent-color); }
+
+        .cta-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .cta-button.trollapps { background: var(--trollapps-color); border-color: var(--trollapps-color); }
+        .cta-button.sidestore { background: var(--sidestore-color); border-color: var(--sidestore-color); }
+        .cta-button.feather { background: var(--feather-color); border-color: var(--feather-color); }
+        .cta-button:hover { transform: translateY(-2px); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
+        .search-container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus { outline: none; border-color: var(--accent-color); }
+        .search-box::placeholder { color: var(--text-color); opacity: 0.7; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+
+        .app-icon-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 6px;
+            border: 2px solid var(--card-border);
+        }
+        .app-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+            max-width: 100%;
+        }
+
+        .app-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+            color: var(--success-color);
+            flex-wrap: wrap;
+        }
+        .download-count { font-size: 0.8em; opacity: 0.8; color: var(--text-color); }
+
+        .app-card-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+        .app-card h3 {
+            margin: 0 auto 12px;
+            color: var(--text-color);
+            font-size: 1.2em;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .app-card p {
+            font-size: 0.9em;
+            color: var(--text-color);
+            opacity: 0.8;
+            line-height: 1.5;
+            margin: 0 auto 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, var(--success-color), #1ed760);
+            color: #fff;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-top: auto;
+            border: none;
+            cursor: pointer;
+        }
+        .download-btn:hover { transform: translateY(-2px); }
+
+        .repo-info {
+            margin-top: 40px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+        .repo-info h3 {
+            color: var(--text-color);
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .repo-link {
+            margin: 12px 0;
+            font-size: 1em;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .repo-link a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .repo-link a:hover { color: var(--success-color); }
+        .repo-link code {
+            background: var(--card-bg);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: var(--text-color);
+            font-size: 0.85em;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            padding: 12px 16px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 8px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            font-size: 0.9em;
+            max-width: 300px;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.error { background: var(--error-color); }
+        .toast.warning { background: var(--warning-color); }
+        .toast.info { background: var(--info-color); }
+        .toast.success { background: var(--success-color); }
+
+        @media (max-width: 768px) {
+            .app-grid { grid-template-columns: 1fr; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .cta-button { width: 180px; }
+            .fade-in-left { transform: translateY(30px); }
+            .fade-in-left.visible { transform: translateY(0); }
+            .repo-link { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy" width="60" height="60">
+        <h1 class="animated-gradient">Mini's IPA Repo</h1>
+        <p class="hero-subtitle">Tweaked IPAs</p>
+
+        <div class="badges" role="status" aria-live="polite">
+            <span class="badge" aria-label="Repository status active">✅ Active</span>
+            <span class="badge purple" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+        </div>
+
+        <nav class="cta-buttons" aria-label="Add repository to app">
+            <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
+                <span role="img" aria-hidden="true">📱</span> Add to TrollApps
+            </button>
+            <button class="cta-button sidestore" onclick="addToApp('SideStore', 'sidestore.json')" aria-label="Add repository to SideStore">
+                <span role="img" aria-hidden="true">⚙️</span> Add to SideStore
+            </button>
+            <button class="cta-button feather" onclick="addToApp('Feather', 'feather.json')" aria-label="Add repository to Feather">
+                <span role="img" aria-hidden="true">🪶</span> Add to Feather
+            </button>
+        </nav>
+    </header>
+
+    <main class="container" role="main">
+        <!-- Search box -->
+        <section class="search-container fade-in" aria-labelledby="search-title">
+            <h2 id="search-title" class="visually-hidden">Search apps</h2>
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
+                   aria-label="Search apps by name or description" autocomplete="off">
+        </section>
+
+        <!-- App grid -->
+        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
+
+        <!-- Repo info -->
+        <section class="repo-info fade-in" aria-labelledby="repo-info-title">
+            <h3 id="repo-info-title">📦 Repository Information</h3>
+
+            <div class="repo-link fade-in-left stagger-1">
+                <span role="img" aria-hidden="true">🌐</span>
+                <strong>Official Website:</strong>
+                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
+            </div>
+
+            <div class="repo-link fade-in-left stagger-2">
+                <span role="img" aria-hidden="true">📱</span>
+                <strong>SideStore Manifest:</strong>
+                <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
+            </div>
+
+            <div class="repo-link fade-in-left stagger-3">
+                <span role="img" aria-hidden="true">🧌</span>
+                <strong>TrollApps Manifest:</strong>
+                <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+            </div>
+
+            <div class="repo-link fade-in-left stagger-3">
+                <span role="img" aria-hidden="true">🪶</span>
+                <strong>Feather Manifest:</strong>
+                <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container" aria-label="Site footer">
+        <p style="opacity:0.6; text-align:center; font-size:0.85em; padding:15px 0;">
+            © Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+        </p>
+    </footer>
+
+    <div class="toast" id="toast" aria-live="polite" role="status"></div>
+
+    <script>
+        // Constants configuration
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
+        };
+
+        // Custom Error class
+        class AppError extends Error {
+            constructor(message, type) {
+                super(message);
+                this.type = type;
+                this.name = 'AppError';
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function isValidDownloadUrl(url) {
+            try {
+                const parsed = new URL(url);
+                return parsed.protocol === 'https:' && 
+                       parsed.hostname.includes('github.com');
+            } catch {
+                return false;
+            }
+        }
+
+        // Prevent caching by adding timestamp to requests
+        const timestamp = new Date().getTime();
+
+        const appsData = [
+            {
+                id: 'eeveespotify',
+                name: 'EeveeSpotify',
+                developer: 'whoeevee',
+                description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
+                version: '9.1.0',
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'ytlite',
+                name: 'YTLite',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
+                version: '20.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'ytmusicultimate',
+                name: 'YTMusicUltimate',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png?' + timestamp,
+                version: '8.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'neofreebird',
+                name: 'NeoFreeBird',
+                developer: 'NeoFreeBird',
+                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.45, NeoFreeBird v5.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
+                version: '11.45',
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'scinsta',
+                name: 'SCInsta',
+                developer: 'SoCuul',
+                description: 'Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta v0.8.0',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png?' + timestamp,
+                version: '408.0.0',
+                downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'inshot',
+                name: 'InShotPro',
+                developer: 'IPAOMTK',
+                description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
+                version: '1.91.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'appstoreplus',
+                name: 'Appstore++',
+                developer: 'cokernutx',
+                description: 'Appstore++ allows users to downgrade apps.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
+                version: '1.0.3',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'itorrent',
+                name: 'iTorrent',
+                developer: 'XITRIX',
+                description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
+                version: '2.1.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'livecontainer',
+                name: 'LiveContainer',
+                developer: 'hugeBlack',
+                description: 'Runs live production containers for streaming apps and runtime isolation.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
+                version: '3.6.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'refacepro',
+                name: 'RefacePro (IOS 17+)',
+                developer: 'IPAOMTK',
+                description: 'Reface Premium Unlocked.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
+                version: '5.27.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            }
+        ];
+
+        let searchTerm = '';
+        let deferredPrompt;
+        let searchTimeout;
+        let cachedApps = [...appsData]; // Cache for search
+        let observer = null;
+
+        // Enhanced initialization with error handling
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                setupNetworkMonitoring();
+                setupEventListeners();
+                initializeScrollAnimations();
+                loadAppsWithFallback();
+                // Defer service worker registration
+                setTimeout(setupPWA, 1000);
+            } catch (error) {
+                handleError(error);
+            }
+        });
+
+        function handleError(error) {
+            if (error instanceof AppError) {
+                showToast(error.message, error.type);
+            } else {
+                showToast('An unexpected error occurred', 'error');
+            }
+            console.error(error);
+        }
+
+        function initializeScrollAnimations() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+
+            document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
+                if (observer) observer.observe(el);
+            });
+        }
+
+        // Clean up observer on page unload
+        window.addEventListener('beforeunload', () => {
+            if (observer) {
+                observer.disconnect();
+            }
+        });
+
+        // Skeleton Loading Screens
+        function showSkeletonLoading() {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = `
+                <div class="skeleton-card fade-in">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            `.repeat(6);
+
+            setTimeout(() => {
+                appGrid.querySelectorAll('.skeleton-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
+            }, 100);
+        }
+
+        // Fetch with timeout helper
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = CONFIG.FETCH_TIMEOUT } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(resource, { ...options, signal: controller.signal });
+                return response;
+            } finally {
+                clearTimeout(id);
+            }
+        }
+
+        // Error Handling & Offline Support
+        async function loadAppsWithFallback() {
+            try {
+                showSkeletonLoading();
+
+                if (!navigator.onLine) {
+                    throw new AppError('No internet connection', 'warning');
+                }
+
+                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp);
+                if (!manifestAvailable) {
+                    throw new AppError('Repository temporarily unavailable', 'warning');
+                }
+
+                // Simulate async loading
+                await new Promise(resolve => setTimeout(resolve, CONFIG.SKELETON_DELAY));
+                renderAppGrid();
+
+            } catch (error) {
+                console.error('Failed to load apps:', error);
+                showErrorState(error.message);
+            }
+        }
+
+        function showErrorState(message) {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = `
+                <div class="error-state fade-in" role="alert">
+                    <div class="error-emoji" aria-hidden="true">😕</div>
+                    <h3 class="error-title">Unable to Load Apps</h3>
+                    <p class="error-message">${escapeHtml(message)}</p>
+                    <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+            setTimeout(() => {
+                const element = appGrid.querySelector('.fade-in');
+                if (element && observer) observer.observe(element);
+            }, 100);
+        }
+
+        async function checkResourceAvailability(url) {
+            try {
+                const response = await fetchWithTimeout(url, {
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+                    timeout: 5000
+                });
+                return response.ok;
+            } catch (error) {
+                console.warn(`Resource unavailable: ${url}`, error);
+                return false;
+            }
+        }
+
+        function setupNetworkMonitoring() {
+            window.addEventListener('online', () => {
+                showToast('Connection restored', 'success');
+            });
+
+            window.addEventListener('offline', () => {
+                showToast('You are currently offline', 'warning');
+            });
+
+            if (!navigator.onLine) {
+                showToast('You are currently offline. Some features may be limited.', 'warning');
+            }
+        }
+
+        function renderAppGrid() {
+            const appGrid = document.getElementById('appGrid');
+            const filteredApps = cachedApps.filter(app =>
+                app.name.toLowerCase().includes(searchTerm) ||
+                app.description.toLowerCase().includes(searchTerm) ||
+                app.developer.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredApps.length === 0) {
+                appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
+                setTimeout(() => {
+                    const element = appGrid.querySelector('.fade-in');
+                    if (element && observer) observer.observe(element);
+                }, 100);
+                return;
+            }
+
+            appGrid.innerHTML = filteredApps.map((app, index) => {
+                const safeId = escapeHtml(app.id);
+                const safeName = escapeHtml(app.name);
+                const safeDeveloper = escapeHtml(app.developer);
+                const safeDescription = escapeHtml(app.description);
+                const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
+                
+                return `
+                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}">
+                    <div class="app-icon-container">
+                        <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
+                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
+                    </div>
+                    <div class="app-status">
+                        <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
+                        <span class="download-count" aria-label="Download count">${formatNumber(app.downloads)} downloads</span>
+                    </div>
+                    <div class="app-card-content">
+                        <h3>${safeName}</h3>
+                        <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                        <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
+                            ⬇️ Download IPA
+                        </button>
+                    </div>
+                </article>
+                `;
+            }).join('');
+
+            setTimeout(() => {
+                appGrid.querySelectorAll('.app-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
+            }, 100);
+        }
+
+        // Consolidated add function
+        function addToApp(appName, manifestPath) {
+            try {
+                const schemes = {
+                    'TrollApps': 'trollapps',
+                    'SideStore': 'sidestore',
+                    'Feather': 'feather'
+                };
+                
+                const scheme = schemes[appName];
+                if (!scheme) {
+                    throw new AppError(`Unknown app: ${appName}`, 'error');
+                }
+                
+                const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${timestamp}`;
+                window.location.href = url;
+                
+                setTimeout(() => {
+                    showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
+                }, 1000);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        // Download handler with security validation
+        function trackDownload(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) {
+                    throw new AppError('App not found', 'error');
+                }
+
+                // Validate URL before opening
+                if (!isValidDownloadUrl(app.downloadUrl)) {
+                    throw new AppError('Invalid download URL', 'error');
+                }
+
+                if (!navigator.onLine) {
+                    showToast('You are offline. Download link copied to clipboard.', 'warning');
+                    copyToClipboard(app.downloadUrl);
+                    return;
+                }
+
+                showToast(`Downloading ${app.name}...`);
+                setTimeout(() => {
+                    // Security: Use noopener and noreferrer
+                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                }, 500);
+
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'warning') toast.classList.add('warning');
+            else if (type === 'success') toast.classList.add('success');
+            else toast.classList.add('info');
+
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
+        }
+
+        // PWA Features
+        function setupPWA() {
+            if ('serviceWorker' in navigator) {
+                // Use relative path for GitHub Pages compatibility
+                navigator.serviceWorker.register('./sw.js?' + timestamp)
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show a subtle install toast rather than forcing
+                setTimeout(showInstallPrompt, 3000);
+            });
+        }
+
+        function showInstallPrompt() {
+            if (!deferredPrompt) return;
+
+            const toast = document.getElementById('toast');
+            // Security: Don't use innerHTML
+            toast.textContent = 'Install Mini\'s IPA Repo? ';
             
-            # Apps updated
-            echo "### 📱 Apps Updated:"
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                echo "- ✓ $app"
-              done
-              echo ""
-              echo "**Processed ${#UPDATED_APPS_ARR[@]} of 5 apps**"
-            else
-              echo "- ℹ️ No apps were updated"
-              echo ""
-              echo "**Processed 0 of 5 apps**"
-            fi
+            const installButton = document.createElement('button');
+            installButton.textContent = 'Install';
+            installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
+            installButton.onclick = installApp;
             
-            # Apps skipped
-            echo ""
-            echo "### 🚫 Apps Skipped (Toggle Disabled):"
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                echo "- $app"
-              done
-            else
-              echo "- ℹ️ No apps were skipped"
-            fi
-            
-            echo ""
-            echo "### 🔢 Version Details:"
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                IPA_VER="${PARTS[1]}"
-                TWEAK_VER="${PARTS[2]}"
-                APP_DISPLAY="${APP_KEY^}"
-                echo "- **${APP_DISPLAY}**:"
-                echo "  - IPA Version: \`$IPA_VER\`"
-                echo "  - Tweak Version: \`$TWEAK_VER\`"
-              done
-            else
-              echo "- ℹ️ No version updates"
-            fi
-            
-            echo ""
-            echo "### 📄 Files Processed:"
-            echo "- \`sidestore.json\`"
-            echo "- \`feather.json\`"
-            echo "- \`trollapps.json\`"
-            if [ -f "index.html" ]; then
-              echo "- \`index.html\`"
-            fi
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              echo "- \`.github/workflows/bulk-ipa-updates-tweaked-apps.yml\` (workflow defaults)"
-            fi
-            
-            echo ""
-            echo "### ⚙️ Configuration:"
-            echo "- Update workflow defaults: \`${{ github.event.inputs.update_workflow_defaults }}\`"
-            echo "- Authentication: PAT Token"
-            
-            echo ""
-            echo "### ⏰ Execution Time:"
-            echo "- Date: \`${{ steps.update-files.outputs.current_date }}\`"
-            echo "- Workflow: [\`${{ github.run_id }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-            
-            echo ""
-            echo "---"
-            echo "*Automated tweaked apps repository management via GitHub Actions*"
-          } >> $GITHUB_STEP_SUMMARY 2>&1 || echo "::warning::Failed to write step summary"
+            toast.appendChild(installButton);
+            toast.classList.remove('error','warning','success','info');
+            toast.classList.add('toast','info','show');
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('URL copied to clipboard');
+                }).catch(() => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('URL copied to clipboard');
+            } catch (err) {
+                showToast('Failed to copy URL', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function setupEventListeners() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                // Debounced search with cache - FIXED: Using proper setTimeout
+                searchBox.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    const value = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = value.toLowerCase().trim();
+                        renderAppGrid();
+                    }, CONFIG.SEARCH_DEBOUNCE);
+                });
+            }
+        }
+
+        // Force reload to prevent caching (with browser compatibility)
+        window.addEventListener('load', function() {
+            const perf = window.performance;
+            if (perf && perf.navigation && perf.navigation.type === 1) {
+                // Page was reloaded
+                try {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                } catch (e) {
+                    // Ignore storage errors
+                }
+            }
+        });
+    </script>
+
+    <style>
+        /* Utility: visually hidden for accessible headings */
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px; width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+    </style>
+</body>
+</html>
