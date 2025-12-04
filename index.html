@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy (Fixed - allows inline events) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://OofMini.github.io https://*.github.io https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://OofMini.github.io https://*.github.io; manifest-src 'self'; frame-ancestors 'none';">
+    <!-- Security: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -33,21 +34,8 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Structured Data for SEO -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Mini's IPA Repo",
-        "description": "Premium tweaked applications for iOS 15+",
-        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
-        "applicationCategory": "Utilities",
-        "operatingSystem": "iOS",
-        "offers": {
-            "@type": "Offer",
-            "availability": "https://schema.org/InStock"
-        }
-    }
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Mini's IPA Repo","description":"Premium tweaked applications for iOS 15+","url":"https://oofmini.github.io/Minis-IPA-Repo/","applicationCategory":"Utilities","operatingSystem":"iOS"}
     </script>
 
     <style>
@@ -465,7 +453,7 @@
         </section>
 
         <!-- App grid -->
-        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
+        <section class="app-grid" id="appGrid" aria-label="Available apps"></section>
 
         <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
@@ -659,19 +647,18 @@
         let searchTerm = '';
         let deferredPrompt;
         let searchTimeout;
+        let cachedApps = [...appsData];
         let observer = null;
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                console.log('Initializing app...');
                 setupNetworkMonitoring();
                 setupEventListeners();
                 initializeScrollAnimations();
                 loadApps();
-                setTimeout(setupPWA, 1000);
+                setupPWA();
             } catch (error) {
-                console.error('Initialization error:', error);
                 handleError(error);
             }
         });
@@ -686,11 +673,8 @@
         }
 
         function initializeScrollAnimations() {
-            console.log('Setting up scroll animations...');
-            
             // Fallback for browsers without IntersectionObserver
             if (!('IntersectionObserver' in window)) {
-                console.log('IntersectionObserver not supported, showing all elements');
                 document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
                     el.classList.add('visible');
                 });
@@ -708,8 +692,6 @@
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
                 observer.observe(el);
             });
-            
-            console.log('Scroll animations initialized');
         }
 
         // Clean up observer
@@ -722,11 +704,6 @@
         // Skeleton Loading Screens
         function showSkeletonLoading() {
             const appGrid = document.getElementById('appGrid');
-            if (!appGrid) {
-                console.error('appGrid element not found!');
-                return;
-            }
-            
             appGrid.innerHTML = '';
             for (let i = 0; i < 6; i++) {
                 const skeleton = document.createElement('div');
@@ -748,9 +725,8 @@
             }, 100);
         }
 
-        // Load apps function (simplified)
+        // Load apps function
         function loadApps() {
-            console.log('Loading apps...');
             showSkeletonLoading();
             
             // Simulate loading delay
@@ -766,8 +742,6 @@
 
         function showErrorState(message) {
             const appGrid = document.getElementById('appGrid');
-            if (!appGrid) return;
-            
             appGrid.innerHTML = `
                 <div class="error-state fade-in" role="alert">
                     <div class="error-emoji" aria-hidden="true">😕</div>
@@ -800,13 +774,7 @@
         }
 
         function renderAppGrid() {
-            console.log('Rendering app grid...');
             const appGrid = document.getElementById('appGrid');
-            if (!appGrid) {
-                console.error('appGrid not found');
-                return;
-            }
-
             const filteredApps = appsData.filter(app => {
                 if (!searchTerm) return true;
                 const term = searchTerm.toLowerCase();
@@ -862,8 +830,6 @@
                     if (observer) observer.observe(card);
                 });
             }, 100);
-            
-            console.log('App grid rendered with', filteredApps.length, 'apps');
         }
 
         // Consolidated add function
@@ -929,8 +895,6 @@
 
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
-            if (!toast) return;
-            
             toast.textContent = message;
             toast.className = 'toast';
 
@@ -943,23 +907,22 @@
             setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
-        // PWA Features
+        // PWA Features - using your existing sw.js
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                // Use relative path for GitHub Pages compatibility
-                navigator.serviceWorker.register('./sw.js?' + timestamp)
+                // Use your existing service worker
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
                     .then((registration) => {
-                        console.log('SW registered: ', registration);
+                        console.log('Service Worker registered successfully:', registration.scope);
                     })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
                     });
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                // Show a subtle install toast rather than forcing
                 setTimeout(showInstallPrompt, 3000);
             });
         }
@@ -968,7 +931,6 @@
             if (!deferredPrompt) return;
 
             const toast = document.getElementById('toast');
-            // Security: Don't use innerHTML
             toast.textContent = 'Install Mini\'s IPA Repo? ';
             
             const installButton = document.createElement('button');
@@ -1022,27 +984,21 @@
         function setupEventListeners() {
             const searchBox = document.getElementById('searchBox');
             if (searchBox) {
-                console.log('Setting up search listener...');
-                // Debounced search
                 searchBox.addEventListener('input', (e) => {
                     clearTimeout(searchTimeout);
                     const value = e.target.value;
                     searchTimeout = setTimeout(() => {
                         searchTerm = value.toLowerCase().trim();
-                        console.log('Searching for:', searchTerm);
                         renderAppGrid();
                     }, CONFIG.SEARCH_DEBOUNCE);
                 });
-            } else {
-                console.error('Search box not found!');
             }
         }
 
-        // Force reload to prevent caching (with browser compatibility)
+        // Force reload to prevent caching
         window.addEventListener('load', function() {
             const perf = window.performance;
             if (perf && perf.navigation && perf.navigation.type === 1) {
-                // Page was reloaded
                 try {
                     localStorage.clear();
                     sessionStorage.clear();
