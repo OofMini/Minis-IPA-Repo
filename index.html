@@ -4,15 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy (Improved) -->
-    <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; 
-                   img-src 'self' https://OofMini.github.io https://*.github.io https: data:; 
-                   script-src 'self'; 
-                   style-src 'self' 'unsafe-inline'; 
-                   connect-src 'self' https://OofMini.github.io https://*.github.io;
-                   manifest-src 'self';
-                   frame-ancestors 'none';">
+    <!-- Security: Content Security Policy (Fixed - single line) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://OofMini.github.io https://*.github.io https: data:; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://OofMini.github.io https://*.github.io; manifest-src 'self'; frame-ancestors 'none';">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -31,7 +24,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- PWA Manifest (Conditional) -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -280,8 +273,6 @@
             gap: 20px;
             margin: 0 auto;
             padding: 0 15px;
-            content-visibility: auto;
-            contain-intrinsic-size: 280px;
         }
         .app-card {
             background: var(--card-bg);
@@ -293,9 +284,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transform: translateZ(0);
         }
         .app-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
 
@@ -518,15 +506,12 @@
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
     <script>
-        // Constants configuration - Read from CSS custom properties
+        // Constants configuration
         const CONFIG = {
             SEARCH_DEBOUNCE: 300,
-            TOAST_DURATION: parseInt(getComputedStyle(document.documentElement)
-                .getPropertyValue('--toast-duration')) || 3000,
-            FETCH_TIMEOUT: parseInt(getComputedStyle(document.documentElement)
-                .getPropertyValue('--fetch-timeout')) || 8000,
-            SKELETON_DELAY: parseInt(getComputedStyle(document.documentElement)
-                .getPropertyValue('--skeleton-delay')) || 800
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
         };
 
         // Custom Error class
@@ -553,21 +538,6 @@
             } catch {
                 return false;
             }
-        }
-
-        function generateDownloadToken(appId) {
-            if (!window.crypto || !window.crypto.getRandomValues) {
-                return Date.now().toString(36) + Math.random().toString(36).substr(2);
-            }
-            const token = crypto.getRandomValues(new Uint8Array(16));
-            const tokenStr = Array.from(token, byte => byte.toString(16).padStart(2, '0')).join('');
-            sessionStorage.setItem(`download_${appId}`, tokenStr);
-            return tokenStr;
-        }
-
-        function validateDownloadToken(appId, token) {
-            const stored = sessionStorage.getItem(`download_${appId}`);
-            return stored === token;
         }
 
         // Prevent caching by adding timestamp to requests
@@ -689,17 +659,18 @@
         let searchTerm = '';
         let deferredPrompt;
         let searchTimeout;
+        let cachedApps = [...appsData]; // Cache for search
         let observer = null;
 
         // Enhanced initialization with error handling
         document.addEventListener('DOMContentLoaded', () => {
             try {
-                setupAppData();
                 setupNetworkMonitoring();
                 setupEventListeners();
                 initializeScrollAnimations();
                 loadAppsWithFallback();
-                setupPWA();
+                // Defer service worker registration
+                setTimeout(setupPWA, 1000);
             } catch (error) {
                 handleError(error);
             }
@@ -709,38 +680,12 @@
             if (error instanceof AppError) {
                 showToast(error.message, error.type);
             } else {
-                console.error('Unhandled error:', error);
                 showToast('An unexpected error occurred', 'error');
             }
-        }
-
-        function setupAppData() {
-            try {
-                const saved = localStorage.getItem('appsData');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) {
-                        appsData.forEach((app, i) => {
-                            if (parsed[i] && parsed[i].downloads) {
-                                app.downloads = parsed[i].downloads;
-                            }
-                        });
-                    }
-                }
-            } catch (e) {
-                console.warn('Failed to load saved data:', e);
-            }
+            console.error(error);
         }
 
         function initializeScrollAnimations() {
-            // Fallback for browsers without IntersectionObserver
-            if (!('IntersectionObserver' in window)) {
-                document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                    el.classList.add('visible');
-                });
-                return;
-            }
-
             observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -750,22 +695,14 @@
             }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
 
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                observer.observe(el);
+                if (observer) observer.observe(el);
             });
         }
 
-        // Clean up observers
-        window.addEventListener('pagehide', () => {
-            if (observer) {
-                observer.disconnect();
-                observer = null;
-            }
-        });
-
+        // Clean up observer on page unload
         window.addEventListener('beforeunload', () => {
             if (observer) {
                 observer.disconnect();
-                observer = null;
             }
         });
 
@@ -790,17 +727,13 @@
         }
 
         // Fetch with timeout helper
-        async function safeFetch(resource, options = {}) {
+        async function fetchWithTimeout(resource, options = {}) {
             const { timeout = CONFIG.FETCH_TIMEOUT } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
             try {
                 const response = await fetch(resource, { ...options, signal: controller.signal });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 return response;
-            } catch (error) {
-                console.error('Fetch failed:', error);
-                throw new AppError('Network request failed', 'error');
             } finally {
                 clearTimeout(id);
             }
@@ -820,6 +753,7 @@
                     throw new AppError('Repository temporarily unavailable', 'warning');
                 }
 
+                // Simulate async loading
                 await new Promise(resolve => setTimeout(resolve, CONFIG.SKELETON_DELAY));
                 renderAppGrid();
 
@@ -849,10 +783,11 @@
 
         async function checkResourceAvailability(url) {
             try {
-                const response = await safeFetch(url, {
+                const response = await fetchWithTimeout(url, {
                     method: 'HEAD',
                     cache: 'no-cache',
-                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+                    timeout: 5000
                 });
                 return response.ok;
             } catch (error) {
@@ -875,15 +810,31 @@
             }
         }
 
-        function createAppCard(app, index) {
-            const safeId = escapeHtml(app.id);
-            const safeName = escapeHtml(app.name);
-            const safeDeveloper = escapeHtml(app.developer);
-            const safeDescription = escapeHtml(app.description);
-            const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
-            
-            const template = document.createElement('template');
-            template.innerHTML = `
+        function renderAppGrid() {
+            const appGrid = document.getElementById('appGrid');
+            const filteredApps = cachedApps.filter(app =>
+                app.name.toLowerCase().includes(searchTerm) ||
+                app.description.toLowerCase().includes(searchTerm) ||
+                app.developer.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredApps.length === 0) {
+                appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
+                setTimeout(() => {
+                    const element = appGrid.querySelector('.fade-in');
+                    if (element && observer) observer.observe(element);
+                }, 100);
+                return;
+            }
+
+            appGrid.innerHTML = filteredApps.map((app, index) => {
+                const safeId = escapeHtml(app.id);
+                const safeName = escapeHtml(app.name);
+                const safeDeveloper = escapeHtml(app.developer);
+                const safeDescription = escapeHtml(app.description);
+                const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
+                
+                return `
                 <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}">
                     <div class="app-icon-container">
                         <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
@@ -901,37 +852,8 @@
                         </button>
                     </div>
                 </article>
-            `.trim();
-            
-            return template.content.firstChild;
-        }
-
-        function renderAppGrid() {
-            const appGrid = document.getElementById('appGrid');
-            const filteredApps = appsData.filter(app =>
-                app.name.toLowerCase().includes(searchTerm) ||
-                app.description.toLowerCase().includes(searchTerm) ||
-                app.developer.toLowerCase().includes(searchTerm)
-            );
-
-            if (filteredApps.length === 0) {
-                appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
-                setTimeout(() => {
-                    const element = appGrid.querySelector('.fade-in');
-                    if (element && observer) observer.observe(element);
-                }, 100);
-                return;
-            }
-
-            // Use DocumentFragment for better performance
-            const fragment = document.createDocumentFragment();
-            filteredApps.forEach((app, index) => {
-                const card = createAppCard(app, index);
-                fragment.appendChild(card);
-            });
-            
-            appGrid.innerHTML = '';
-            appGrid.appendChild(fragment);
+                `;
+            }).join('');
 
             setTimeout(() => {
                 appGrid.querySelectorAll('.app-card').forEach(card => {
@@ -984,28 +906,14 @@
                     return;
                 }
 
-                // Generate and validate download token
-                const token = generateDownloadToken(appId);
-                const downloadUrl = `${app.downloadUrl}&token=${token}`;
-                
                 showToast(`Downloading ${app.name}...`);
-                app.downloads++;
-                saveAppsData();
-                
                 setTimeout(() => {
-                    window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+                    // Security: Use noopener and noreferrer
+                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
                 }, 500);
 
             } catch (error) {
                 handleError(error);
-            }
-        }
-
-        function saveAppsData() {
-            try {
-                localStorage.setItem('appsData', JSON.stringify(appsData));
-            } catch (e) {
-                console.warn('Failed to save data:', e);
             }
         }
 
@@ -1029,23 +937,23 @@
             setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
-        // PWA Features - Conditional loading
+        // PWA Features
         function setupPWA() {
-            // Only enable PWA on GitHub Pages domain
-            if (location.hostname === 'oofmini.github.io' && 'serviceWorker' in navigator) {
-                // Note: sw.js file must exist in repository
+            if ('serviceWorker' in navigator) {
+                // Use relative path for GitHub Pages compatibility
                 navigator.serviceWorker.register('./sw.js?' + timestamp)
                     .then((registration) => {
-                        console.log('Service Worker registered:', registration);
+                        console.log('SW registered: ', registration);
                     })
-                    .catch((error) => {
-                        console.log('Service Worker registration skipped:', error);
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
                     });
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
+                // Show a subtle install toast rather than forcing
                 setTimeout(showInstallPrompt, 3000);
             });
         }
@@ -1054,6 +962,7 @@
             if (!deferredPrompt) return;
 
             const toast = document.getElementById('toast');
+            // Security: Don't use innerHTML
             toast.textContent = 'Install Mini\'s IPA Repo? ';
             
             const installButton = document.createElement('button');
@@ -1062,7 +971,8 @@
             installButton.onclick = installApp;
             
             toast.appendChild(installButton);
-            toast.className = 'toast info show';
+            toast.classList.remove('error','warning','success','info');
+            toast.classList.add('toast','info','show');
         }
 
         function installApp() {
@@ -1103,63 +1013,26 @@
             document.body.removeChild(textArea);
         }
 
-        function debounceSearch(value) {
-            cancelAnimationFrame(searchTimeout);
-            searchTimeout = requestAnimationFrame(() => {
-                searchTerm = value.toLowerCase().trim();
-                renderAppGrid();
-            });
-        }
-
         function setupEventListeners() {
             const searchBox = document.getElementById('searchBox');
             if (searchBox) {
+                // Debounced search with cache
                 searchBox.addEventListener('input', (e) => {
-                    debounceSearch(e.target.value);
+                    clearTimeout(searchTimeout);
+                    const value = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = value.toLowerCase().trim();
+                        renderAppGrid();
+                    }, CONFIG.SEARCH_DEBOUNCE);
                 });
             }
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && document.activeElement.id === 'searchBox') {
-                    document.getElementById('searchBox').blur();
-                }
-                if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
-                    e.preventDefault();
-                    document.getElementById('searchBox').focus();
-                }
-            });
         }
 
-        // Global error handling
-        window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
-            // Optionally send to analytics in production
-            if (navigator.onLine && location.hostname === 'oofmini.github.io') {
-                // Basic error logging
-                const errorData = {
-                    message: event.error?.message || 'Unknown error',
-                    stack: event.error?.stack || '',
-                    url: location.href,
-                    timestamp: new Date().toISOString()
-                };
-                
-                // Store locally for debugging
-                try {
-                    const errors = JSON.parse(localStorage.getItem('appErrors') || '[]');
-                    errors.push(errorData);
-                    if (errors.length > 50) errors.shift();
-                    localStorage.setItem('appErrors', JSON.stringify(errors));
-                } catch (e) {
-                    console.warn('Could not save error log:', e);
-                }
-            }
-        });
-
-        // Force reload to prevent caching
+        // Force reload to prevent caching (with browser compatibility)
         window.addEventListener('load', function() {
             const perf = window.performance;
             if (perf && perf.navigation && perf.navigation.type === 1) {
+                // Page was reloaded
                 try {
                     localStorage.clear();
                     sessionStorage.clear();
