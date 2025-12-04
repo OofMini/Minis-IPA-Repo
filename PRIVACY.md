@@ -16,4 +16,4 @@ Mini's IPA Repo does not collect, store, or transmit any personal data.
 ## Contact
 For privacy concerns, contact through GitHub Issues.
 
-Last Updated: 2024-01-01
+Last Updated: 2025-12-01
