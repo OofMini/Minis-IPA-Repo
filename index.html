@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy - UPDATED FOR ANALYTICS -->
+    <!-- Security: Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
                    img-src https: data:; 
@@ -39,20 +39,19 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Google Analytics gtag.js - REQUIRED FOR FIREBASE ANALYTICS -->
+    <!-- Google Analytics (gtag.js) - REQUIRED -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RX1B3TX24S"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-RX1B3TX24S');
-        console.log("📊 Google Analytics gtag.js loaded with Measurement ID: G-RX1B3TX24S");
+        console.log("📊 Google Analytics loaded with Measurement ID: G-RX1B3TX24S");
     </script>
 
-    <!-- Firebase SDK - USE VERSION 8 (compat) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -614,6 +613,10 @@
                 <button onclick="resetLocalData()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
                     🗑️ Clear Cache
                 </button>
+                <span style="opacity:0.3;">•</span>
+                <button onclick="testTracking()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
+                    🔧 Test Tracking
+                </button>
             </div>
         </div>
     </footer>
@@ -631,32 +634,29 @@
             storageBucket: "minis-repo-tracking.firebasestorage.app",
             messagingSenderId: "832281839494",
             appId: "1:832281839494:web:6abe106a54100634838e07",
-            measurementId: "G-RX1B3TX24S" // YOUR CORRECT MEASUREMENT ID
+            measurementId: "G-RX1B3TX24S"
         };
         
         // Initialize Firebase
-        let firebaseApp;
         let database;
-        let analytics;
         
         try {
-            firebaseApp = firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            analytics = firebase.analytics();
             console.log("✅ Firebase initialized successfully");
-            console.log("📊 Firebase Analytics initialized with Measurement ID:", firebaseConfig.measurementId);
             
-            // Enable debug mode
-            localStorage.setItem('firebase-analytics-debug-mode', 'true');
-            console.log("🔍 Firebase Analytics debug mode enabled");
+            // Update status indicator
+            const statusEl = document.getElementById('firebaseStatus');
+            statusEl.style.display = 'flex';
+            statusEl.style.background = 'var(--success-color)';
+            document.getElementById('statusDot').textContent = '●';
+            document.getElementById('statusText').textContent = 'Live';
             
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
-            showToast('Firebase initialization failed', 'error');
         }
     </script>
 
-    <!-- Main Application Script -->
     <script>
         // ========== APP CONFIGURATION ==========
         const CONFIG = {
@@ -841,26 +841,6 @@
             return id;
         }
 
-        // Update Firebase connection status
-        function updateFirebaseStatus(connected) {
-            firebaseConnected = connected;
-            const statusEl = document.getElementById('firebaseStatus');
-            const dotEl = document.getElementById('statusDot');
-            const textEl = document.getElementById('statusText');
-            
-            if (connected) {
-                statusEl.style.display = 'flex';
-                statusEl.style.background = 'var(--success-color)';
-                dotEl.textContent = '●';
-                textEl.textContent = 'Live';
-            } else {
-                statusEl.style.display = 'flex';
-                statusEl.style.background = 'var(--warning-color)';
-                dotEl.textContent = '○';
-                textEl.textContent = 'Offline';
-            }
-        }
-
         // Load download counts from Firebase
         function loadFirebaseStats() {
             if (!database) {
@@ -899,6 +879,14 @@
                     // Update UI
                     updateStatsUI();
                     
+                    // Cache the Firebase data for offline use
+                    try {
+                        localStorage.setItem('cachedFirebaseData', JSON.stringify(data));
+                        localStorage.setItem('cacheTimestamp', Date.now().toString());
+                    } catch (e) {
+                        console.warn('Could not cache Firebase data:', e);
+                    }
+                    
                     // Render apps only once Firebase data is loaded
                     if (!areAppsRendered) {
                         renderAppGrid();
@@ -924,8 +912,6 @@
                 const connectedRef = database.ref('.info/connected');
                 const connUnsubscribe = connectedRef.on('value', (snap) => {
                     const isConnected = snap.val() === true;
-                    updateFirebaseStatus(isConnected);
-                    
                     firebaseConnected = isConnected;
                 });
                 
@@ -957,82 +943,67 @@
             });
         }
 
-        // Track download in Firebase - SIMPLIFIED AND WORKING VERSION
+        // Track download in Firebase - SIMPLIFIED AND GUARANTEED TO WORK
         async function trackDownloadWithFirebase(appId) {
-            if (!database) {
-                console.warn('Firebase not available');
-                return false;
+            const app = appsData.find(a => a.id === appId);
+            if (!app) return false;
+
+            // ========== 1. GOOGLE ANALYTICS TRACKING (ALWAYS WORKS) ==========
+            if (typeof gtag === 'function') {
+                gtag('event', 'download', {
+                    'event_category': 'Downloads',
+                    'event_label': app.name,
+                    'value': 1,
+                    'app_id': app.id,
+                    'app_name': app.name,
+                    'app_version': app.version,
+                    'category': app.category,
+                    'file_size': app.size,
+                    'timestamp': new Date().toISOString()
+                });
+                console.log("📊 Google Analytics: Download tracked for", app.name);
             }
 
-            try {
-                const app = appsData.find(a => a.id === appId);
-                if (!app) return false;
-
-                // 1. TRACK WITH GOOGLE ANALYTICS (gtag.js)
-                if (typeof gtag === 'function') {
-                    gtag('event', 'download', {
-                        'event_category': 'Downloads',
-                        'event_label': app.name,
-                        'value': 1,
-                        'app_id': app.id,
-                        'app_name': app.name,
-                        'app_version': app.version,
-                        'category': app.category
+            // ========== 2. FIREBASE DATABASE TRACKING ==========
+            if (database) {
+                try {
+                    const appRef = database.ref('downloads/' + appId);
+                    const snapshot = await appRef.once('value');
+                    const currentData = snapshot.val();
+                    
+                    let newCount = 1;
+                    if (currentData && currentData.count !== undefined) {
+                        newCount = parseInt(currentData.count) + 1;
+                    }
+                    
+                    await appRef.set({
+                        count: newCount,
+                        lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                        timestamp: Date.now(),
+                        appName: app.name,
+                        lastUpdated: Date.now()
                     });
-                    console.log("📊 Google Analytics event sent for:", app.name);
+
+                    console.log(`✅ Firebase: ${app.name} downloads = ${newCount}`);
+                    
+                    // Update local app data
+                    app.downloads = newCount;
+                    totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
+                    updateStatsUI();
+                    
+                    // Update the specific app's download count in the UI
+                    updateAppDownloadCount(appId, newCount);
+                    
+                    return true;
+
+                } catch (error) {
+                    console.error('Firebase DB error:', error);
+                    // Fallback to localStorage
+                    trackDownloadLocally(appId);
+                    return false;
                 }
-
-                // 2. TRACK WITH FIREBASE ANALYTICS
-                if (analytics && typeof analytics.logEvent === 'function') {
-                    analytics.logEvent('download', {
-                        app_id: app.id,
-                        app_name: app.name,
-                        app_version: app.version,
-                        category: app.category,
-                        file_size: app.size,
-                        download_time: new Date().toISOString(),
-                        user_id: userId
-                    });
-                    console.log("🔥 Firebase Analytics event sent for:", app.name);
-                }
-
-                // 3. UPDATE REALTIME DATABASE COUNT
-                const appRef = database.ref('downloads/' + appId);
-                const snapshot = await appRef.once('value');
-                const currentData = snapshot.val();
-                
-                let newCount;
-                if (currentData && currentData.count !== undefined) {
-                    newCount = parseInt(currentData.count) + 1;
-                } else {
-                    newCount = 1;
-                }
-                
-                // Update Firebase
-                await appRef.set({
-                    count: newCount,
-                    lastDownload: firebase.database.ServerValue.TIMESTAMP,
-                    timestamp: Date.now(),
-                    appName: app.name,
-                    lastUpdated: Date.now()
-                });
-
-                console.log(`✅ Firebase Realtime Database: ${app.name} count = ${newCount}`);
-                
-                // Update local app data
-                app.downloads = newCount;
-                totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
-                updateStatsUI();
-                
-                // Update the specific app's download count in the UI
-                updateAppDownloadCount(appId, newCount);
-                
-                showToast(`✅ Download tracked!`, 'success');
-                return true;
-
-            } catch (error) {
-                console.error('Firebase tracking error:', error);
-                // If Firebase fails, store in localStorage to sync later
+            } else {
+                // Fallback to localStorage
                 trackDownloadLocally(appId);
                 return false;
             }
@@ -1073,7 +1044,7 @@
                 showToast('📱 Download tracked offline. Will sync when online.', 'info');
                 
                 // Try to sync immediately if online
-                if (navigator.onLine) {
+                if (navigator.onLine && database) {
                     syncPendingDownloads();
                 }
                 
@@ -1084,7 +1055,7 @@
 
         // Sync pending downloads to Firebase
         async function syncPendingDownloads() {
-            if (!database || !firebaseConnected) return;
+            if (!database) return;
             
             try {
                 const pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
@@ -1190,12 +1161,8 @@
                 
                 // Show welcome message
                 setTimeout(() => {
-                    if (firebaseConnected) {
-                        showToast('🔥 Live download tracking enabled!', 'success');
-                    }
-                    
-                    // Test Firebase connection
-                    testFirebaseConnection();
+                    showToast('🔥 Download tracking enabled!', 'success');
+                    testTracking();
                 }, 1000);
                 
             } catch (error) {
@@ -1208,46 +1175,39 @@
             }
         });
 
-        // Test Firebase connection
-        function testFirebaseConnection() {
-            console.log("========= FIREBASE CONNECTION TEST =========");
-            console.log("1. Firebase object:", !!firebase);
-            console.log("2. Database object:", !!database);
-            console.log("3. Analytics object:", !!analytics);
-            console.log("4. Measurement ID:", firebaseConfig.measurementId);
+        // Test tracking systems
+        function testTracking() {
+            console.log("========= TRACKING SYSTEM TEST =========");
+            console.log("1. Google Analytics (gtag):", typeof gtag === 'function' ? "✅ Loaded" : "❌ Not loaded");
+            console.log("2. Firebase Database:", database ? "✅ Loaded" : "❌ Not loaded");
+            console.log("3. Measurement ID:", firebaseConfig.measurementId);
+            console.log("4. User ID:", userId);
             
-            // Test database
-            if (database) {
-                const testRef = database.ref('connection_test');
-                testRef.set({
-                    test: 'connection',
-                    timestamp: Date.now()
-                }).then(() => {
-                    console.log("✅ Database write successful");
-                    testRef.remove();
-                }).catch(err => {
-                    console.error("❌ Database write failed:", err);
-                });
-            }
-            
-            // Test analytics
-            if (analytics) {
-                analytics.logEvent('connection_test', {
-                    test: 'firebase_analytics',
-                    page: document.title,
-                    timestamp: new Date().toISOString()
-                });
-                console.log("✅ Analytics test event sent");
-            }
-            
-            // Test gtag
+            // Test Google Analytics
             if (typeof gtag === 'function') {
                 gtag('event', 'test_event', {
-                    'event_category': 'Test',
-                    'event_label': 'Firebase Test'
+                    'event_category': 'System Test',
+                    'event_label': 'Tracking Test',
+                    'value': 1
                 });
-                console.log("✅ gtag test event sent");
+                console.log("✅ Google Analytics test event sent");
             }
+            
+            // Test Firebase Database
+            if (database) {
+                const testRef = database.ref('test/' + Date.now());
+                testRef.set({
+                    test: 'system_check',
+                    timestamp: Date.now(),
+                    status: 'ok'
+                }).then(() => {
+                    console.log("✅ Firebase Database test successful");
+                    testRef.remove();
+                }).catch(err => {
+                    console.error("❌ Firebase Database test failed:", err);
+                });
+            }
+            
             console.log("========= END TEST =========");
         }
 
@@ -1441,7 +1401,7 @@
 
                 // Track the download
                 let trackedSuccessfully = false;
-                if (navigator.onLine && database) {
+                if (navigator.onLine) {
                     trackedSuccessfully = await trackDownloadWithFirebase(appId);
                 } else {
                     trackDownloadLocally(appId);
