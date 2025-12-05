@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Updated Security Policy for tracking -->
+    <!-- Security: Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; 
-                   img-src https: data:; 
-                   script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googletagmanager.com; 
-                   style-src 'self' 'unsafe-inline'; 
-                   connect-src 'self' https://*.firebaseio.com https://minis-repo-tracking-default-rtdb.firebaseio.com https://*.google-analytics.com; 
-                   frame-src https://*.firebaseio.com;">
+          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.firebaseio.com https://minis-ipa-repo-default-rtdb.firebaseio.com; frame-src https://*.firebaseio.com;">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -39,19 +34,9 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- SIMPLE Google Analytics - GUARANTEED TO WORK -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RX1B3TX24S"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-RX1B3TX24S');
-        console.log("ðŸ“Š Google Analytics LOADED with ID: G-RX1B3TX24S");
-    </script>
-
-    <!-- SIMPLE Firebase Database ONLY -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -515,7 +500,7 @@
 <body>
     <!-- Firebase Status Indicator -->
     <div class="firebase-status" id="firebaseStatus" style="display: none;">
-        <span class="status-dot" id="statusDot">â—</span>
+        <span class="status-dot" id="statusDot">●</span>
         <span id="statusText">Connecting...</span>
     </div>
 
@@ -526,13 +511,13 @@
 
         <!-- Updated Badges - Only Active and iOS 15+ -->
         <div class="badges" role="status" aria-live="polite">
-            <span class="badge" aria-label="Repository status active">âœ… Active</span>
-            <span class="badge ios" aria-label="Supports iOS 15 and above">ðŸ“± iOS 15+</span>
+            <span class="badge" aria-label="Repository status active">✅ Active</span>
+            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
         </div>
 
         <!-- Slim Download Tracker -->
         <div class="download-tracker" id="downloadTracker">
-            <span class="icon">â¬‡ï¸</span>
+            <span class="icon">⬇️</span>
             <span class="count" id="totalDownloads">0</span>
             <span class="label">Total Downloads</span>
         </div>
@@ -540,13 +525,13 @@
         <!-- CTA Buttons -->
         <nav class="cta-buttons" aria-label="Add repository to app">
             <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
-                <span role="img" aria-hidden="true">ðŸ“±</span> Add to TrollApps
+                <span role="img" aria-hidden="true">📱</span> Add to TrollApps
             </button>
             <button class="cta-button sidestore" onclick="addToApp('SideStore', 'sidestore.json')" aria-label="Add repository to SideStore">
-                <span role="img" aria-hidden="true">âš™ï¸</span> Add to SideStore
+                <span role="img" aria-hidden="true">⚙️</span> Add to SideStore
             </button>
             <button class="cta-button feather" onclick="addToApp('Feather', 'feather.json')" aria-label="Add repository to Feather">
-                <span role="img" aria-hidden="true">ðŸª¶</span> Add to Feather
+                <span role="img" aria-hidden="true">🪶</span> Add to Feather
             </button>
         </nav>
     </header>
@@ -555,7 +540,7 @@
         <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
-            <input type="text" class="search-box" id="searchBox" placeholder="ðŸ” Search apps by name or description..." 
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
                    aria-label="Search apps by name or description" autocomplete="off">
         </section>
 
@@ -564,28 +549,28 @@
 
         <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
-            <h3 id="repo-info-title">ðŸ“¦ Repository Information</h3>
+            <h3 id="repo-info-title">📦 Repository Information</h3>
 
             <div class="repo-link fade-in-left stagger-1">
-                <span role="img" aria-hidden="true">ðŸŒ</span>
+                <span role="img" aria-hidden="true">🌐</span>
                 <strong>Official Website:</strong>
                 <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
             </div>
 
             <div class="repo-link fade-in-left stagger-2">
-                <span role="img" aria-hidden="true">ðŸ“±</span>
+                <span role="img" aria-hidden="true">📱</span>
                 <strong>SideStore Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span role="img" aria-hidden="true">ðŸ§Œ</span>
+                <span role="img" aria-hidden="true">🧌</span>
                 <strong>TrollApps Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span role="img" aria-hidden="true">ðŸª¶</span>
+                <span role="img" aria-hidden="true">🪶</span>
                 <strong>Feather Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
             </div>
@@ -595,23 +580,23 @@
     <footer class="container" aria-label="Site footer">
         <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
             <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
-                Â© 2024 Mini â€” Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+                © 2024 Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
             </p>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
                 <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    ðŸ“¦ GitHub Repo
+                    📦 GitHub Repo
                 </a>
-                <span style="opacity:0.3;">â€¢</span>
+                <span style="opacity:0.3;">•</span>
                 <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    ðŸ› Report Issue
+                    🐛 Report Issue
                 </a>
-                <span style="opacity:0.3;">â€¢</span>
+                <span style="opacity:0.3;">•</span>
                 <button onclick="showPrivacyInfo()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    ðŸ”’ Privacy
+                    🔒 Privacy
                 </button>
-                <span style="opacity:0.3;">â€¢</span>
+                <span style="opacity:0.3;">•</span>
                 <button onclick="resetLocalData()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    ðŸ—‘ï¸ Clear Cache
+                    🗑️ Clear Cache
                 </button>
             </div>
         </div>
@@ -619,27 +604,69 @@
 
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
-    <!-- SIMPLE FIREBASE SETUP -->
+    <!-- Firebase Config -->
     <script>
-        // ========== SIMPLE FIREBASE CONFIG ==========
+        // ========== FIREBASE CONFIGURATION ==========
         const firebaseConfig = {
             apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
-            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com"
+            authDomain: "minis-repo-tracking.firebaseapp.com",
+            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
+            projectId: "minis-repo-tracking",
+            storageBucket: "minis-repo-tracking.firebasestorage.app",
+            messagingSenderId: "832281839494",
+            appId: "1:832281839494:web:6abe106a54100634838e07",
+            measurementId: "G-RX1B3TX24S"
         };
         
-        // Initialize Firebase (Database ONLY)
+        // Initialize Firebase
+        let firebaseApp;
         let database;
+        
         try {
-            firebase.initializeApp(firebaseConfig);
+            firebaseApp = firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            console.log("âœ… Firebase Database initialized");
+            console.log("✅ Firebase initialized successfully");
         } catch (error) {
-            console.log("â„¹ï¸ Firebase not available - using local mode");
+            console.error("❌ Firebase initialization error:", error);
         }
     </script>
 
     <script>
-        // ========== APP DATA ==========
+        // ========== APP CONFIGURATION ==========
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
+        };
+
+        // Custom Error class
+        class AppError extends Error {
+            constructor(message, type) {
+                super(message);
+                this.type = type;
+                this.name = 'AppError';
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function isValidDownloadUrl(url) {
+            try {
+                const parsed = new URL(url);
+                return parsed.protocol === 'https:' && 
+                       parsed.hostname.includes('github.com');
+            } catch {
+                return false;
+            }
+        }
+
+        // Prevent caching by adding timestamp to requests
         const timestamp = new Date().getTime();
 
         const appsData = [
@@ -765,147 +792,32 @@
             }
         ];
 
-        // ========== SIMPLE TRACKING FUNCTIONS ==========
+        let searchTerm = '';
+        let deferredPrompt;
+        let searchTimeout;
+        let observer = null;
+        let totalDownloads = 0;
+        let firebaseConnected = false;
+        let userId = generateUserId();
+        let firebaseListeners = [];
+        let areAppsRendered = false;
+        let isInitialDataLoaded = false;
+
+        // ========== FIREBASE FUNCTIONS ==========
         
-        // SIMPLE DOWNLOAD TRACKER - GUARANTEED TO WORK
-        async function trackDownload(appId) {
-            console.log("ðŸš€ Starting download tracking for:", appId);
-            
-            const app = appsData.find(a => a.id === appId);
-            if (!app) return;
-            
-            // 1. GOOGLE ANALYTICS - ALWAYS SEND
-            if (typeof gtag === 'function') {
-                gtag('event', 'download', {
-                    'event_category': 'Downloads',
-                    'event_label': app.name,
-                    'value': 1,
-                    'app_id': app.id,
-                    'app_name': app.name,
-                    'app_version': app.version
-                });
-                console.log("âœ… Google Analytics event sent");
-                
-                // Send an extra test event to be sure
-                gtag('event', 'download_started', {
-                    'event_category': 'Downloads',
-                    'event_label': 'Download Started - ' + app.name
-                });
-            } else {
-                console.warn("âš ï¸ gtag not available");
+        // Generate unique user ID for anonymous tracking
+        function generateUserId() {
+            let id = localStorage.getItem('userId');
+            if (!id) {
+                id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userId', id);
             }
-            
-            // 2. FIREBASE DATABASE - TRY BUT DON'T FAIL
-            if (database) {
-                try {
-                    const appRef = database.ref('downloads/' + appId);
-                    const snapshot = await appRef.once('value');
-                    const currentData = snapshot.val();
-                    
-                    let newCount = 1;
-                    if (currentData && currentData.count) {
-                        newCount = parseInt(currentData.count) + 1;
-                    }
-                    
-                    await appRef.set({
-                        count: newCount,
-                        lastDownload: firebase.database.ServerValue.TIMESTAMP,
-                        appName: app.name,
-                        lastUpdated: Date.now()
-                    });
-                    
-                    console.log(`âœ… Firebase updated: ${app.name} = ${newCount} downloads`);
-                    
-                    // Update local data
-                    app.downloads = newCount;
-                    updateAppUI(appId, newCount);
-                    
-                } catch (error) {
-                    console.log("ðŸ“¦ Firebase failed, using local count");
-                    app.downloads = (app.downloads || 0) + 1;
-                    updateAppUI(appId, app.downloads);
-                }
-            } else {
-                // No Firebase, just update local
-                app.downloads = (app.downloads || 0) + 1;
-                updateAppUI(appId, app.downloads);
-            }
-            
-            // Update total downloads display
-            updateTotalDownloads();
-            
-            // 3. OPEN THE DOWNLOAD
-            setTimeout(() => {
-                window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
-            }, 300);
-            
-            // 4. SHOW FEEDBACK
-            showToast('âœ… Download started!', 'success');
-            
-            // 5. DIAGNOSTIC LOG
-            console.log("ðŸ“Š TRACKING COMPLETE for " + app.name);
-            console.log("Check Google Analytics Real-time view now!");
-        }
-        
-        // Update app UI
-        function updateAppUI(appId, count) {
-            const appCard = document.querySelector(`[data-app-id="${appId}"]`);
-            if (appCard) {
-                const countEl = appCard.querySelector('.download-count');
-                if (countEl) {
-                    countEl.textContent = formatNumber(count) + ' downloads';
-                }
-            }
-        }
-        
-        // Update total downloads display
-        function updateTotalDownloads() {
-            const total = appsData.reduce((sum, app) => sum + (app.downloads || 0), 0);
-            document.getElementById('totalDownloads').textContent = formatNumber(total);
-        }
-        
-        // Format numbers
-        function formatNumber(num) {
-            num = parseInt(num) || 0;
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-        
-        // Load download counts from Firebase
-        function loadDownloadCounts() {
-            if (!database) {
-                console.log("No Firebase, showing default counts");
-                renderAppGrid();
-                updateTotalDownloads();
-                updateFirebaseStatus(false);
-                return;
-            }
-            
-            const downloadsRef = database.ref('downloads');
-            downloadsRef.on('value', (snapshot) => {
-                const data = snapshot.val() || {};
-                
-                appsData.forEach(app => {
-                    if (data[app.id] && data[app.id].count) {
-                        app.downloads = parseInt(data[app.id].count);
-                    }
-                });
-                
-                renderAppGrid();
-                updateTotalDownloads();
-                updateFirebaseStatus(true);
-                console.log("ðŸ“Š Download counts loaded from Firebase");
-            }, (error) => {
-                console.error("Error loading download counts:", error);
-                updateFirebaseStatus(false);
-                renderAppGrid();
-                updateTotalDownloads();
-            });
+            return id;
         }
 
         // Update Firebase connection status
         function updateFirebaseStatus(connected) {
+            firebaseConnected = connected;
             const statusEl = document.getElementById('firebaseStatus');
             const dotEl = document.getElementById('statusDot');
             const textEl = document.getElementById('statusText');
@@ -913,67 +825,329 @@
             if (connected) {
                 statusEl.style.display = 'flex';
                 statusEl.style.background = 'var(--success-color)';
-                dotEl.textContent = 'â—';
+                dotEl.textContent = '●';
                 textEl.textContent = 'Live';
             } else {
                 statusEl.style.display = 'flex';
                 statusEl.style.background = 'var(--warning-color)';
-                dotEl.textContent = 'â—‹';
+                dotEl.textContent = '○';
                 textEl.textContent = 'Offline';
             }
         }
 
-        // ========== APP CONFIGURATION ==========
-        const CONFIG = {
-            SEARCH_DEBOUNCE: 300,
-            TOAST_DURATION: 3000,
-            FETCH_TIMEOUT: 8000,
-            SKELETON_DELAY: 800
-        };
+        // Load download counts from Firebase
+        function loadFirebaseStats() {
+            if (!database) {
+                console.warn('Firebase not available, using localStorage');
+                loadLocalStats();
+                if (!areAppsRendered) {
+                    loadApps();
+                }
+                return;
+            }
 
-        class AppError extends Error {
-            constructor(message, type) {
-                super(message);
-                this.type = type;
-                this.name = 'AppError';
+            try {
+                // Show skeleton loading while waiting for Firebase
+                showSkeletonLoading();
+                
+                // Listen for download count changes
+                const downloadsRef = database.ref('downloads');
+                
+                const unsubscribe = downloadsRef.on('value', (snapshot) => {
+                    const data = snapshot.val() || {};
+                    
+                    console.log("📊 Firebase data loaded:", data);
+                    
+                    // Update each app's download count from Firebase
+                    appsData.forEach(app => {
+                        if (data[app.id] && data[app.id].count !== undefined) {
+                            app.downloads = parseInt(data[app.id].count) || 0;
+                        } else {
+                            app.downloads = 0;
+                        }
+                    });
+                    
+                    // Calculate total downloads
+                    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+                    
+                    // Update UI
+                    updateStatsUI();
+                    
+                    // Render apps only once Firebase data is loaded
+                    if (!areAppsRendered) {
+                        renderAppGrid();
+                        areAppsRendered = true;
+                    } else if (isInitialDataLoaded) {
+                        // Update individual app counts after initial load
+                        updateAllAppDownloadCounts();
+                    }
+                    
+                    isInitialDataLoaded = true;
+                    
+                }, (error) => {
+                    console.error('Firebase error:', error);
+                    loadLocalStats();
+                    if (!areAppsRendered) {
+                        loadApps();
+                    }
+                });
+                
+                firebaseListeners.push(() => downloadsRef.off('value', unsubscribe));
+                
+                // Listen for connection status
+                const connectedRef = database.ref('.info/connected');
+                const connUnsubscribe = connectedRef.on('value', (snap) => {
+                    const isConnected = snap.val() === true;
+                    updateFirebaseStatus(isConnected);
+                    
+                    firebaseConnected = isConnected;
+                });
+                
+                firebaseListeners.push(() => connectedRef.off('value', connUnsubscribe));
+                
+            } catch (error) {
+                console.error('Firebase load error:', error);
+                loadLocalStats();
+                if (!areAppsRendered) {
+                    loadApps();
+                }
             }
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // Update all app download counts in UI
+        function updateAllAppDownloadCounts() {
+            const appCards = document.querySelectorAll('.app-card');
+            appCards.forEach(card => {
+                const appId = card.dataset.appId;
+                if (appId) {
+                    const app = appsData.find(a => a.id === appId);
+                    if (app) {
+                        const downloadCountElement = card.querySelector('.download-count');
+                        if (downloadCountElement) {
+                            downloadCountElement.textContent = formatNumber(app.downloads) + ' downloads';
+                        }
+                    }
+                }
+            });
         }
 
-        let searchTerm = '';
-        let deferredPrompt;
-        let searchTimeout;
-        let observer = null;
+        // Track download in Firebase
+        async function trackDownloadWithFirebase(appId) {
+            if (!database) {
+                console.warn('Firebase not available');
+                return false;
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
             try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) return false;
+
+                // Get current count from Firebase first
+                const appRef = database.ref('downloads/' + appId);
+                const snapshot = await appRef.once('value');
+                const currentData = snapshot.val();
+                
+                let newCount;
+                if (currentData && currentData.count !== undefined) {
+                    newCount = parseInt(currentData.count) + 1;
+                } else {
+                    newCount = 1;
+                }
+                
+                // Update Firebase
+                await appRef.set({
+                    count: newCount,
+                    lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                    timestamp: Date.now(),
+                    appName: app.name,
+                    lastUpdated: Date.now()
+                });
+
+                console.log(`✅ Firebase: ${app.name} download count updated to ${newCount}`);
+                
+                // Update local app data
+                app.downloads = newCount;
+                totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
+                updateStatsUI();
+                
+                // Update the specific app's download count in the UI
+                updateAppDownloadCount(appId, newCount);
+                
+                showToast(`✅ Download tracked!`, 'success');
+                return true;
+
+            } catch (error) {
+                console.error('Firebase tracking error:', error);
+                // If Firebase fails, store in localStorage to sync later
+                trackDownloadLocally(appId);
+                return false;
+            }
+        }
+
+        // Update individual app download count in UI
+        function updateAppDownloadCount(appId, count) {
+            const appCard = document.querySelector(`.app-card[data-app-id="${appId}"]`);
+            if (appCard) {
+                const downloadCountElement = appCard.querySelector('.download-count');
+                if (downloadCountElement) {
+                    downloadCountElement.textContent = formatNumber(count) + ' downloads';
+                }
+            }
+        }
+
+        // Local storage fallback for offline tracking
+        function trackDownloadLocally(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) return;
+
+                // Store pending download in localStorage
+                let pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+                pendingDownloads.push({
+                    appId: appId,
+                    timestamp: Date.now(),
+                    appName: app.name
+                });
+                localStorage.setItem('pendingDownloads', JSON.stringify(pendingDownloads));
+                
+                // Update UI optimistically
+                app.downloads = (app.downloads || 0) + 1;
+                totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
+                updateStatsUI();
+                updateAppDownloadCount(appId, app.downloads);
+                
+                showToast('📱 Download tracked offline. Will sync when online.', 'info');
+                
+                // Try to sync immediately if online
+                if (navigator.onLine) {
+                    syncPendingDownloads();
+                }
+                
+            } catch (error) {
+                console.error('Local tracking error:', error);
+            }
+        }
+
+        // Sync pending downloads to Firebase
+        async function syncPendingDownloads() {
+            if (!database || !firebaseConnected) return;
+            
+            try {
+                const pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+                if (pendingDownloads.length === 0) return;
+                
+                console.log(`🔄 Syncing ${pendingDownloads.length} pending downloads to Firebase`);
+                
+                // Group downloads by appId
+                const downloadsByApp = {};
+                pendingDownloads.forEach(download => {
+                    if (!downloadsByApp[download.appId]) {
+                        downloadsByApp[download.appId] = 0;
+                    }
+                    downloadsByApp[download.appId]++;
+                });
+                
+                // Sync each app's downloads
+                for (const [appId, count] of Object.entries(downloadsByApp)) {
+                    const appRef = database.ref('downloads/' + appId);
+                    const snapshot = await appRef.once('value');
+                    const currentData = snapshot.val();
+                    
+                    let newCount;
+                    if (currentData && currentData.count !== undefined) {
+                        newCount = parseInt(currentData.count) + count;
+                    } else {
+                        newCount = count;
+                    }
+                    
+                    await appRef.set({
+                        count: newCount,
+                        lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                        timestamp: Date.now(),
+                        appName: appsData.find(a => a.id === appId)?.name || appId,
+                        lastUpdated: Date.now()
+                    });
+                    
+                    console.log(`✅ Synced ${count} downloads for ${appId} to Firebase`);
+                }
+                
+                // Clear pending downloads
+                localStorage.removeItem('pendingDownloads');
+                console.log('✅ All pending downloads synced to Firebase');
+                
+            } catch (error) {
+                console.error('Sync pending downloads error:', error);
+            }
+        }
+
+        // Load local stats as fallback (for offline viewing)
+        function loadLocalStats() {
+            try {
+                // Check if we have any cached Firebase data
+                const cachedFirebaseData = JSON.parse(localStorage.getItem('cachedFirebaseData') || '{}');
+                const cacheTimestamp = localStorage.getItem('cacheTimestamp');
+                
+                // Use cached data if it's less than 1 hour old
+                if (cachedFirebaseData && cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 3600000) {
+                    appsData.forEach(app => {
+                        if (cachedFirebaseData[app.id] && cachedFirebaseData[app.id].count !== undefined) {
+                            app.downloads = parseInt(cachedFirebaseData[app.id].count) || 0;
+                        }
+                    });
+                    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+                    updateStatsUI();
+                    console.log('📱 Loaded cached Firebase data');
+                } else {
+                    // Use default values
+                    appsData.forEach(app => {
+                        app.downloads = 0;
+                    });
+                    totalDownloads = 0;
+                    updateStatsUI();
+                }
+                
+            } catch (error) {
+                console.error('Local stats error:', error);
+            }
+        }
+
+        // Update stats UI
+        function updateStatsUI() {
+            // Calculate total downloads
+            totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+            
+            // Update total downloads display
+            document.getElementById('totalDownloads').textContent = formatNumber(totalDownloads);
+        }
+
+        // ========== CORE APP FUNCTIONS ==========
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Initialize Firebase stats (this will render apps when data is loaded)
+                loadFirebaseStats();
+                
+                // Setup the rest
                 setupNetworkMonitoring();
                 setupEventListeners();
                 initializeScrollAnimations();
+                setupPWA();
                 
-                // Load download counts from Firebase first
-                loadDownloadCounts();
-                
-                // Defer service worker registration
-                setTimeout(setupPWA, 1000);
-                
-                // Send page view to Google Analytics
+                // Show welcome message
                 setTimeout(() => {
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'page_view', {
-                            'page_title': document.title,
-                            'page_location': window.location.href
-                        });
+                    if (firebaseConnected) {
+                        showToast('🔥 Live download tracking enabled!', 'success');
                     }
-                }, 500);
+                }, 1000);
                 
             } catch (error) {
+                console.error('Initialization error:', error);
                 handleError(error);
+                // Ensure apps are loaded even if there's an error
+                if (!areAppsRendered) {
+                    loadApps();
+                }
             }
         });
 
@@ -987,6 +1161,7 @@
         }
 
         function initializeScrollAnimations() {
+            // Fallback for browsers without IntersectionObserver
             if (!('IntersectionObserver' in window)) {
                 document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
                     el.classList.add('visible');
@@ -1003,10 +1178,24 @@
             }, {threshold: 0.1});
 
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                if (observer) observer.observe(el);
+                observer.observe(el);
             });
         }
 
+        // Clean up observers
+        window.addEventListener('beforeunload', () => {
+            if (observer) {
+                observer.disconnect();
+            }
+            // Clean up Firebase listeners
+            firebaseListeners.forEach(unsubscribe => {
+                if (typeof unsubscribe === 'function') {
+                    unsubscribe();
+                }
+            });
+        });
+
+        // Skeleton Loading Screens
         function showSkeletonLoading() {
             const appGrid = document.getElementById('appGrid');
             appGrid.innerHTML = '';
@@ -1030,6 +1219,47 @@
             }, 100);
         }
 
+        // Load apps function
+        function loadApps() {
+            renderAppGrid();
+            areAppsRendered = true;
+        }
+
+        function showErrorState(message) {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = `
+                <div class="error-state fade-in" role="alert">
+                    <div class="error-emoji" aria-hidden="true">😕</div>
+                    <h3 class="error-title">Unable to Load Apps</h3>
+                    <p class="error-message">${escapeHtml(message)}</p>
+                    <button class="download-btn" onclick="loadApps()" style="background: var(--info-color);">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const element = appGrid.querySelector('.fade-in');
+                if (element && observer) observer.observe(element);
+            }, 100);
+        }
+
+        function setupNetworkMonitoring() {
+            window.addEventListener('online', () => {
+                showToast('Connection restored', 'success');
+                // Try to sync pending downloads
+                setTimeout(syncPendingDownloads, 1000);
+            });
+
+            window.addEventListener('offline', () => {
+                showToast('You are currently offline', 'warning');
+            });
+
+            if (!navigator.onLine) {
+                showToast('You are currently offline. Some features may be limited.', 'warning');
+            }
+        }
+
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
             const filteredApps = appsData.filter(app => {
@@ -1038,7 +1268,7 @@
                 return app.name.toLowerCase().includes(term) ||
                        app.description.toLowerCase().includes(term) ||
                        app.developer.toLowerCase().includes(term) ||
-                       (app.category && app.category.toLowerCase().includes(term));
+                       app.category.toLowerCase().includes(term);
             });
 
             if (filteredApps.length === 0) {
@@ -1062,7 +1292,7 @@
                 const safeDescription = escapeHtml(app.description);
                 const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
                 
-                // Get download count
+                // Get download count (use current value from appsData)
                 const downloadCount = app.downloads || 0;
                 const countDisplay = formatNumber(downloadCount) + ' downloads';
                 
@@ -1073,7 +1303,7 @@
                              onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
-                        <span aria-label="Status fully working">âœ… Fully Working</span> â€¢ v${app.version}
+                        <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
                         <span class="download-count" aria-label="Download count">${countDisplay}</span>
                     </div>
                     <div class="app-card-content">
@@ -1082,7 +1312,7 @@
                         <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
                         <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
                         <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
-                            â¬‡ï¸ Download IPA
+                            ⬇️ Download IPA
                         </button>
                     </div>
                 </article>
@@ -1096,6 +1326,45 @@
             }, 100);
         }
 
+        // Main download handler
+        async function trackDownload(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) {
+                    throw new AppError('App not found', 'error');
+                }
+
+                // Validate URL before opening
+                if (!isValidDownloadUrl(app.downloadUrl)) {
+                    throw new AppError('Invalid download URL', 'error');
+                }
+
+                // Track the download
+                let trackedSuccessfully = false;
+                if (navigator.onLine && database) {
+                    trackedSuccessfully = await trackDownloadWithFirebase(appId);
+                } else {
+                    trackDownloadLocally(appId);
+                    trackedSuccessfully = true;
+                }
+
+                // Open download after tracking (if tracking was attempted)
+                if (trackedSuccessfully) {
+                    setTimeout(() => {
+                        window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                    }, 300);
+                } else {
+                    // If tracking failed, still open the download but show warning
+                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                    showToast('⚠️ Download opened but tracking failed', 'warning');
+                }
+
+            } catch (error) {
+                handleError(error);
+            }
+        }
+
+        // Consolidated add function
         function addToApp(appName, manifestPath) {
             try {
                 const schemes = {
@@ -1120,6 +1389,28 @@
             }
         }
 
+        function formatNumber(num) {
+            num = parseInt(num) || 0;
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+            return date.toLocaleDateString();
+        }
+
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1134,9 +1425,10 @@
             setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
+        // PWA Features
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js?' + timestamp)
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
                     .then((registration) => {
                         console.log('Service Worker registered successfully:', registration.scope);
                     })
@@ -1181,18 +1473,30 @@
             }
         }
 
-        function setupNetworkMonitoring() {
-            window.addEventListener('online', () => {
-                showToast('Connection restored', 'success');
-            });
-
-            window.addEventListener('offline', () => {
-                showToast('You are currently offline', 'warning');
-            });
-
-            if (!navigator.onLine) {
-                showToast('You are currently offline. Some features may be limited.', 'warning');
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('URL copied to clipboard');
+                }).catch(() => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
             }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('URL copied to clipboard');
+            } catch (err) {
+                showToast('Failed to copy URL', 'error');
+            }
+            document.body.removeChild(textArea);
         }
 
         function setupEventListeners() {
@@ -1206,21 +1510,37 @@
                         renderAppGrid();
                     }, CONFIG.SEARCH_DEBOUNCE);
                 });
+                
+                // Add keyboard shortcut for search (press / to focus)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === '/' && document.activeElement !== searchBox) {
+                        e.preventDefault();
+                        searchBox.focus();
+                    }
+                });
             }
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.activeElement === searchBox) {
+                    searchBox.blur();
+                }
+            });
         }
 
         // Privacy info modal
         function showPrivacyInfo() {
-            const privacyMessage = `ðŸ”’ Privacy Policy
+            const privacyMessage = `
+🔒 Privacy Policy
 
-â€¢ Anonymous download tracking only
-â€¢ No personal data collected
-â€¢ No analytics or cookies
-â€¢ Firebase stores only download counts
+• Anonymous download tracking only
+• No personal data collected
+• No analytics or cookies
+• Firebase stores only download counts
 
-â€¢ User IDs are randomly generated
-â€¢ No IP address storage
-â€¢ Data is public and aggregated
+• User IDs are randomly generated
+• No IP address storage
+• Data is public and aggregated
 
 For questions: GitHub Issues
 `;
@@ -1231,17 +1551,26 @@ For questions: GitHub Issues
         // Reset local data
         function resetLocalData() {
             if (confirm('Clear all local data and cache?')) {
+                // Keep the user ID and pending downloads
+                const userId = localStorage.getItem('userId');
+                const pendingDownloads = localStorage.getItem('pendingDownloads');
                 localStorage.clear();
+                if (userId) {
+                    localStorage.setItem('userId', userId);
+                }
+                if (pendingDownloads) {
+                    localStorage.setItem('pendingDownloads', pendingDownloads);
+                }
                 sessionStorage.clear();
                 location.reload();
+                showToast('Local cache cleared (pending downloads preserved)', 'success');
             }
         }
 
         // Clean up on page unload
         window.addEventListener('beforeunload', () => {
-            if (observer) {
-                observer.disconnect();
-            }
+            // Update last seen
+            localStorage.setItem('lastUpdated', Date.now().toString());
         });
     </script>
 
