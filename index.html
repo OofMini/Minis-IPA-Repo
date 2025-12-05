@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SIMPLIFIED Security Policy for tracking -->
+    <!-- Updated Security Policy for tracking -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
                    img-src https: data:; 
@@ -49,25 +49,12 @@
         console.log("📊 Google Analytics LOADED with ID: G-RX1B3TX24S");
     </script>
 
-    <!-- SIMPLE Firebase Database ONLY - Use compat versions -->
+    <!-- SIMPLE Firebase Database ONLY -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
-    <!-- Structured Data for SEO -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Mini's IPA Repo",
-        "description": "Premium tweaked applications for iOS 15+",
-        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
-        "applicationCategory": "Utilities",
-        "operatingSystem": "iOS",
-        "offers": {
-            "@type": "Offer",
-            "availability": "https://schema.org/InStock"
-        }
-    }
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Mini's IPA Repo","description":"Premium tweaked applications for iOS 15+","url":"https://oofmini.github.io/Minis-IPA-Repo/","applicationCategory":"Utilities","operatingSystem":"iOS"}
     </script>
 
     <style>
@@ -84,7 +71,6 @@
             --trollapps-color: #8a2be2;
             --sidestore-color: #1db954;
             --feather-color: #ff6b35;
-            --firebase-color: #FFA611;
             
             /* Constants for animations */
             --fade-duration: 1s;
@@ -113,7 +99,7 @@
         .hero-subtitle,
         .app-card p,
         .download-count {
-            color: #cccccc !important;
+            color: #cccccc !important; /* Better contrast ratio */
         }
         
         * {
@@ -221,7 +207,6 @@
             padding: 20px 15px 15px;
             border-bottom: 1px solid var(--card-border);
             text-align: center;
-            position: relative;
         }
         .repo-icon {
             width: 60px;
@@ -233,18 +218,21 @@
         .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
         .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
 
-        /* Updated Badges Section -->
-        <div class="badges" role="status" aria-live="polite">
-            <span class="badge" aria-label="Repository status active">✅ Active</span>
-            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
-        </div>
-
-        /* Slim Download Tracker -->
-        <div class="download-tracker" id="downloadTracker">
-            <span class="icon">⬇️</span>
-            <span class="count" id="totalDownloads">0</span>
-            <span class="label">Total Downloads</span>
-        </div>
+        .badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .badge {
+            background: var(--success-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .badge.purple { background: var(--accent-color); }
 
         .cta-buttons {
             display: flex;
@@ -323,7 +311,7 @@
             height: 100%;
             object-fit: contain;
             border-radius: 16px;
-            max-width: 100%;
+            max-width: 100%; /* Image optimization */
         }
 
         .app-status {
@@ -336,16 +324,7 @@
             color: var(--success-color);
             flex-wrap: wrap;
         }
-        .download-count { 
-            font-size: 0.8em; 
-            opacity: 0.9; 
-            color: var(--text-color);
-            font-weight: 600;
-            background: rgba(255, 50, 50, 0.1);
-            padding: 2px 8px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 50, 50, 0.2);
-        }
+        .download-count { font-size: 0.8em; opacity: 0.8; color: var(--text-color); }
 
         .app-card-content {
             width: 100%;
@@ -450,49 +429,6 @@
         .toast.info { background: var(--info-color); }
         .toast.success { background: var(--success-color); }
 
-        .firebase-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.7em;
-            font-weight: 600;
-            z-index: 1000;
-            background: var(--firebase-color);
-            color: #000;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Slim Download Tracker Styles - MUST BE ADDED */
-        .download-tracker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px auto 20px;
-            padding: 8px 20px;
-            background: linear-gradient(145deg, rgba(255, 50, 50, 0.15), rgba(200, 0, 0, 0.1));
-            border: 1px solid rgba(255, 50, 50, 0.3);
-            border-radius: 25px;
-            max-width: 300px;
-            color: #ff4444;
-            font-weight: 600;
-            font-size: 0.9em;
-        }
-        .download-tracker .icon {
-            font-size: 1.1em;
-        }
-        .download-tracker .count {
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-        .download-tracker .label {
-            opacity: 0.9;
-        }
-
         @media (max-width: 768px) {
             .app-grid { grid-template-columns: 1fr; }
             .cta-buttons { flex-direction: column; align-items: center; }
@@ -500,47 +436,20 @@
             .fade-in-left { transform: translateY(30px); }
             .fade-in-left.visible { transform: translateY(0); }
             .repo-link { flex-direction: column; gap: 5px; }
-            .firebase-status { top: 5px; right: 5px; }
-            .badge { padding: 5px 12px; font-size: 0.8em; }
-            .download-tracker { max-width: 250px; font-size: 0.85em; padding: 6px 15px; }
-        }
-        
-        /* Utility: visually hidden for accessible headings */
-        .visually-hidden {
-            position: absolute !important;
-            height: 1px; width: 1px;
-            overflow: hidden;
-            clip: rect(1px, 1px, 1px, 1px);
-            white-space: nowrap;
         }
     </style>
 </head>
 <body>
-    <!-- Firebase Status Indicator -->
-    <div class="firebase-status" id="firebaseStatus" style="display: none;">
-        <span class="status-dot" id="statusDot">●</span>
-        <span id="statusText">Connecting...</span>
-    </div>
-
     <header class="hero">
         <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy" width="60" height="60">
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
-        <p class="hero-subtitle">Premium tweaked iOS applications for iOS 15+</p>
+        <p class="hero-subtitle">Tweaked IPAs</p>
 
-        <!-- Updated Badges - Only Active and iOS 15+ -->
         <div class="badges" role="status" aria-live="polite">
             <span class="badge" aria-label="Repository status active">✅ Active</span>
-            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+            <span class="badge purple" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
         </div>
 
-        <!-- Slim Download Tracker -->
-        <div class="download-tracker" id="downloadTracker">
-            <span class="icon">⬇️</span>
-            <span class="count" id="totalDownloads">0</span>
-            <span class="label">Total Downloads</span>
-        </div>
-
-        <!-- CTA Buttons -->
         <nav class="cta-buttons" aria-label="Add repository to app">
             <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
                 <span role="img" aria-hidden="true">📱</span> Add to TrollApps
@@ -554,7 +463,7 @@
         </nav>
     </header>
 
-    <main class="container" role="main">
+    <main class="container">
         <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
@@ -563,9 +472,7 @@
         </section>
 
         <!-- App grid -->
-        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps">
-            <!-- Skeleton loading will appear here -->
-        </section>
+        <section class="app-grid" id="appGrid" aria-label="Available apps"></section>
 
         <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
@@ -598,32 +505,13 @@
     </main>
 
     <footer class="container" aria-label="Site footer">
-        <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
-            <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
-                © 2024 Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
-            </p>
-            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
-                <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    📦 GitHub Repo
-                </a>
-                <span style="opacity:0.3;">•</span>
-                <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    🐛 Report Issue
-                </a>
-                <span style="opacity:0.3;">•</span>
-                <button onclick="showPrivacyInfo()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🔒 Privacy
-                </button>
-                <span style="opacity:0.3;">•</span>
-                <button onclick="resetLocalData()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🗑️ Clear Cache
-                </button>
-                <span style="opacity:0.3;">•</span>
-                <a href="firebase-tracker.html" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🔧 Test Tracking
-                </a>
-            </div>
-        </div>
+        <p style="opacity:0.6; text-align:center; font-size:0.85em; padding:15px 0;">
+            © Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+            <br>
+            <a href="firebase-tracker.html" style="color:var(--accent-color); text-decoration:none; margin-top:10px; display:inline-block;">
+                🔧 Test Tracking
+            </a>
+        </p>
     </footer>
 
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
@@ -642,170 +530,12 @@
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             console.log("✅ Firebase Database initialized");
-            
-            // Update status
-            const statusEl = document.getElementById('firebaseStatus');
-            if (statusEl) {
-                statusEl.style.display = 'flex';
-                document.getElementById('statusText').textContent = 'Connected';
-            }
         } catch (error) {
             console.log("ℹ️ Firebase not available - using local mode");
         }
     </script>
 
     <script>
-        // ========== APP CONFIGURATION ==========
-        const CONFIG = {
-            SEARCH_DEBOUNCE: 300,
-            TOAST_DURATION: 3000,
-            FETCH_TIMEOUT: 8000,
-            SKELETON_DELAY: 800
-        };
-
-        // Utility functions
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function isValidDownloadUrl(url) {
-            try {
-                const parsed = new URL(url);
-                return parsed.protocol === 'https:' && 
-                       parsed.hostname.includes('github.com');
-            } catch {
-                return false;
-            }
-        }
-
-        // Prevent caching by adding timestamp to requests
-        const timestamp = new Date().getTime();
-
-        const appsData = [
-            {
-                id: 'eeveespotify',
-                name: 'EeveeSpotify',
-                developer: 'whoeevee',
-                description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
-                version: '9.1.0',
-                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Music',
-                size: '150 MB'
-            },
-            {
-                id: 'ytlite',
-                name: 'YTLite',
-                developer: 'dayanch96',
-                description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
-                version: '20.47.3',
-                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Video',
-                size: '180 MB'
-            },
-            {
-                id: 'ytmusicultimate',
-                name: 'YTMusicUltimate',
-                developer: 'dayanch96',
-                description: 'Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png?' + timestamp,
-                version: '8.47.3',
-                downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Music',
-                size: '120 MB'
-            },
-            {
-                id: 'neofreebird',
-                name: 'NeoFreeBird',
-                developer: 'NeoFreeBird',
-                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.45, NeoFreeBird v5.2',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
-                version: '11.45',
-                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Social',
-                size: '110 MB'
-            },
-            {
-                id: 'scinsta',
-                name: 'SCInsta',
-                developer: 'SoCuul',
-                description: 'Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta v0.8.0',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png?' + timestamp,
-                version: '408.0.0',
-                downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Social',
-                size: '140 MB'
-            },
-            {
-                id: 'inshot',
-                name: 'InShotPro',
-                developer: 'IPAOMTK',
-                description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
-                version: '1.91.1',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Photo & Video',
-                size: '220 MB'
-            },
-            {
-                id: 'appstoreplus',
-                name: 'Appstore++',
-                developer: 'cokernutx',
-                description: 'Appstore++ allows users to downgrade apps.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
-                version: '1.0.3',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Utilities',
-                size: '15 MB'
-            },
-            {
-                id: 'itorrent',
-                name: 'iTorrent',
-                developer: 'XITRIX',
-                description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
-                version: '2.1.0',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Utilities',
-                size: '25 MB'
-            },
-            {
-                id: 'livecontainer',
-                name: 'LiveContainer',
-                developer: 'hugeBlack',
-                description: 'Runs live production containers for streaming apps and runtime isolation.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
-                version: '3.6.1',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Utilities',
-                size: '45 MB'
-            },
-            {
-                id: 'refacepro',
-                name: 'RefacePro (IOS 17+)',
-                developer: 'IPAOMTK',
-                description: 'Reface Premium Unlocked.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
-                version: '5.27.0',
-                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
-                downloads: 0,
-                category: 'Entertainment',
-                size: '280 MB'
-            }
-        ];
-
         // ========== SIMPLE TRACKING FUNCTIONS ==========
         
         // SIMPLE DOWNLOAD TRACKER - GUARANTEED TO WORK
@@ -823,8 +553,7 @@
                     'value': 1,
                     'app_id': app.id,
                     'app_name': app.name,
-                    'app_version': app.version,
-                    'category': app.category
+                    'app_version': app.version
                 });
                 console.log("✅ Google Analytics event sent");
                 
@@ -895,13 +624,6 @@
                     countEl.textContent = formatNumber(count) + ' downloads';
                 }
             }
-            updateTotalDownloads();
-        }
-        
-        // Update total downloads
-        function updateTotalDownloads() {
-            const total = appsData.reduce((sum, app) => sum + (app.downloads || 0), 0);
-            document.getElementById('totalDownloads').textContent = formatNumber(total);
         }
         
         // Format numbers
@@ -916,15 +638,9 @@
         function loadDownloadCounts() {
             if (!database) {
                 console.log("No Firebase, showing default counts");
-                showSkeletonLoading();
-                setTimeout(() => {
-                    renderAppGrid();
-                }, 1000);
+                renderAppGrid();
                 return;
             }
-            
-            // Show skeleton loading while we wait for Firebase
-            showSkeletonLoading();
             
             const downloadsRef = database.ref('downloads');
             downloadsRef.on('value', (snapshot) => {
@@ -937,99 +653,230 @@
                 });
                 
                 renderAppGrid();
-                updateTotalDownloads();
                 console.log("📊 Download counts loaded from Firebase");
-            }, (error) => {
-                console.error("Firebase error:", error);
-                // If Firebase fails, render apps anyway
-                renderAppGrid();
             });
         }
 
-        // ========== APP INITIALIZATION ==========
+        // ========== YOUR EXISTING CODE (UNCHANGED) ==========
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
+        };
+
+        class AppError extends Error {
+            constructor(message, type) {
+                super(message);
+                this.type = type;
+                this.name = 'AppError';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function isValidDownloadUrl(url) {
+            try {
+                const parsed = new URL(url);
+                return parsed.protocol === 'https:' && 
+                       parsed.hostname.includes('github.com');
+            } catch {
+                return false;
+            }
+        }
+
+        const timestamp = new Date().getTime();
+
+        const appsData = [
+            {
+                id: 'eeveespotify',
+                name: 'EeveeSpotify',
+                developer: 'whoeevee',
+                description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
+                version: '9.1.0',
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'ytlite',
+                name: 'YTLite',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
+                version: '20.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'ytmusicultimate',
+                name: 'YTMusicUltimate',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png?' + timestamp,
+                version: '8.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'neofreebird',
+                name: 'NeoFreeBird',
+                developer: 'NeoFreeBird',
+                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.45, NeoFreeBird v5.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
+                version: '11.45',
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'scinsta',
+                name: 'SCInsta',
+                developer: 'SoCuul',
+                description: 'Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta v0.8.0',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png?' + timestamp,
+                version: '408.0.0',
+                downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'inshot',
+                name: 'InShotPro',
+                developer: 'IPAOMTK',
+                description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
+                version: '1.91.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'appstoreplus',
+                name: 'Appstore++',
+                developer: 'cokernutx',
+                description: 'Appstore++ allows users to downgrade apps.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
+                version: '1.0.3',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'itorrent',
+                name: 'iTorrent',
+                developer: 'XITRIX',
+                description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
+                version: '2.1.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'livecontainer',
+                name: 'LiveContainer',
+                developer: 'hugeBlack',
+                description: 'Runs live production containers for streaming apps and runtime isolation.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
+                version: '3.6.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            },
+            {
+                id: 'refacepro',
+                name: 'RefacePro (IOS 17+)',
+                developer: 'IPAOMTK',
+                description: 'Reface Premium Unlocked.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
+                version: '5.27.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
+                initialDownloads: 0,
+                downloads: 0
+            }
+        ];
+
         let searchTerm = '';
+        let deferredPrompt;
         let searchTimeout;
+        let cachedApps = [...appsData];
         let observer = null;
-        let areAppsRendered = false;
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show skeleton loading immediately
-            showSkeletonLoading();
-            
-            // Load download counts (this will trigger app rendering)
-            loadDownloadCounts();
-            
-            // Setup animations
-            initializeScrollAnimations();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Setup PWA
-            setupPWA();
-            
-            // Test that tracking is ready
-            setTimeout(() => {
-                console.log("✅ App initialized");
-                console.log("📊 Google Analytics:", typeof gtag === 'function' ? "READY" : "NOT FOUND");
-                console.log("🔥 Firebase Database:", database ? "CONNECTED" : "NOT CONNECTED");
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                setupNetworkMonitoring();
+                setupEventListeners();
+                initializeScrollAnimations();
                 
-                // Send page view to GA
-                if (typeof gtag === 'function') {
-                    gtag('event', 'page_view', {
-                        'page_title': document.title,
-                        'page_location': window.location.href
-                    });
-                }
-            }, 1000);
+                // Load download counts from Firebase first
+                loadDownloadCounts();
+                
+                // Defer service worker registration
+                setTimeout(setupPWA, 1000);
+                
+                // Send page view to Google Analytics
+                setTimeout(() => {
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'page_view', {
+                            'page_title': document.title,
+                            'page_location': window.location.href
+                        });
+                    }
+                }, 500);
+                
+            } catch (error) {
+                handleError(error);
+            }
         });
 
-        // ========== UI FUNCTIONS ==========
-        function initializeScrollAnimations() {
-            if (!('IntersectionObserver' in window)) {
-                document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                    el.classList.add('visible');
-                });
-                return;
+        function handleError(error) {
+            if (error instanceof AppError) {
+                showToast(error.message, error.type);
+            } else {
+                showToast('An unexpected error occurred', 'error');
             }
+            console.error(error);
+        }
 
+        function initializeScrollAnimations() {
             observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     }
                 });
-            }, {threshold: 0.1});
+            }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
 
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                observer.observe(el);
-            });
-            
-            // Clean up observer on page unload
-            window.addEventListener('beforeunload', () => {
-                if (observer) {
-                    observer.disconnect();
-                }
+                if (observer) observer.observe(el);
             });
         }
-        
-        // Skeleton Loading
+
+        window.addEventListener('beforeunload', () => {
+            if (observer) {
+                observer.disconnect();
+            }
+        });
+
         function showSkeletonLoading() {
             const appGrid = document.getElementById('appGrid');
-            appGrid.innerHTML = '';
-            
-            for (let i = 0; i < 6; i++) {
-                const skeleton = document.createElement('div');
-                skeleton.className = 'skeleton-card fade-in';
-                skeleton.innerHTML = `
+            appGrid.innerHTML = `
+                <div class="skeleton-card fade-in">
                     <div class="skeleton skeleton-icon"></div>
                     <div class="skeleton skeleton-text short"></div>
                     <div class="skeleton skeleton-text medium"></div>
                     <div class="skeleton skeleton-text medium"></div>
                     <div class="skeleton skeleton-button"></div>
-                `;
-                appGrid.appendChild(skeleton);
-            }
+                </div>
+            `.repeat(6);
 
             setTimeout(() => {
                 appGrid.querySelectorAll('.skeleton-card').forEach(card => {
@@ -1038,24 +885,97 @@
             }, 100);
         }
 
-        function renderAppGrid() {
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = CONFIG.FETCH_TIMEOUT } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(resource, { ...options, signal: controller.signal });
+                return response;
+            } finally {
+                clearTimeout(id);
+            }
+        }
+
+        async function loadAppsWithFallback() {
+            try {
+                showSkeletonLoading();
+
+                if (!navigator.onLine) {
+                    throw new AppError('No internet connection', 'warning');
+                }
+
+                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp);
+                if (!manifestAvailable) {
+                    throw new AppError('Repository temporarily unavailable', 'warning');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, CONFIG.SKELETON_DELAY));
+                renderAppGrid();
+
+            } catch (error) {
+                console.error('Failed to load apps:', error);
+                showErrorState(error.message);
+            }
+        }
+
+        function showErrorState(message) {
             const appGrid = document.getElementById('appGrid');
-            const filteredApps = appsData.filter(app => {
-                if (!searchTerm) return true;
-                const term = searchTerm.toLowerCase();
-                return app.name.toLowerCase().includes(term) ||
-                       app.description.toLowerCase().includes(term) ||
-                       app.developer.toLowerCase().includes(term) ||
-                       app.category.toLowerCase().includes(term);
+            appGrid.innerHTML = `
+                <div class="error-state fade-in" role="alert">
+                    <div class="error-emoji" aria-hidden="true">😕</div>
+                    <h3 class="error-title">Unable to Load Apps</h3>
+                    <p class="error-message">${escapeHtml(message)}</p>
+                    <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+            setTimeout(() => {
+                const element = appGrid.querySelector('.fade-in');
+                if (element && observer) observer.observe(element);
+            }, 100);
+        }
+
+        async function checkResourceAvailability(url) {
+            try {
+                const response = await fetchWithTimeout(url, {
+                    method: 'HEAD',
+                    cache: 'no-cache',
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+                    timeout: 5000
+                });
+                return response.ok;
+            } catch (error) {
+                console.warn(`Resource unavailable: ${url}`, error);
+                return false;
+            }
+        }
+
+        function setupNetworkMonitoring() {
+            window.addEventListener('online', () => {
+                showToast('Connection restored', 'success');
             });
 
+            window.addEventListener('offline', () => {
+                showToast('You are currently offline', 'warning');
+            });
+
+            if (!navigator.onLine) {
+                showToast('You are currently offline. Some features may be limited.', 'warning');
+            }
+        }
+
+        function renderAppGrid() {
+            const appGrid = document.getElementById('appGrid');
+            const filteredApps = appsData.filter(app =>
+                app.name.toLowerCase().includes(searchTerm) ||
+                app.description.toLowerCase().includes(searchTerm) ||
+                app.developer.toLowerCase().includes(searchTerm)
+            );
+
             if (filteredApps.length === 0) {
-                appGrid.innerHTML = `
-                    <div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7">
-                        <h3>No apps found</h3>
-                        <p>Try different search terms</p>
-                    </div>
-                `;
+                appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
                 setTimeout(() => {
                     const element = appGrid.querySelector('.fade-in');
                     if (element && observer) observer.observe(element);
@@ -1064,25 +984,27 @@
             }
 
             appGrid.innerHTML = filteredApps.map((app, index) => {
+                const safeId = escapeHtml(app.id);
+                const safeName = escapeHtml(app.name);
+                const safeDeveloper = escapeHtml(app.developer);
+                const safeDescription = escapeHtml(app.description);
+                const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
                 const downloadCount = app.downloads || 0;
-                const countDisplay = formatNumber(downloadCount) + ' downloads';
                 
                 return `
-                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${app.name}" data-app-id="${app.id}">
+                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
                     <div class="app-icon-container">
-                        <img src="${app.icon}" alt="Icon for ${app.name}" class="app-icon" loading="lazy" width="80" height="80"
-                             onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
+                        <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
+                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
                         <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
-                        <span class="download-count" aria-label="Download count">${countDisplay}</span>
+                        <span class="download-count" aria-label="Download count">${formatNumber(downloadCount)} downloads</span>
                     </div>
                     <div class="app-card-content">
-                        <h3>${app.name}</h3>
-                        <p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>
-                        <p>By <b>${app.developer}</b><br>${app.description}</p>
-                        <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
-                        <button class="download-btn" onclick="trackDownload('${app.id}')" aria-label="Download ${app.name} IPA">
+                        <h3>${safeName}</h3>
+                        <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                        <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
                             ⬇️ Download IPA
                         </button>
                     </div>
@@ -1095,25 +1017,32 @@
                     if (observer) observer.observe(card);
                 });
             }, 100);
-            
-            areAppsRendered = true;
         }
 
-        function setupEventListeners() {
-            const searchBox = document.getElementById('searchBox');
-            if (searchBox) {
-                searchBox.addEventListener('input', (e) => {
-                    clearTimeout(searchTimeout);
-                    const value = e.target.value;
-                    searchTimeout = setTimeout(() => {
-                        searchTerm = value.toLowerCase().trim();
-                        renderAppGrid();
-                    }, 300);
-                });
+        function addToApp(appName, manifestPath) {
+            try {
+                const schemes = {
+                    'TrollApps': 'trollapps',
+                    'SideStore': 'sidestore',
+                    'Feather': 'feather'
+                };
+                
+                const scheme = schemes[appName];
+                if (!scheme) {
+                    throw new AppError(`Unknown app: ${appName}`, 'error');
+                }
+                
+                const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${timestamp}`;
+                window.location.href = url;
+                
+                setTimeout(() => {
+                    showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
+                }, 1000);
+            } catch (error) {
+                handleError(error);
             }
         }
 
-        // Toast function
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1125,67 +1054,115 @@
             else toast.classList.add('info');
 
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
-        // PWA functions
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
+                navigator.serviceWorker.register('./sw.js?' + timestamp)
                     .then((registration) => {
-                        console.log('Service Worker registered:', registration.scope);
+                        console.log('SW registered: ', registration);
                     })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
                     });
             }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                setTimeout(showInstallPrompt, 3000);
+            });
         }
 
-        // Add to app function
-        function addToApp(appName, manifestPath) {
-            const schemes = {
-                'TrollApps': 'trollapps',
-                'SideStore': 'sidestore',
-                'Feather': 'feather'
-            };
+        function showInstallPrompt() {
+            if (!deferredPrompt) return;
+
+            const toast = document.getElementById('toast');
+            toast.textContent = 'Install Mini\'s IPA Repo? ';
             
-            const scheme = schemes[appName];
-            if (!scheme) {
-                showToast(`Unknown app: ${appName}`, 'error');
-                return;
-            }
+            const installButton = document.createElement('button');
+            installButton.textContent = 'Install';
+            installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
+            installButton.onclick = installApp;
             
-            const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${timestamp}`;
-            window.location.href = url;
-            
-            setTimeout(() => {
-                showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
-            }, 1000);
+            toast.appendChild(installButton);
+            toast.classList.remove('error','warning','success','info');
+            toast.classList.add('toast','info','show');
         }
 
-        // Privacy info
-        function showPrivacyInfo() {
-            const privacyMessage = `
-🔒 Privacy Policy
-
-• Anonymous download tracking only
-• No personal data collected
-• Firebase stores only download counts
-• User IDs are randomly generated
-
-For questions: GitHub Issues
-`;
-            showToast(privacyMessage, 'info');
-        }
-
-        // Reset local data
-        function resetLocalData() {
-            if (confirm('Clear all local data and cache?')) {
-                localStorage.clear();
-                sessionStorage.clear();
-                location.reload();
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    }
+                    deferredPrompt = null;
+                });
             }
         }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('URL copied to clipboard');
+                }).catch(() => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('URL copied to clipboard');
+            } catch (err) {
+                showToast('Failed to copy URL', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function setupEventListeners() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    const value = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = value.toLowerCase().trim();
+                        renderAppGrid();
+                    }, CONFIG.SEARCH_DEBOUNCE);
+                });
+            }
+        }
+
+        window.addEventListener('load', function() {
+            const perf = window.performance;
+            if (perf && perf.navigation && perf.navigation.type === 1) {
+                try {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                } catch (e) {}
+            }
+        });
     </script>
+
+    <style>
+        /* Utility: visually hidden for accessible headings */
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px; width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+    </style>
 </body>
 </html>
