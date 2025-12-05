@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini's IPA Repo - Test Tracking</title>
+    
+    <!-- Simple Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RX1B3TX24S"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RX1B3TX24S');
+    </script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>📊 Simple Tracking Test</h1>
+    <p>This page will test if Google Analytics is working.</p>
+    
+    <button onclick="testGoogleAnalytics()">Test Google Analytics</button>
+    <button onclick="testDownload()">Simulate Download</button>
+    
+    <div id="log" class="log"></div>
+    
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            console.log(message);
+        }
+        
+        function testGoogleAnalytics() {
+            log("Testing Google Analytics...");
+            
+            if (typeof gtag !== 'function') {
+                log("❌ ERROR: gtag() function not found!");
+                return;
+            }
+            
+            // Test event
+            gtag('event', 'test_event', {
+                'event_category': 'Test',
+                'event_label': 'Google Analytics Test',
+                'value': 1
+            });
+            
+            log("✅ Test event sent to Google Analytics!");
+            log("Check Google Analytics Real-time view for 'test_event'");
+        }
+        
+        function testDownload() {
+            log("Simulating a download...");
+            
+            if (typeof gtag !== 'function') {
+                log("❌ ERROR: gtag() function not found!");
+                return;
+            }
+            
+            // Track download
+            gtag('event', 'download', {
+                'event_category': 'Downloads',
+                'event_label': 'Test App Download',
+                'value': 1,
+                'app_name': 'Test App',
+                'app_version': '1.0.0'
+            });
+            
+            log("✅ Download tracked!");
+            log("Check Google Analytics Real-time view for 'download' event");
+            
+            // Open a test download
+            window.open('https://github.com/OofMini/Minis-IPA-Repo/blob/main/README.md', '_blank');
+        }
+        
+        // Auto-test on load
+        setTimeout(() => {
+            log("Page loaded. gtag available: " + (typeof gtag === 'function'));
+            if (typeof gtag === 'function') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Test Tracking Page'
+                });
+                log("✅ Page view sent to Google Analytics");
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
