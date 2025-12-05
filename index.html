@@ -49,9 +49,9 @@
         console.log("📊 Google Analytics LOADED with ID: G-RX1B3TX24S");
     </script>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+    <!-- SIMPLE Firebase Database ONLY -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -630,7 +630,7 @@
         // Initialize Firebase (Database ONLY)
         let database;
         try {
-            const firebaseApp = firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             console.log("✅ Firebase Database initialized");
         } catch (error) {
@@ -641,7 +641,7 @@
     <script>
         // ========== SIMPLE TRACKING FUNCTIONS ==========
         
-        // SIMPLE DOWNLOAD TRACKER - GUARANTEED TO WORK (from first index)
+        // SIMPLE DOWNLOAD TRACKER - GUARANTEED TO WORK
         async function trackDownload(appId) {
             console.log("🚀 Starting download tracking for:", appId);
             
@@ -705,7 +705,7 @@
                 updateAppUI(appId, app.downloads);
             }
             
-            // Update total downloads display
+            // Update total downloads
             updateTotalDownloads();
             
             // 3. OPEN THE DOWNLOAD
@@ -762,13 +762,42 @@
                 appsData.forEach(app => {
                     if (data[app.id] && data[app.id].count) {
                         app.downloads = parseInt(data[app.id].count);
+                    } else {
+                        app.downloads = 0;
                     }
                 });
                 
                 renderAppGrid();
                 updateTotalDownloads();
                 console.log("📊 Download counts loaded from Firebase");
+                
+                // Update Firebase status indicator
+                updateFirebaseStatus(true);
+            }, (error) => {
+                console.error("Error loading download counts:", error);
+                updateFirebaseStatus(false);
+                renderAppGrid();
+                updateTotalDownloads();
             });
+        }
+
+        // Update Firebase connection status
+        function updateFirebaseStatus(connected) {
+            const statusEl = document.getElementById('firebaseStatus');
+            const dotEl = document.getElementById('statusDot');
+            const textEl = document.getElementById('statusText');
+            
+            if (connected) {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = 'var(--success-color)';
+                dotEl.textContent = '●';
+                textEl.textContent = 'Live';
+            } else {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = 'var(--warning-color)';
+                dotEl.textContent = '○';
+                textEl.textContent = 'Offline';
+            }
         }
 
         // ========== APP CONFIGURATION ==========
@@ -939,7 +968,7 @@
                 setupEventListeners();
                 initializeScrollAnimations();
                 
-                // Load download counts from Firebase first (using the simple version)
+                // Load download counts from Firebase first
                 loadDownloadCounts();
                 
                 // Defer service worker registration
@@ -1127,6 +1156,7 @@
                     </div>
                     <div class="app-card-content">
                         <h3>${safeName}</h3>
+                        ${app.category ? `<p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>` : ''}
                         <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
                         ${app.size ? `<p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>` : ''}
                         <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
