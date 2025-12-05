@@ -6,7 +6,7 @@
     
     <!-- Security: Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.firebaseio.com https://minis-ipa-repo-default-rtdb.firebaseio.com; frame-src https://*.firebaseio.com;">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -34,8 +34,25 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+
+    <!-- Structured Data for SEO -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebApplication","name":"Mini's IPA Repo","description":"Premium tweaked applications for iOS 15+","url":"https://oofmini.github.io/Minis-IPA-Repo/","applicationCategory":"Utilities","operatingSystem":"iOS"}
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Mini's IPA Repo",
+        "description": "Premium tweaked applications for iOS 15+",
+        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
+        "applicationCategory": "Utilities",
+        "operatingSystem": "iOS",
+        "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock"
+        }
+    }
     </script>
 
     <style>
@@ -52,6 +69,7 @@
             --trollapps-color: #8a2be2;
             --sidestore-color: #1db954;
             --feather-color: #ff6b35;
+            --firebase-color: #FFA611;
             
             /* Constants for animations */
             --fade-duration: 1s;
@@ -80,7 +98,7 @@
         .hero-subtitle,
         .app-card p,
         .download-count {
-            color: #cccccc !important; /* Better contrast ratio */
+            color: #cccccc !important;
         }
         
         * {
@@ -188,6 +206,7 @@
             padding: 20px 15px 15px;
             border-bottom: 1px solid var(--card-border);
             text-align: center;
+            position: relative;
         }
         .repo-icon {
             width: 60px;
@@ -199,21 +218,51 @@
         .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
         .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
 
+        /* Updated Badges Section */
         .badges {
             display: flex;
             gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .badge {
             background: var(--success-color);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .badge.purple { background: var(--accent-color); }
+        .badge.ios { background: var(--accent-color); }
+        
+        /* Slim Download Tracker */
+        .download-tracker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px auto 20px;
+            padding: 8px 20px;
+            background: linear-gradient(145deg, rgba(255, 50, 50, 0.15), rgba(200, 0, 0, 0.1));
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            border-radius: 25px;
+            max-width: 300px;
+            color: #ff4444;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .download-tracker .icon {
+            font-size: 1.1em;
+        }
+        .download-tracker .count {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .download-tracker .label {
+            opacity: 0.9;
+        }
 
         .cta-buttons {
             display: flex;
@@ -292,7 +341,7 @@
             height: 100%;
             object-fit: contain;
             border-radius: 16px;
-            max-width: 100%; /* Image optimization */
+            max-width: 100%;
         }
 
         .app-status {
@@ -305,7 +354,16 @@
             color: var(--success-color);
             flex-wrap: wrap;
         }
-        .download-count { font-size: 0.8em; opacity: 0.8; color: var(--text-color); }
+        .download-count { 
+            font-size: 0.8em; 
+            opacity: 0.9; 
+            color: var(--text-color);
+            font-weight: 600;
+            background: rgba(255, 50, 50, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 50, 50, 0.2);
+        }
 
         .app-card-content {
             width: 100%;
@@ -410,6 +468,22 @@
         .toast.info { background: var(--info-color); }
         .toast.success { background: var(--success-color); }
 
+        .firebase-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 600;
+            z-index: 1000;
+            background: var(--firebase-color);
+            color: #000;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         @media (max-width: 768px) {
             .app-grid { grid-template-columns: 1fr; }
             .cta-buttons { flex-direction: column; align-items: center; }
@@ -417,20 +491,38 @@
             .fade-in-left { transform: translateY(30px); }
             .fade-in-left.visible { transform: translateY(0); }
             .repo-link { flex-direction: column; gap: 5px; }
+            .firebase-status { top: 5px; right: 5px; }
+            .badge { padding: 5px 12px; font-size: 0.8em; }
+            .download-tracker { max-width: 250px; font-size: 0.85em; padding: 6px 15px; }
         }
     </style>
 </head>
 <body>
+    <!-- Firebase Status Indicator -->
+    <div class="firebase-status" id="firebaseStatus" style="display: none;">
+        <span class="status-dot" id="statusDot">●</span>
+        <span id="statusText">Connecting...</span>
+    </div>
+
     <header class="hero">
         <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy" width="60" height="60">
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
-        <p class="hero-subtitle">Tweaked IPAs</p>
+        <p class="hero-subtitle">Premium tweaked iOS applications for iOS 15+</p>
 
+        <!-- Updated Badges - Only Active and iOS 15+ -->
         <div class="badges" role="status" aria-live="polite">
             <span class="badge" aria-label="Repository status active">✅ Active</span>
-            <span class="badge purple" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
         </div>
 
+        <!-- Slim Download Tracker -->
+        <div class="download-tracker" id="downloadTracker">
+            <span class="icon">⬇️</span>
+            <span class="count" id="totalDownloads">0</span>
+            <span class="label">Total Downloads</span>
+        </div>
+
+        <!-- CTA Buttons -->
         <nav class="cta-buttons" aria-label="Add repository to app">
             <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
                 <span role="img" aria-hidden="true">📱</span> Add to TrollApps
@@ -444,7 +536,7 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" role="main">
         <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
@@ -453,7 +545,7 @@
         </section>
 
         <!-- App grid -->
-        <section class="app-grid" id="appGrid" aria-label="Available apps"></section>
+        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
 
         <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
@@ -486,15 +578,61 @@
     </main>
 
     <footer class="container" aria-label="Site footer">
-        <p style="opacity:0.6; text-align:center; font-size:0.85em; padding:15px 0;">
-            © Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
-        </p>
+        <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
+            <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
+                © 2024 Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+            </p>
+            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+                <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
+                    📦 GitHub Repo
+                </a>
+                <span style="opacity:0.3;">•</span>
+                <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
+                    🐛 Report Issue
+                </a>
+                <span style="opacity:0.3;">•</span>
+                <button onclick="showPrivacyInfo()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
+                    🔒 Privacy
+                </button>
+                <span style="opacity:0.3;">•</span>
+                <button onclick="resetLocalData()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
+                    🗑️ Clear Cache
+                </button>
+            </div>
+        </div>
     </footer>
 
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
+    <!-- Firebase Config -->
     <script>
-        // Constants configuration
+        // ========== FIREBASE CONFIGURATION ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
+            authDomain: "minis-repo-tracking.firebaseapp.com",
+            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
+            projectId: "minis-repo-tracking",
+            storageBucket: "minis-repo-tracking.firebasestorage.app",
+            messagingSenderId: "832281839494",
+            appId: "1:832281839494:web:6abe106a54100634838e07",
+            measurementId: "G-RX1B3TX24S"
+        };
+        
+        // Initialize Firebase
+        let firebaseApp;
+        let database;
+        
+        try {
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("✅ Firebase initialized successfully");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+        }
+    </script>
+
+    <script>
+        // ========== APP CONFIGURATION ==========
         const CONFIG = {
             SEARCH_DEBOUNCE: 300,
             TOAST_DURATION: 3000,
@@ -540,8 +678,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
                 version: '9.1.0',
                 downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Music',
+                size: '150 MB'
             },
             {
                 id: 'ytlite',
@@ -551,8 +690,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
                 version: '20.47.3',
                 downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Video',
+                size: '180 MB'
             },
             {
                 id: 'ytmusicultimate',
@@ -562,19 +702,21 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png?' + timestamp,
                 version: '8.47.3',
                 downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Music',
+                size: '120 MB'
             },
             {
                 id: 'neofreebird',
                 name: 'NeoFreeBird',
                 developer: 'NeoFreeBird',
-                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.43.1, NeoFreeBird v5.2',
+                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.45, NeoFreeBird v5.2',
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
-                version: '11.43.1',
+                version: '11.45',
                 downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Social',
+                size: '110 MB'
             },
             {
                 id: 'scinsta',
@@ -584,8 +726,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png?' + timestamp,
                 version: '408.0.0',
                 downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Social',
+                size: '140 MB'
             },
             {
                 id: 'inshot',
@@ -595,8 +738,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
                 version: '1.91.1',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Photo & Video',
+                size: '220 MB'
             },
             {
                 id: 'appstoreplus',
@@ -606,8 +750,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
                 version: '1.0.3',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Utilities',
+                size: '15 MB'
             },
             {
                 id: 'itorrent',
@@ -617,8 +762,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
                 version: '2.1.0',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Utilities',
+                size: '25 MB'
             },
             {
                 id: 'livecontainer',
@@ -628,8 +774,9 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
                 version: '3.6.1',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Utilities',
+                size: '45 MB'
             },
             {
                 id: 'refacepro',
@@ -639,28 +786,368 @@
                 icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
                 version: '5.27.0',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
-                initialDownloads: 0,
-                downloads: 0
+                downloads: 0,
+                category: 'Entertainment',
+                size: '280 MB'
             }
         ];
 
         let searchTerm = '';
         let deferredPrompt;
         let searchTimeout;
-        let cachedApps = [...appsData]; // Cache for search
         let observer = null;
+        let totalDownloads = 0;
+        let firebaseConnected = false;
+        let userId = generateUserId();
+        let firebaseListeners = [];
+        let areAppsRendered = false;
+        let isInitialDataLoaded = false;
 
-        // Enhanced initialization with error handling
-        document.addEventListener('DOMContentLoaded', () => {
+        // ========== FIREBASE FUNCTIONS ==========
+        
+        // Generate unique user ID for anonymous tracking
+        function generateUserId() {
+            let id = localStorage.getItem('userId');
+            if (!id) {
+                id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('userId', id);
+            }
+            return id;
+        }
+
+        // Update Firebase connection status
+        function updateFirebaseStatus(connected) {
+            firebaseConnected = connected;
+            const statusEl = document.getElementById('firebaseStatus');
+            const dotEl = document.getElementById('statusDot');
+            const textEl = document.getElementById('statusText');
+            
+            if (connected) {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = 'var(--success-color)';
+                dotEl.textContent = '●';
+                textEl.textContent = 'Live';
+            } else {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = 'var(--warning-color)';
+                dotEl.textContent = '○';
+                textEl.textContent = 'Offline';
+            }
+        }
+
+        // Load download counts from Firebase
+        function loadFirebaseStats() {
+            if (!database) {
+                console.warn('Firebase not available, using localStorage');
+                loadLocalStats();
+                if (!areAppsRendered) {
+                    loadApps();
+                }
+                return;
+            }
+
             try {
+                // Show skeleton loading while waiting for Firebase
+                showSkeletonLoading();
+                
+                // Listen for download count changes
+                const downloadsRef = database.ref('downloads');
+                
+                const unsubscribe = downloadsRef.on('value', (snapshot) => {
+                    const data = snapshot.val() || {};
+                    
+                    console.log("📊 Firebase data loaded:", data);
+                    
+                    // Update each app's download count from Firebase
+                    appsData.forEach(app => {
+                        if (data[app.id] && data[app.id].count !== undefined) {
+                            app.downloads = parseInt(data[app.id].count) || 0;
+                        } else {
+                            app.downloads = 0;
+                        }
+                    });
+                    
+                    // Calculate total downloads
+                    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+                    
+                    // Update UI
+                    updateStatsUI();
+                    
+                    // Render apps only once Firebase data is loaded
+                    if (!areAppsRendered) {
+                        renderAppGrid();
+                        areAppsRendered = true;
+                    } else if (isInitialDataLoaded) {
+                        // Update individual app counts after initial load
+                        updateAllAppDownloadCounts();
+                    }
+                    
+                    isInitialDataLoaded = true;
+                    
+                }, (error) => {
+                    console.error('Firebase error:', error);
+                    loadLocalStats();
+                    if (!areAppsRendered) {
+                        loadApps();
+                    }
+                });
+                
+                firebaseListeners.push(() => downloadsRef.off('value', unsubscribe));
+                
+                // Listen for connection status
+                const connectedRef = database.ref('.info/connected');
+                const connUnsubscribe = connectedRef.on('value', (snap) => {
+                    const isConnected = snap.val() === true;
+                    updateFirebaseStatus(isConnected);
+                    
+                    firebaseConnected = isConnected;
+                });
+                
+                firebaseListeners.push(() => connectedRef.off('value', connUnsubscribe));
+                
+            } catch (error) {
+                console.error('Firebase load error:', error);
+                loadLocalStats();
+                if (!areAppsRendered) {
+                    loadApps();
+                }
+            }
+        }
+
+        // Update all app download counts in UI
+        function updateAllAppDownloadCounts() {
+            const appCards = document.querySelectorAll('.app-card');
+            appCards.forEach(card => {
+                const appId = card.dataset.appId;
+                if (appId) {
+                    const app = appsData.find(a => a.id === appId);
+                    if (app) {
+                        const downloadCountElement = card.querySelector('.download-count');
+                        if (downloadCountElement) {
+                            downloadCountElement.textContent = formatNumber(app.downloads) + ' downloads';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Track download in Firebase
+        async function trackDownloadWithFirebase(appId) {
+            if (!database) {
+                console.warn('Firebase not available');
+                return false;
+            }
+
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) return false;
+
+                // Get current count from Firebase first
+                const appRef = database.ref('downloads/' + appId);
+                const snapshot = await appRef.once('value');
+                const currentData = snapshot.val();
+                
+                let newCount;
+                if (currentData && currentData.count !== undefined) {
+                    newCount = parseInt(currentData.count) + 1;
+                } else {
+                    newCount = 1;
+                }
+                
+                // Update Firebase
+                await appRef.set({
+                    count: newCount,
+                    lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                    timestamp: Date.now(),
+                    appName: app.name,
+                    lastUpdated: Date.now()
+                });
+
+                console.log(`✅ Firebase: ${app.name} download count updated to ${newCount}`);
+                
+                // Update local app data
+                app.downloads = newCount;
+                totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
+                updateStatsUI();
+                
+                // Update the specific app's download count in the UI
+                updateAppDownloadCount(appId, newCount);
+                
+                showToast(`✅ Download tracked!`, 'success');
+                return true;
+
+            } catch (error) {
+                console.error('Firebase tracking error:', error);
+                // If Firebase fails, store in localStorage to sync later
+                trackDownloadLocally(appId);
+                return false;
+            }
+        }
+
+        // Update individual app download count in UI
+        function updateAppDownloadCount(appId, count) {
+            const appCard = document.querySelector(`.app-card[data-app-id="${appId}"]`);
+            if (appCard) {
+                const downloadCountElement = appCard.querySelector('.download-count');
+                if (downloadCountElement) {
+                    downloadCountElement.textContent = formatNumber(count) + ' downloads';
+                }
+            }
+        }
+
+        // Local storage fallback for offline tracking
+        function trackDownloadLocally(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) return;
+
+                // Store pending download in localStorage
+                let pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+                pendingDownloads.push({
+                    appId: appId,
+                    timestamp: Date.now(),
+                    appName: app.name
+                });
+                localStorage.setItem('pendingDownloads', JSON.stringify(pendingDownloads));
+                
+                // Update UI optimistically
+                app.downloads = (app.downloads || 0) + 1;
+                totalDownloads = appsData.reduce((sum, a) => sum + a.downloads, 0);
+                updateStatsUI();
+                updateAppDownloadCount(appId, app.downloads);
+                
+                showToast('📱 Download tracked offline. Will sync when online.', 'info');
+                
+                // Try to sync immediately if online
+                if (navigator.onLine) {
+                    syncPendingDownloads();
+                }
+                
+            } catch (error) {
+                console.error('Local tracking error:', error);
+            }
+        }
+
+        // Sync pending downloads to Firebase
+        async function syncPendingDownloads() {
+            if (!database || !firebaseConnected) return;
+            
+            try {
+                const pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+                if (pendingDownloads.length === 0) return;
+                
+                console.log(`🔄 Syncing ${pendingDownloads.length} pending downloads to Firebase`);
+                
+                // Group downloads by appId
+                const downloadsByApp = {};
+                pendingDownloads.forEach(download => {
+                    if (!downloadsByApp[download.appId]) {
+                        downloadsByApp[download.appId] = 0;
+                    }
+                    downloadsByApp[download.appId]++;
+                });
+                
+                // Sync each app's downloads
+                for (const [appId, count] of Object.entries(downloadsByApp)) {
+                    const appRef = database.ref('downloads/' + appId);
+                    const snapshot = await appRef.once('value');
+                    const currentData = snapshot.val();
+                    
+                    let newCount;
+                    if (currentData && currentData.count !== undefined) {
+                        newCount = parseInt(currentData.count) + count;
+                    } else {
+                        newCount = count;
+                    }
+                    
+                    await appRef.set({
+                        count: newCount,
+                        lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                        timestamp: Date.now(),
+                        appName: appsData.find(a => a.id === appId)?.name || appId,
+                        lastUpdated: Date.now()
+                    });
+                    
+                    console.log(`✅ Synced ${count} downloads for ${appId} to Firebase`);
+                }
+                
+                // Clear pending downloads
+                localStorage.removeItem('pendingDownloads');
+                console.log('✅ All pending downloads synced to Firebase');
+                
+            } catch (error) {
+                console.error('Sync pending downloads error:', error);
+            }
+        }
+
+        // Load local stats as fallback (for offline viewing)
+        function loadLocalStats() {
+            try {
+                // Check if we have any cached Firebase data
+                const cachedFirebaseData = JSON.parse(localStorage.getItem('cachedFirebaseData') || '{}');
+                const cacheTimestamp = localStorage.getItem('cacheTimestamp');
+                
+                // Use cached data if it's less than 1 hour old
+                if (cachedFirebaseData && cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 3600000) {
+                    appsData.forEach(app => {
+                        if (cachedFirebaseData[app.id] && cachedFirebaseData[app.id].count !== undefined) {
+                            app.downloads = parseInt(cachedFirebaseData[app.id].count) || 0;
+                        }
+                    });
+                    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+                    updateStatsUI();
+                    console.log('📱 Loaded cached Firebase data');
+                } else {
+                    // Use default values
+                    appsData.forEach(app => {
+                        app.downloads = 0;
+                    });
+                    totalDownloads = 0;
+                    updateStatsUI();
+                }
+                
+            } catch (error) {
+                console.error('Local stats error:', error);
+            }
+        }
+
+        // Update stats UI
+        function updateStatsUI() {
+            // Calculate total downloads
+            totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+            
+            // Update total downloads display
+            document.getElementById('totalDownloads').textContent = formatNumber(totalDownloads);
+        }
+
+        // ========== CORE APP FUNCTIONS ==========
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Initialize Firebase stats (this will render apps when data is loaded)
+                loadFirebaseStats();
+                
+                // Setup the rest
                 setupNetworkMonitoring();
                 setupEventListeners();
                 initializeScrollAnimations();
-                loadAppsWithFallback();
-                // Defer service worker registration
-                setTimeout(setupPWA, 1000);
+                setupPWA();
+                
+                // Show welcome message
+                setTimeout(() => {
+                    if (firebaseConnected) {
+                        showToast('🔥 Live download tracking enabled!', 'success');
+                    }
+                }, 1000);
+                
             } catch (error) {
+                console.error('Initialization error:', error);
                 handleError(error);
+                // Ensure apps are loaded even if there's an error
+                if (!areAppsRendered) {
+                    loadApps();
+                }
             }
         });
 
@@ -674,38 +1161,56 @@
         }
 
         function initializeScrollAnimations() {
+            // Fallback for browsers without IntersectionObserver
+            if (!('IntersectionObserver' in window)) {
+                document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
+                    el.classList.add('visible');
+                });
+                return;
+            }
+
             observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
                     }
                 });
-            }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+            }, {threshold: 0.1});
 
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-                if (observer) observer.observe(el);
+                observer.observe(el);
             });
         }
 
-        // Clean up observer on page unload
+        // Clean up observers
         window.addEventListener('beforeunload', () => {
             if (observer) {
                 observer.disconnect();
             }
+            // Clean up Firebase listeners
+            firebaseListeners.forEach(unsubscribe => {
+                if (typeof unsubscribe === 'function') {
+                    unsubscribe();
+                }
+            });
         });
 
         // Skeleton Loading Screens
         function showSkeletonLoading() {
             const appGrid = document.getElementById('appGrid');
-            appGrid.innerHTML = `
-                <div class="skeleton-card fade-in">
+            appGrid.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'skeleton-card fade-in';
+                skeleton.innerHTML = `
                     <div class="skeleton skeleton-icon"></div>
                     <div class="skeleton skeleton-text short"></div>
                     <div class="skeleton skeleton-text medium"></div>
                     <div class="skeleton skeleton-text medium"></div>
                     <div class="skeleton skeleton-button"></div>
-                </div>
-            `.repeat(6);
+                `;
+                appGrid.appendChild(skeleton);
+            }
 
             setTimeout(() => {
                 appGrid.querySelectorAll('.skeleton-card').forEach(card => {
@@ -714,41 +1219,10 @@
             }, 100);
         }
 
-        // Fetch with timeout helper
-        async function fetchWithTimeout(resource, options = {}) {
-            const { timeout = CONFIG.FETCH_TIMEOUT } = options;
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeout);
-            try {
-                const response = await fetch(resource, { ...options, signal: controller.signal });
-                return response;
-            } finally {
-                clearTimeout(id);
-            }
-        }
-
-        // Error Handling & Offline Support
-        async function loadAppsWithFallback() {
-            try {
-                showSkeletonLoading();
-
-                if (!navigator.onLine) {
-                    throw new AppError('No internet connection', 'warning');
-                }
-
-                const manifestAvailable = await checkResourceAvailability('https://OofMini.github.io/Minis-IPA-Repo/sidestore.json?' + timestamp);
-                if (!manifestAvailable) {
-                    throw new AppError('Repository temporarily unavailable', 'warning');
-                }
-
-                // Simulate async loading
-                await new Promise(resolve => setTimeout(resolve, CONFIG.SKELETON_DELAY));
-                renderAppGrid();
-
-            } catch (error) {
-                console.error('Failed to load apps:', error);
-                showErrorState(error.message);
-            }
+        // Load apps function
+        function loadApps() {
+            renderAppGrid();
+            areAppsRendered = true;
         }
 
         function showErrorState(message) {
@@ -758,35 +1232,23 @@
                     <div class="error-emoji" aria-hidden="true">😕</div>
                     <h3 class="error-title">Unable to Load Apps</h3>
                     <p class="error-message">${escapeHtml(message)}</p>
-                    <button class="download-btn" onclick="loadAppsWithFallback()" style="background: var(--info-color);">
+                    <button class="download-btn" onclick="loadApps()" style="background: var(--info-color);">
                         🔄 Retry
                     </button>
                 </div>
             `;
+            
             setTimeout(() => {
                 const element = appGrid.querySelector('.fade-in');
                 if (element && observer) observer.observe(element);
             }, 100);
         }
 
-        async function checkResourceAvailability(url) {
-            try {
-                const response = await fetchWithTimeout(url, {
-                    method: 'HEAD',
-                    cache: 'no-cache',
-                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
-                    timeout: 5000
-                });
-                return response.ok;
-            } catch (error) {
-                console.warn(`Resource unavailable: ${url}`, error);
-                return false;
-            }
-        }
-
         function setupNetworkMonitoring() {
             window.addEventListener('online', () => {
                 showToast('Connection restored', 'success');
+                // Try to sync pending downloads
+                setTimeout(syncPendingDownloads, 1000);
             });
 
             window.addEventListener('offline', () => {
@@ -800,14 +1262,22 @@
 
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
-            const filteredApps = appsData.filter(app =>
-                app.name.toLowerCase().includes(searchTerm) ||
-                app.description.toLowerCase().includes(searchTerm) ||
-                app.developer.toLowerCase().includes(searchTerm)
-            );
+            const filteredApps = appsData.filter(app => {
+                if (!searchTerm) return true;
+                const term = searchTerm.toLowerCase();
+                return app.name.toLowerCase().includes(term) ||
+                       app.description.toLowerCase().includes(term) ||
+                       app.developer.toLowerCase().includes(term) ||
+                       app.category.toLowerCase().includes(term);
+            });
 
             if (filteredApps.length === 0) {
-                appGrid.innerHTML = `<div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7"><h3>No apps found</h3><p>Try different search terms</p></div>`;
+                appGrid.innerHTML = `
+                    <div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7">
+                        <h3>No apps found</h3>
+                        <p>Try different search terms</p>
+                    </div>
+                `;
                 setTimeout(() => {
                     const element = appGrid.querySelector('.fade-in');
                     if (element && observer) observer.observe(element);
@@ -822,19 +1292,25 @@
                 const safeDescription = escapeHtml(app.description);
                 const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
                 
+                // Get download count (use current value from appsData)
+                const downloadCount = app.downloads || 0;
+                const countDisplay = formatNumber(downloadCount) + ' downloads';
+                
                 return `
-                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}">
+                <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
                     <div class="app-icon-container">
                         <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
-                             onerror="this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
+                             onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
                         <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
-                        <span class="download-count" aria-label="Download count">${formatNumber(app.downloads)} downloads</span>
+                        <span class="download-count" aria-label="Download count">${countDisplay}</span>
                     </div>
                     <div class="app-card-content">
                         <h3>${safeName}</h3>
+                        <p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>
                         <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                        <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
                         <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
                             ⬇️ Download IPA
                         </button>
@@ -848,6 +1324,44 @@
                     if (observer) observer.observe(card);
                 });
             }, 100);
+        }
+
+        // Main download handler
+        async function trackDownload(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) {
+                    throw new AppError('App not found', 'error');
+                }
+
+                // Validate URL before opening
+                if (!isValidDownloadUrl(app.downloadUrl)) {
+                    throw new AppError('Invalid download URL', 'error');
+                }
+
+                // Track the download
+                let trackedSuccessfully = false;
+                if (navigator.onLine && database) {
+                    trackedSuccessfully = await trackDownloadWithFirebase(appId);
+                } else {
+                    trackDownloadLocally(appId);
+                    trackedSuccessfully = true;
+                }
+
+                // Open download after tracking (if tracking was attempted)
+                if (trackedSuccessfully) {
+                    setTimeout(() => {
+                        window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                    }, 300);
+                } else {
+                    // If tracking failed, still open the download but show warning
+                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+                    showToast('⚠️ Download opened but tracking failed', 'warning');
+                }
+
+            } catch (error) {
+                handleError(error);
+            }
         }
 
         // Consolidated add function
@@ -875,40 +1389,26 @@
             }
         }
 
-        // Download handler with security validation
-        function trackDownload(appId) {
-            try {
-                const app = appsData.find(a => a.id === appId);
-                if (!app) {
-                    throw new AppError('App not found', 'error');
-                }
-
-                // Validate URL before opening
-                if (!isValidDownloadUrl(app.downloadUrl)) {
-                    throw new AppError('Invalid download URL', 'error');
-                }
-
-                if (!navigator.onLine) {
-                    showToast('You are offline. Download link copied to clipboard.', 'warning');
-                    copyToClipboard(app.downloadUrl);
-                    return;
-                }
-
-                showToast(`Downloading ${app.name}...`);
-                setTimeout(() => {
-                    // Security: Use noopener and noreferrer
-                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
-                }, 500);
-
-            } catch (error) {
-                handleError(error);
-            }
-        }
-
         function formatNumber(num) {
+            num = parseInt(num) || 0;
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
+        }
+
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+            return date.toLocaleDateString();
         }
 
         function showToast(message, type = 'info') {
@@ -928,20 +1428,18 @@
         // PWA Features
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                // Use relative path for GitHub Pages compatibility
-                navigator.serviceWorker.register('./sw.js?' + timestamp)
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
                     .then((registration) => {
-                        console.log('SW registered: ', registration);
+                        console.log('Service Worker registered successfully:', registration.scope);
                     })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
                     });
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                // Show a subtle install toast rather than forcing
                 setTimeout(showInstallPrompt, 3000);
             });
         }
@@ -950,7 +1448,6 @@
             if (!deferredPrompt) return;
 
             const toast = document.getElementById('toast');
-            // Security: Don't use innerHTML
             toast.textContent = 'Install Mini\'s IPA Repo? ';
             
             const installButton = document.createElement('button');
@@ -969,6 +1466,7 @@
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         console.log('User accepted install');
+                        showToast('App installed successfully!', 'success');
                     }
                     deferredPrompt = null;
                 });
@@ -1004,7 +1502,6 @@
         function setupEventListeners() {
             const searchBox = document.getElementById('searchBox');
             if (searchBox) {
-                // Debounced search with cache
                 searchBox.addEventListener('input', (e) => {
                     clearTimeout(searchTimeout);
                     const value = e.target.value;
@@ -1013,21 +1510,67 @@
                         renderAppGrid();
                     }, CONFIG.SEARCH_DEBOUNCE);
                 });
+                
+                // Add keyboard shortcut for search (press / to focus)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === '/' && document.activeElement !== searchBox) {
+                        e.preventDefault();
+                        searchBox.focus();
+                    }
+                });
+            }
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.activeElement === searchBox) {
+                    searchBox.blur();
+                }
+            });
+        }
+
+        // Privacy info modal
+        function showPrivacyInfo() {
+            const privacyMessage = `
+🔒 Privacy Policy
+
+• Anonymous download tracking only
+• No personal data collected
+• No analytics or cookies
+• Firebase stores only download counts
+
+• User IDs are randomly generated
+• No IP address storage
+• Data is public and aggregated
+
+For questions: GitHub Issues
+`;
+            
+            showToast(privacyMessage, 'info');
+        }
+
+        // Reset local data
+        function resetLocalData() {
+            if (confirm('Clear all local data and cache?')) {
+                // Keep the user ID and pending downloads
+                const userId = localStorage.getItem('userId');
+                const pendingDownloads = localStorage.getItem('pendingDownloads');
+                localStorage.clear();
+                if (userId) {
+                    localStorage.setItem('userId', userId);
+                }
+                if (pendingDownloads) {
+                    localStorage.setItem('pendingDownloads', pendingDownloads);
+                }
+                sessionStorage.clear();
+                location.reload();
+                showToast('Local cache cleared (pending downloads preserved)', 'success');
             }
         }
 
-        // Force reload to prevent caching (with browser compatibility)
-        window.addEventListener('load', function() {
-            const perf = window.performance;
-            if (perf && perf.navigation && perf.navigation.type === 1) {
-                // Page was reloaded
-                try {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                } catch (e) {
-                    // Ignore storage errors
-                }
-            }
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            // Update last seen
+            localStorage.setItem('lastUpdated', Date.now().toString());
         });
     </script>
 

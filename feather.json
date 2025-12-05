@@ -86,16 +86,16 @@
       "versions": [
         {
           "version": "8.47.3",
-          "date": "2025-12-02",
-          "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate_2.3.1.ipa",
+          "date": "2025-12-04",
+          "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
           "size": 257425408,
           "localizedDescription": "Premium unlocked, background playback, no ads"
         }
       ],
       "version": "8.47.3",
-      "versionDate": "2025-12-02",
+      "versionDate": "2025-12-04",
       "size": 257425408,
-      "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate_2.3.1.ipa",
+      "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
       "appPermissions": {
         "background-audio": "Required for background music playback",
         "media-access": "Needed for audio playback and library access"
@@ -107,7 +107,7 @@
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
       "subtitle": "Tweaked Twitter/X",
-      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.43.1, NeoFreeBird v5.2.",
+      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.45, NeoFreeBird v5.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "tintColor": "1DA1F2",
       "screenshotURLs": [
@@ -117,15 +117,15 @@
       ],
       "versions": [
         {
-          "version": "11.43.1",
-          "date": "2025-11-28",
+          "version": "11.45",
+          "date": "2025-12-04",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
         }
       ],
-      "version": "11.43.1",
-      "versionDate": "2025-11-28",
+      "version": "11.45",
+      "versionDate": "2025-12-04",
       "size": 142816051,
       "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
       "appPermissions": {

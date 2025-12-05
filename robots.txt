@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /apps/
+Sitemap: https://oofmini.github.io/Minis-IPA-Repo/sitemap.xml
+
+User-agent: GPTBot
+Disallow: /

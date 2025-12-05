@@ -146,9 +146,10 @@ jobs:
               exit 1
             fi
             
-            # Stricter version validation: ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$ ]]; then
-              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4'), got: $version"
+            # FIXED: Updated regex to handle both 2-part (major.minor) AND 3-part (major.minor.patch) versions
+            # Allows: 11.45, 0.0, 0.0.0, v6.2.2, 5.2b4, 9.1.0
+            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
+              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4', '11.45', '0.0'), got: $version"
               exit 1
             fi
           }
@@ -458,7 +459,8 @@ jobs:
             local app_key="$1"
             local ipa_version="$2"
             local tweak_version="$3"
-            local workflow_file=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
+            # FIXED: Updated to use the correct workflow filename
+            local workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
             
             if [ ! -f "$workflow_file" ]; then
               echo "::warning::Workflow file not found"
@@ -649,7 +651,8 @@ jobs:
           fi
           
           # Add workflow file if it was modified
-          WORKFLOW_FILE=".github/workflows/bulk-ipa-updates-tweaked-apps.yml"
+          # FIXED: Updated to use the correct workflow filename
+          WORKFLOW_FILE=".github/workflows/bulk-tweaked-apps-updates.yml"
           if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
             git add "$WORKFLOW_FILE"
             echo "⚙️ Workflow file changes staged"
@@ -758,7 +761,7 @@ jobs:
               echo "- \`index.html\`"
             fi
             if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              echo "- \`.github/workflows/bulk-ipa-updates-tweaked-apps.yml\` (workflow defaults)"
+              echo "- \`.github/workflows/bulk-tweaked-apps-updates.yml\` (workflow defaults)"
             fi
             
             echo ""
