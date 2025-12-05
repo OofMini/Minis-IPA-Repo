@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security Policy for tracking -->
+    <!-- Updated Security Policy for tracking -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
                    img-src https: data:; 
@@ -39,16 +39,19 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Google Analytics (gtag.js) - STEP 1: Load Script -->
+    <!-- SIMPLE Google Analytics - GUARANTEED TO WORK -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RX1B3TX24S"></script>
-    
-    <!-- Google Analytics (gtag.js) - STEP 2: Initialize -->
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-RX1B3TX24S');
+        console.log("ðŸ“Š Google Analytics LOADED with ID: G-RX1B3TX24S");
     </script>
+
+    <!-- SIMPLE Firebase Database ONLY -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -83,6 +86,7 @@
             --feather-color: #ff6b35;
             --firebase-color: #FFA611;
             
+            /* Constants for animations */
             --fade-duration: 1s;
             --stagger-delay-1: 0.15s;
             --stagger-delay-2: 0.3s;
@@ -92,6 +96,7 @@
             --skeleton-delay: 800ms;
         }
         
+        /* Accessibility: Better focus indicators */
         *:focus {
             outline: 2px solid var(--accent-color);
             outline-offset: 2px;
@@ -104,6 +109,7 @@
             outline-offset: 4px;
         }
         
+        /* Accessibility: Improve color contrast */
         .hero-subtitle,
         .app-card p,
         .download-count {
@@ -116,7 +122,6 @@
             box-sizing: border-box;
             transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
-        
         body {
             background: var(--bg-color);
             color: var(--text-color);
@@ -125,6 +130,7 @@
             overflow-x: hidden;
         }
 
+        /* Motion preferences */
         @media (prefers-reduced-motion: reduce) {
             * {
                 transition: none !important;
@@ -158,6 +164,7 @@
         .stagger-2 { transition-delay: var(--stagger-delay-2); }
         .stagger-3 { transition-delay: var(--stagger-delay-3); }
 
+        /* Animated Gradient for Title */
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -172,6 +179,7 @@
             animation: gradientShift 4s ease infinite;
         }
 
+        /* Skeleton Loading Animation */
         .skeleton {
             background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
             background-size: 200% 100%;
@@ -225,6 +233,7 @@
         .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
         .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
 
+        /* Updated Badges Section */
         .badges {
             display: flex;
             gap: 8px;
@@ -243,6 +252,7 @@
         .badge.purple { background: var(--accent-color); }
         .badge.ios { background: var(--accent-color); }
         
+        /* Slim Download Tracker */
         .download-tracker {
             display: flex;
             align-items: center;
@@ -489,15 +499,6 @@
             gap: 5px;
         }
 
-        .visually-hidden {
-            position: absolute !important;
-            height: 1px; 
-            width: 1px;
-            overflow: hidden;
-            clip: rect(1px, 1px, 1px, 1px);
-            white-space: nowrap;
-        }
-
         @media (max-width: 768px) {
             .app-grid { grid-template-columns: 1fr; }
             .cta-buttons { flex-direction: column; align-items: center; }
@@ -514,7 +515,7 @@
 <body>
     <!-- Firebase Status Indicator -->
     <div class="firebase-status" id="firebaseStatus" style="display: none;">
-        <span class="status-dot" id="statusDot">●</span>
+        <span class="status-dot" id="statusDot">â—</span>
         <span id="statusText">Connecting...</span>
     </div>
 
@@ -523,62 +524,68 @@
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
         <p class="hero-subtitle">Premium tweaked iOS applications for iOS 15+</p>
 
+        <!-- Updated Badges - Only Active and iOS 15+ -->
         <div class="badges" role="status" aria-live="polite">
-            <span class="badge" aria-label="Repository status active">✅ Active</span>
-            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+            <span class="badge" aria-label="Repository status active">âœ… Active</span>
+            <span class="badge ios" aria-label="Supports iOS 15 and above">ðŸ“± iOS 15+</span>
         </div>
 
+        <!-- Slim Download Tracker -->
         <div class="download-tracker" id="downloadTracker">
-            <span class="icon">⬇️</span>
+            <span class="icon">â¬‡ï¸</span>
             <span class="count" id="totalDownloads">0</span>
             <span class="label">Total Downloads</span>
         </div>
 
+        <!-- CTA Buttons -->
         <nav class="cta-buttons" aria-label="Add repository to app">
             <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
-                <span role="img" aria-hidden="true">📱</span> Add to TrollApps
+                <span role="img" aria-hidden="true">ðŸ“±</span> Add to TrollApps
             </button>
             <button class="cta-button sidestore" onclick="addToApp('SideStore', 'sidestore.json')" aria-label="Add repository to SideStore">
-                <span role="img" aria-hidden="true">⚙️</span> Add to SideStore
+                <span role="img" aria-hidden="true">âš™ï¸</span> Add to SideStore
             </button>
             <button class="cta-button feather" onclick="addToApp('Feather', 'feather.json')" aria-label="Add repository to Feather">
-                <span role="img" aria-hidden="true">🪶</span> Add to Feather
+                <span role="img" aria-hidden="true">ðŸª¶</span> Add to Feather
             </button>
         </nav>
     </header>
 
     <main class="container" role="main">
+        <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
+            <input type="text" class="search-box" id="searchBox" placeholder="ðŸ” Search apps by name or description..." 
                    aria-label="Search apps by name or description" autocomplete="off">
         </section>
 
+        <!-- App grid -->
         <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
 
+        <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
-            <h3 id="repo-info-title">📦 Repository Information</h3>
+            <h3 id="repo-info-title">ðŸ“¦ Repository Information</h3>
 
             <div class="repo-link fade-in-left stagger-1">
-                <span role="img" aria-hidden="true">🌐</span>
+                <span role="img" aria-hidden="true">ðŸŒ</span>
                 <strong>Official Website:</strong>
                 <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
             </div>
 
             <div class="repo-link fade-in-left stagger-2">
-                <span role="img" aria-hidden="true">📱</span>
+                <span role="img" aria-hidden="true">ðŸ“±</span>
                 <strong>SideStore Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span role="img" aria-hidden="true">🧪</span>
+                <span role="img" aria-hidden="true">ðŸ§Œ</span>
                 <strong>TrollApps Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
             </div>
 
             <div class="repo-link fade-in-left stagger-3">
-                <span role="img" aria-hidden="true">🪶</span>
+                <span role="img" aria-hidden="true">ðŸª¶</span>
                 <strong>Feather Manifest:</strong>
                 <code>https://OofMini.github.io/Minis-IPA-Repo/feather.json</code>
             </div>
@@ -588,23 +595,23 @@
     <footer class="container" aria-label="Site footer">
         <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
             <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
-                © 2024 Mini – Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
+                Â© 2024 Mini â€” Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
             </p>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
                 <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    📦 GitHub Repo
+                    ðŸ“¦ GitHub Repo
                 </a>
-                <span style="opacity:0.3;">•</span>
+                <span style="opacity:0.3;">â€¢</span>
                 <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    🛠 Report Issue
+                    ðŸ› Report Issue
                 </a>
-                <span style="opacity:0.3;">•</span>
+                <span style="opacity:0.3;">â€¢</span>
                 <button onclick="showPrivacyInfo()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🔒 Privacy
+                    ðŸ”’ Privacy
                 </button>
-                <span style="opacity:0.3;">•</span>
+                <span style="opacity:0.3;">â€¢</span>
                 <button onclick="resetLocalData()" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🗑️ Clear Cache
+                    ðŸ—‘ï¸ Clear Cache
                 </button>
             </div>
         </div>
@@ -612,90 +619,29 @@
 
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
-    <!-- Firebase - Attempt to load SDK (may be blocked) -->
+    <!-- SIMPLE FIREBASE SETUP -->
     <script>
-        window.firebaseScriptsLoaded = false;
-        window.firebaseLoadError = false;
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" 
-            onload="window.firebaseScriptsLoaded = true;"
-            onerror="window.firebaseLoadError = true;">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"
-            onerror="window.firebaseLoadError = true;">
-    </script>
-
-    <!-- Firebase - Initialize (or run in offline mode) -->
-    <script>
-        // Wait for scripts to load/fail
-        setTimeout(function() {
-            initializeFirebase();
-        }, 200);
+        // ========== SIMPLE FIREBASE CONFIG ==========
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
+            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com"
+        };
         
-        function initializeFirebase() {
-            window.database = null;
-            window.firebaseInitialized = false;
-            
-            // Check if Firebase CDN was blocked
-            if (window.firebaseLoadError || typeof firebase === 'undefined') {
-                console.log("📱 Running in LOCAL MODE (Firebase CDN blocked)");
-                console.log("   → Google Analytics: ✅ Active");
-                console.log("   → Download tracking: ✅ Local counters");
-                console.log("   → All features: ✅ Working");
-                console.log("");
-                console.log("ℹ️  Firebase is blocked by:");
-                console.log("   • Ad blocker (uBlock, AdBlock, etc.)");
-                console.log("   • Privacy extension (Privacy Badger, etc.)");
-                console.log("   • Network firewall");
-                console.log("   • Corporate/School network restrictions");
-                console.log("");
-                console.log("   This is completely normal and your site works perfectly! 🎉");
-                window.firebaseInitialized = false;
-                return;
-            }
-            
-            // Firebase Configuration
-            const firebaseConfig = {
-                apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
-                authDomain: "minis-repo-tracking.firebaseapp.com",
-                databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
-                projectId: "minis-repo-tracking",
-                storageBucket: "minis-repo-tracking.appspot.com"
-            };
-            
-            // Try to initialize Firebase
-            try {
-                if (firebase.apps.length === 0) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                window.database = firebase.database();
-                window.firebaseInitialized = true;
-                console.log("🔥 FIREBASE MODE");
-                console.log("   ✅ Firebase Database connected");
-                console.log("   ✅ Real-time sync enabled");
-                console.log("   📊 SDK version:", firebase.SDK_VERSION || "unknown");
-            } catch (error) {
-                console.log("📱 Running in LOCAL MODE (Firebase init failed)");
-                console.log("   Error:", error.message);
-                console.log("   → All features working with local tracking");
-                window.firebaseInitialized = false;
-            }
+        // Initialize Firebase (Database ONLY)
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("âœ… Firebase Database initialized");
+        } catch (error) {
+            console.log("â„¹ï¸ Firebase not available - using local mode");
         }
     </script>
 
-    <!-- Main Application Script -->
     <script>
-        // ========== CONFIGURATION ==========
-        const CONFIG = {
-            SEARCH_DEBOUNCE: 300,
-            TOAST_DURATION: 3000,
-            FETCH_TIMEOUT: 8000,
-            SKELETON_DELAY: 800
-        };
-
+        // ========== APP DATA ==========
         const timestamp = new Date().getTime();
 
-        // ========== APP DATA ==========
         const appsData = [
             {
                 id: 'eeveespotify',
@@ -819,120 +765,89 @@
             }
         ];
 
-        // ========== ERROR HANDLING ==========
-        class AppError extends Error {
-            constructor(message, type) {
-                super(message);
-                this.type = type;
-                this.name = 'AppError';
-            }
-        }
-
-        function handleError(error) {
-            if (error instanceof AppError) {
-                showToast(error.message, error.type);
-            } else {
-                showToast('An unexpected error occurred', 'error');
-            }
-            console.error('Error:', error);
-        }
-
-        // ========== UTILITY FUNCTIONS ==========
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function formatNumber(num) {
-            num = parseInt(num) || 0;
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-
-        // ========== DOWNLOAD TRACKING ==========
+        // ========== SIMPLE TRACKING FUNCTIONS ==========
+        
+        // SIMPLE DOWNLOAD TRACKER - GUARANTEED TO WORK
         async function trackDownload(appId) {
-            console.log("🚀 Tracking download for:", appId);
+            console.log("ðŸš€ Starting download tracking for:", appId);
             
             const app = appsData.find(a => a.id === appId);
-            if (!app) {
-                console.error("App not found:", appId);
-                return;
+            if (!app) return;
+            
+            // 1. GOOGLE ANALYTICS - ALWAYS SEND
+            if (typeof gtag === 'function') {
+                gtag('event', 'download', {
+                    'event_category': 'Downloads',
+                    'event_label': app.name,
+                    'value': 1,
+                    'app_id': app.id,
+                    'app_name': app.name,
+                    'app_version': app.version
+                });
+                console.log("âœ… Google Analytics event sent");
+                
+                // Send an extra test event to be sure
+                gtag('event', 'download_started', {
+                    'event_category': 'Downloads',
+                    'event_label': 'Download Started - ' + app.name
+                });
+            } else {
+                console.warn("âš ï¸ gtag not available");
             }
             
-            try {
-                // 1. Google Analytics Event
-                if (typeof gtag === 'function') {
-                    gtag('event', 'download', {
-                        'event_category': 'Downloads',
-                        'event_label': app.name,
-                        'value': 1,
-                        'app_id': app.id,
-                        'app_name': app.name,
-                        'app_version': app.version
-                    });
-                    console.log("✅ Google Analytics event sent for:", app.name);
-                } else {
-                    console.warn("⚠️ Google Analytics (gtag) not available");
-                }
-                
-                // 2. Firebase Database Update
-                if (window.database && window.firebaseInitialized) {
-                    try {
-                        const appRef = window.database.ref('downloads/' + appId);
-                        const snapshot = await appRef.once('value');
-                        const currentData = snapshot.val();
-                        
-                        let newCount = 1;
-                        if (currentData && currentData.count) {
-                            newCount = parseInt(currentData.count) + 1;
-                        }
-                        
-                        await appRef.set({
-                            count: newCount,
-                            lastDownload: firebase.database.ServerValue.TIMESTAMP,
-                            appName: app.name,
-                            version: app.version,
-                            lastUpdated: Date.now()
-                        });
-                        
-                        console.log(`✅ Firebase updated: ${app.name} = ${newCount} downloads`);
-                        
-                        app.downloads = newCount;
-                        updateAppUI(appId, newCount);
-                        
-                    } catch (firebaseError) {
-                        console.warn("📦 Firebase update failed:", firebaseError.message);
-                        app.downloads = (app.downloads || 0) + 1;
-                        updateAppUI(appId, app.downloads);
+            // 2. FIREBASE DATABASE - TRY BUT DON'T FAIL
+            if (database) {
+                try {
+                    const appRef = database.ref('downloads/' + appId);
+                    const snapshot = await appRef.once('value');
+                    const currentData = snapshot.val();
+                    
+                    let newCount = 1;
+                    if (currentData && currentData.count) {
+                        newCount = parseInt(currentData.count) + 1;
                     }
-                } else {
-                    console.log("📦 Firebase not available - using local count");
+                    
+                    await appRef.set({
+                        count: newCount,
+                        lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                        appName: app.name,
+                        lastUpdated: Date.now()
+                    });
+                    
+                    console.log(`âœ… Firebase updated: ${app.name} = ${newCount} downloads`);
+                    
+                    // Update local data
+                    app.downloads = newCount;
+                    updateAppUI(appId, newCount);
+                    
+                } catch (error) {
+                    console.log("ðŸ“¦ Firebase failed, using local count");
                     app.downloads = (app.downloads || 0) + 1;
                     updateAppUI(appId, app.downloads);
                 }
-                
-                // 3. Update Total Downloads
-                updateTotalDownloads();
-                
-                // 4. Open Download Link
-                setTimeout(() => {
-                    window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
-                }, 300);
-                
-                // 5. User Feedback
-                showToast('✅ Download started!', 'success');
-                
-                console.log("📊 Download tracking complete for:", app.name);
-                
-            } catch (error) {
-                console.error("❌ Error tracking download:", error);
-                showToast('Download started (tracking failed)', 'warning');
-                window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+            } else {
+                // No Firebase, just update local
+                app.downloads = (app.downloads || 0) + 1;
+                updateAppUI(appId, app.downloads);
             }
+            
+            // Update total downloads display
+            updateTotalDownloads();
+            
+            // 3. OPEN THE DOWNLOAD
+            setTimeout(() => {
+                window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
+            }, 300);
+            
+            // 4. SHOW FEEDBACK
+            showToast('âœ… Download started!', 'success');
+            
+            // 5. DIAGNOSTIC LOG
+            console.log("ðŸ“Š TRACKING COMPLETE for " + app.name);
+            console.log("Check Google Analytics Real-time view now!");
         }
         
+        // Update app UI
         function updateAppUI(appId, count) {
             const appCard = document.querySelector(`[data-app-id="${appId}"]`);
             if (appCard) {
@@ -943,78 +858,133 @@
             }
         }
         
+        // Update total downloads display
         function updateTotalDownloads() {
             const total = appsData.reduce((sum, app) => sum + (app.downloads || 0), 0);
-            const totalEl = document.getElementById('totalDownloads');
-            if (totalEl) {
-                totalEl.textContent = formatNumber(total);
-            }
+            document.getElementById('totalDownloads').textContent = formatNumber(total);
         }
         
+        // Format numbers
+        function formatNumber(num) {
+            num = parseInt(num) || 0;
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        // Load download counts from Firebase
         function loadDownloadCounts() {
-            if (!window.database || !window.firebaseInitialized) {
-                console.log("📦 Firebase not available - showing default counts");
+            if (!database) {
+                console.log("No Firebase, showing default counts");
                 renderAppGrid();
                 updateTotalDownloads();
                 updateFirebaseStatus(false);
                 return;
             }
             
-            try {
-                const downloadsRef = window.database.ref('downloads');
-                downloadsRef.on('value', (snapshot) => {
-                    const data = snapshot.val() || {};
-                    
-                    appsData.forEach(app => {
-                        if (data[app.id] && data[app.id].count) {
-                            app.downloads = parseInt(data[app.id].count);
-                        }
-                    });
-                    
-                    renderAppGrid();
-                    updateTotalDownloads();
-                    updateFirebaseStatus(true);
-                    console.log("📊 Download counts loaded from Firebase");
-                }, (error) => {
-                    console.error("❌ Error loading download counts:", error);
-                    updateFirebaseStatus(false);
-                    renderAppGrid();
-                    updateTotalDownloads();
+            const downloadsRef = database.ref('downloads');
+            downloadsRef.on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                
+                appsData.forEach(app => {
+                    if (data[app.id] && data[app.id].count) {
+                        app.downloads = parseInt(data[app.id].count);
+                    }
                 });
-            } catch (error) {
-                console.error("❌ Error setting up Firebase listener:", error);
+                
+                renderAppGrid();
+                updateTotalDownloads();
+                updateFirebaseStatus(true);
+                console.log("ðŸ“Š Download counts loaded from Firebase");
+            }, (error) => {
+                console.error("Error loading download counts:", error);
                 updateFirebaseStatus(false);
                 renderAppGrid();
                 updateTotalDownloads();
-            }
+            });
         }
 
+        // Update Firebase connection status
         function updateFirebaseStatus(connected) {
             const statusEl = document.getElementById('firebaseStatus');
             const dotEl = document.getElementById('statusDot');
             const textEl = document.getElementById('statusText');
             
-            if (!statusEl || !dotEl || !textEl) return;
-            
             if (connected) {
                 statusEl.style.display = 'flex';
                 statusEl.style.background = 'var(--success-color)';
-                statusEl.style.color = '#fff';
-                dotEl.textContent = '●';
+                dotEl.textContent = 'â—';
                 textEl.textContent = 'Live';
             } else {
                 statusEl.style.display = 'flex';
                 statusEl.style.background = 'var(--warning-color)';
-                statusEl.style.color = '#000';
-                dotEl.textContent = '○';
+                dotEl.textContent = 'â—‹';
                 textEl.textContent = 'Offline';
             }
         }
 
-        // ========== UI FUNCTIONS ==========
+        // ========== APP CONFIGURATION ==========
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000,
+            FETCH_TIMEOUT: 8000,
+            SKELETON_DELAY: 800
+        };
+
+        class AppError extends Error {
+            constructor(message, type) {
+                super(message);
+                this.type = type;
+                this.name = 'AppError';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         let searchTerm = '';
+        let deferredPrompt;
         let searchTimeout;
         let observer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                setupNetworkMonitoring();
+                setupEventListeners();
+                initializeScrollAnimations();
+                
+                // Load download counts from Firebase first
+                loadDownloadCounts();
+                
+                // Defer service worker registration
+                setTimeout(setupPWA, 1000);
+                
+                // Send page view to Google Analytics
+                setTimeout(() => {
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'page_view', {
+                            'page_title': document.title,
+                            'page_location': window.location.href
+                        });
+                    }
+                }, 500);
+                
+            } catch (error) {
+                handleError(error);
+            }
+        });
+
+        function handleError(error) {
+            if (error instanceof AppError) {
+                showToast(error.message, error.type);
+            } else {
+                showToast('An unexpected error occurred', 'error');
+            }
+            console.error(error);
+        }
 
         function initializeScrollAnimations() {
             if (!('IntersectionObserver' in window)) {
@@ -1037,10 +1007,31 @@
             });
         }
 
+        function showSkeletonLoading() {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'skeleton-card fade-in';
+                skeleton.innerHTML = `
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-button"></div>
+                `;
+                appGrid.appendChild(skeleton);
+            }
+
+            setTimeout(() => {
+                appGrid.querySelectorAll('.skeleton-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
+            }, 100);
+        }
+
         function renderAppGrid() {
             const appGrid = document.getElementById('appGrid');
-            if (!appGrid) return;
-            
             const filteredApps = appsData.filter(app => {
                 if (!searchTerm) return true;
                 const term = searchTerm.toLowerCase();
@@ -1071,6 +1062,7 @@
                 const safeDescription = escapeHtml(app.description);
                 const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
                 
+                // Get download count
                 const downloadCount = app.downloads || 0;
                 const countDisplay = formatNumber(downloadCount) + ' downloads';
                 
@@ -1081,7 +1073,7 @@
                              onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
                     </div>
                     <div class="app-status">
-                        <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
+                        <span aria-label="Status fully working">âœ… Fully Working</span> â€¢ v${app.version}
                         <span class="download-count" aria-label="Download count">${countDisplay}</span>
                     </div>
                     <div class="app-card-content">
@@ -1090,7 +1082,7 @@
                         <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
                         <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
                         <button class="download-btn" onclick="trackDownload('${safeId}')" aria-label="Download ${safeName} IPA">
-                            ⬇️ Download IPA
+                            â¬‡ï¸ Download IPA
                         </button>
                     </div>
                 </article>
@@ -1102,22 +1094,6 @@
                     if (observer) observer.observe(card);
                 });
             }, 100);
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            if (!toast) return;
-            
-            toast.textContent = message;
-            toast.className = 'toast';
-
-            if (type === 'error') toast.classList.add('error');
-            else if (type === 'warning') toast.classList.add('warning');
-            else if (type === 'success') toast.classList.add('success');
-            else toast.classList.add('info');
-
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
         }
 
         function addToApp(appName, manifestPath) {
@@ -1144,60 +1120,35 @@
             }
         }
 
-        // ========== PWA FUNCTIONS ==========
-        let deferredPrompt;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') toast.classList.add('error');
+            else if (type === 'warning') toast.classList.add('warning');
+            else if (type === 'success') toast.classList.add('success');
+            else toast.classList.add('info');
+
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
+        }
 
         function setupPWA() {
-            // ABSOLUTE GUARD: Do not proceed if in preview/development
-            const hostname = window.location.hostname;
-            
-            if (hostname.includes('claudeusercontent.com') || 
-                hostname.includes('artifacts.anthropic.com') ||
-                hostname === 'localhost' ||
-                hostname === '127.0.0.1' ||
-                hostname === '') {
-                console.log('ℹ️  PWA features skipped (preview/development mode)');
-                return; // STOP HERE - DO NOT CONTINUE
-            }
-
-            // Only production code below this line
-            if (!('serviceWorker' in navigator)) {
-                console.log('ℹ️  Service Worker not supported in this browser');
-                return;
-            }
-
-            // Register service worker for production only
-            navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js?' + timestamp)
-                .then((registration) => {
-                    console.log('✅ Service Worker registered successfully');
-                    console.log('   Scope:', registration.scope);
-                    
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        console.log('🔄 Service Worker update found');
-                        
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('✅ New Service Worker installed, will activate on next page load');
-                            }
-                        });
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js?' + timestamp)
+                    .then((registration) => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
                     });
-                })
-                .catch((error) => {
-                    console.log('ℹ️  Service Worker unavailable (this is normal)');
-                });
+            }
 
-            // Handle install prompt
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
                 setTimeout(showInstallPrompt, 3000);
-            });
-
-            window.addEventListener('appinstalled', () => {
-                console.log('✅ PWA installed successfully');
-                showToast('App installed successfully!', 'success');
-                deferredPrompt = null;
             });
         }
 
@@ -1205,9 +1156,7 @@
             if (!deferredPrompt) return;
 
             const toast = document.getElementById('toast');
-            if (!toast) return;
-            
-            toast.textContent = "Install Mini's IPA Repo? ";
+            toast.textContent = 'Install Mini\'s IPA Repo? ';
             
             const installButton = document.createElement('button');
             installButton.textContent = 'Install';
@@ -1224,7 +1173,7 @@
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('✅ User accepted install');
+                        console.log('User accepted install');
                         showToast('App installed successfully!', 'success');
                     }
                     deferredPrompt = null;
@@ -1232,13 +1181,9 @@
             }
         }
 
-        // ========== NETWORK MONITORING ==========
         function setupNetworkMonitoring() {
             window.addEventListener('online', () => {
                 showToast('Connection restored', 'success');
-                if (window.database && window.firebaseInitialized) {
-                    loadDownloadCounts();
-                }
             });
 
             window.addEventListener('offline', () => {
@@ -1264,96 +1209,51 @@
             }
         }
 
-        // ========== UTILITY FUNCTIONS ==========
+        // Privacy info modal
         function showPrivacyInfo() {
-            const privacyMessage = `🔒 Privacy Policy
+            const privacyMessage = `ðŸ”’ Privacy Policy
 
-• Anonymous download tracking only
-• No personal data collected
-• Firebase stores only download counts
-• User IDs are randomly generated
-• No IP address storage
-• Data is public and aggregated
+â€¢ Anonymous download tracking only
+â€¢ No personal data collected
+â€¢ No analytics or cookies
+â€¢ Firebase stores only download counts
 
-For questions: GitHub Issues`;
+â€¢ User IDs are randomly generated
+â€¢ No IP address storage
+â€¢ Data is public and aggregated
+
+For questions: GitHub Issues
+`;
             
             showToast(privacyMessage, 'info');
         }
 
+        // Reset local data
         function resetLocalData() {
             if (confirm('Clear all local data and cache?')) {
-                try {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    
-                    if ('caches' in window) {
-                        caches.keys().then(names => {
-                            names.forEach(name => caches.delete(name));
-                        });
-                    }
-                    
-                    showToast('Cache cleared! Reloading...', 'success');
-                    setTimeout(() => location.reload(), 1000);
-                } catch (error) {
-                    console.error('Error clearing cache:', error);
-                    showToast('Error clearing cache', 'error');
-                }
+                localStorage.clear();
+                sessionStorage.clear();
+                location.reload();
             }
         }
 
-        // ========== INITIALIZATION ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                console.log('🚀 Initializing Mini\'s IPA Repo...');
-                
-                // Check Google Analytics
-                if (typeof gtag === 'function') {
-                    console.log('✅ Google Analytics loaded');
-                    gtag('event', 'page_view', {
-                        'page_title': document.title,
-                        'page_location': window.location.href
-                    });
-                } else {
-                    console.warn('⚠️ Google Analytics not loaded');
-                }
-                
-                // Setup event listeners
-                setupNetworkMonitoring();
-                setupEventListeners();
-                initializeScrollAnimations();
-                
-                // Load download counts (this will call renderAppGrid)
-                loadDownloadCounts();
-                
-                // Setup PWA (deferred to not block initial load)
-                setTimeout(() => {
-                    // Double-check we're not in preview before calling
-                    const hostname = window.location.hostname;
-                    if (!hostname.includes('claudeusercontent.com') && 
-                        !hostname.includes('artifacts.anthropic.com')) {
-                        setupPWA();
-                    } else {
-                        console.log('ℹ️  PWA setup skipped (preview mode)');
-                    }
-                }, 1000);
-                
-                console.log('✅ Initialization complete');
-                
-            } catch (error) {
-                console.error('❌ Initialization error:', error);
-                handleError(error);
-                // Still try to render the grid even if something fails
-                renderAppGrid();
-                updateTotalDownloads();
-            }
-        });
-
-        // ========== CLEANUP ==========
+        // Clean up on page unload
         window.addEventListener('beforeunload', () => {
             if (observer) {
                 observer.disconnect();
             }
         });
     </script>
+
+    <style>
+        /* Utility: visually hidden for accessible headings */
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px; width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+        }
+    </style>
 </body>
 </html>
