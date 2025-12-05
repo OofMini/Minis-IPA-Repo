@@ -1111,16 +1111,6 @@
             }
         }
 
-        // Cache Firebase data for offline viewing
-        function cacheFirebaseData(data) {
-            try {
-                localStorage.setItem('cachedFirebaseData', JSON.stringify(data));
-                localStorage.setItem('cacheTimestamp', Date.now().toString());
-            } catch (error) {
-                console.error('Cache error:', error);
-            }
-        }
-
         // Update stats UI
         function updateStatsUI() {
             // Calculate total downloads
