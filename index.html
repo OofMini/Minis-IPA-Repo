@@ -49,7 +49,7 @@
         console.log("📊 Google Analytics LOADED with ID: G-RX1B3TX24S");
     </script>
 
-    <!-- SIMPLE Firebase Database ONLY -->
+    <!-- SIMPLE Firebase Database ONLY - Use compat versions -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
@@ -233,25 +233,12 @@
         .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
         .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
 
-        /* Updated Badges Section */
-        .badges {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        .badge {
-            background: var(--success-color);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .badge.purple { background: var(--accent-color); }
-        .badge.ios { background: var(--accent-color); }
-        
+        /* Updated Badges Section -->
+        <div class="badges" role="status" aria-live="polite">
+            <span class="badge" aria-label="Repository status active">✅ Active</span>
+            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+        </div>
+
         /* Slim Download Tracker -->
         <div class="download-tracker" id="downloadTracker">
             <span class="icon">⬇️</span>
@@ -479,6 +466,33 @@
             gap: 5px;
         }
 
+        /* Slim Download Tracker Styles - MUST BE ADDED */
+        .download-tracker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px auto 20px;
+            padding: 8px 20px;
+            background: linear-gradient(145deg, rgba(255, 50, 50, 0.15), rgba(200, 0, 0, 0.1));
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            border-radius: 25px;
+            max-width: 300px;
+            color: #ff4444;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .download-tracker .icon {
+            font-size: 1.1em;
+        }
+        .download-tracker .count {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .download-tracker .label {
+            opacity: 0.9;
+        }
+
         @media (max-width: 768px) {
             .app-grid { grid-template-columns: 1fr; }
             .cta-buttons { flex-direction: column; align-items: center; }
@@ -489,6 +503,15 @@
             .firebase-status { top: 5px; right: 5px; }
             .badge { padding: 5px 12px; font-size: 0.8em; }
             .download-tracker { max-width: 250px; font-size: 0.85em; padding: 6px 15px; }
+        }
+        
+        /* Utility: visually hidden for accessible headings */
+        .visually-hidden {
+            position: absolute !important;
+            height: 1px; width: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -540,7 +563,9 @@
         </section>
 
         <!-- App grid -->
-        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
+        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps">
+            <!-- Skeleton loading will appear here -->
+        </section>
 
         <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
@@ -619,9 +644,11 @@
             console.log("✅ Firebase Database initialized");
             
             // Update status
-            document.getElementById('firebaseStatus').style.display = 'flex';
-            document.getElementById('statusText').textContent = 'Connected';
-            
+            const statusEl = document.getElementById('firebaseStatus');
+            if (statusEl) {
+                statusEl.style.display = 'flex';
+                document.getElementById('statusText').textContent = 'Connected';
+            }
         } catch (error) {
             console.log("ℹ️ Firebase not available - using local mode");
         }
@@ -889,9 +916,15 @@
         function loadDownloadCounts() {
             if (!database) {
                 console.log("No Firebase, showing default counts");
-                renderAppGrid();
+                showSkeletonLoading();
+                setTimeout(() => {
+                    renderAppGrid();
+                }, 1000);
                 return;
             }
+            
+            // Show skeleton loading while we wait for Firebase
+            showSkeletonLoading();
             
             const downloadsRef = database.ref('downloads');
             downloadsRef.on('value', (snapshot) => {
@@ -906,6 +939,10 @@
                 renderAppGrid();
                 updateTotalDownloads();
                 console.log("📊 Download counts loaded from Firebase");
+            }, (error) => {
+                console.error("Firebase error:", error);
+                // If Firebase fails, render apps anyway
+                renderAppGrid();
             });
         }
 
@@ -916,7 +953,10 @@
         let areAppsRendered = false;
         
         document.addEventListener('DOMContentLoaded', function() {
-            // Load download counts
+            // Show skeleton loading immediately
+            showSkeletonLoading();
+            
+            // Load download counts (this will trigger app rendering)
             loadDownloadCounts();
             
             // Setup animations
@@ -964,6 +1004,38 @@
             document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
                 observer.observe(el);
             });
+            
+            // Clean up observer on page unload
+            window.addEventListener('beforeunload', () => {
+                if (observer) {
+                    observer.disconnect();
+                }
+            });
+        }
+        
+        // Skeleton Loading
+        function showSkeletonLoading() {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = '';
+            
+            for (let i = 0; i < 6; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'skeleton-card fade-in';
+                skeleton.innerHTML = `
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-text medium"></div>
+                    <div class="skeleton skeleton-button"></div>
+                `;
+                appGrid.appendChild(skeleton);
+            }
+
+            setTimeout(() => {
+                appGrid.querySelectorAll('.skeleton-card').forEach(card => {
+                    if (observer) observer.observe(card);
+                });
+            }, 100);
         }
 
         function renderAppGrid() {
@@ -1114,19 +1186,6 @@ For questions: GitHub Issues
                 location.reload();
             }
         }
-
-        // Utility for accessible headings
-        const style = document.createElement('style');
-        style.textContent = `
-            .visually-hidden {
-                position: absolute !important;
-                height: 1px; width: 1px;
-                overflow: hidden;
-                clip: rect(1px, 1px, 1px, 1px);
-                white-space: nowrap;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
