@@ -6,7 +6,12 @@
     
     <!-- Security: Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.firebaseio.com https://minis-ipa-repo-default-rtdb.firebaseio.com; frame-src https://*.firebaseio.com;">
+          content="default-src 'self'; 
+                   img-src https: data:; 
+                   script-src 'self' 'unsafe-inline' https://www.gstatic.com; 
+                   style-src 'self' 'unsafe-inline'; 
+                   connect-src 'self' https://*.firebaseio.com https://minis-repo-tracking-default-rtdb.firebaseio.com https://minis-ipa-repo-default-rtdb.firebaseio.com;
+                   frame-src https://*.firebaseio.com;">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -26,7 +31,7 @@
     <meta http-equiv="Expires" content="0">
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="https://oofmini.github.io/Minis-IPA-Repo/manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -34,9 +39,9 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+    <!-- Firebase SDK - UPDATED TO COMPAT VERSION -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -604,7 +609,7 @@
 
     <div class="toast" id="toast" aria-live="polite" role="status"></div>
 
-    <!-- Firebase Config -->
+    <!-- Firebase Config - FIXED VERSION -->
     <script>
         // ========== FIREBASE CONFIGURATION ==========
         const firebaseConfig = {
@@ -623,11 +628,46 @@
         let database;
         
         try {
-            firebaseApp = firebase.initializeApp(firebaseConfig);
+            // Check if Firebase is already initialized
+            if (!firebase.apps.length) {
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+            } else {
+                firebaseApp = firebase.app();
+            }
             database = firebase.database();
             console.log("✅ Firebase initialized successfully");
+            
+            // Test connection immediately
+            testFirebaseConnection();
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
+            showToast("Firebase offline - using local storage", "warning");
+        }
+        
+        // Test Firebase connection
+        async function testFirebaseConnection() {
+            try {
+                const testRef = database.ref('.info/connected');
+                testRef.on('value', (snap) => {
+                    if (snap.val() === true) {
+                        console.log("✅ Firebase connected successfully");
+                        updateFirebaseStatus(true);
+                        showToast("✅ Firebase connected", "success");
+                    } else {
+                        console.log("⚠️ Firebase disconnected");
+                        updateFirebaseStatus(false);
+                    }
+                });
+                
+                // Also try a simple read
+                const testRead = await database.ref('test').once('value');
+                console.log("✅ Firebase read test successful");
+                
+            } catch (error) {
+                console.error("❌ Firebase connection test failed:", error);
+                updateFirebaseStatus(false);
+                showToast("Firebase connection failed", "error");
+            }
         }
     </script>
 
@@ -837,7 +877,10 @@
 
         // Load download counts from Firebase
         function loadFirebaseStats() {
-            if (!database) {
+            console.log("🔄 Attempting to load Firebase stats...");
+            
+            if (!firebase || !database) {
+                console.error("❌ Firebase SDK not loaded!");
                 console.warn('Firebase not available, using localStorage');
                 loadLocalStats();
                 if (!areAppsRendered) {
