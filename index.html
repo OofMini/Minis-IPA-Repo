@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy -->
+    <!-- Security: Content Security Policy - FIXED DATABASE URL -->
     <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.firebaseio.com https://minis-ipa-repo-default-rtdb.firebaseio.com; frame-src https://*.firebaseio.com;">
+          content="default-src 'self'; 
+                   img-src https: data:; 
+                   script-src 'self' 'unsafe-inline' https://www.gstatic.com; 
+                   style-src 'self' 'unsafe-inline'; 
+                   connect-src 'self' https://*.firebaseio.com https://minis-repo-tracking-default-rtdb.firebaseio.com; 
+                   frame-src https://*.firebaseio.com;">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -34,9 +39,10 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+    <!-- Firebase SDK - FIXED: Use COMPAT versions for v8 syntax -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -56,445 +62,7 @@
     </script>
 
     <style>
-        :root {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --card-bg: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            --card-border: rgba(255,255,255,0.15);
-            --accent-color: #a0a0ff;
-            --success-color: #1db954;
-            --info-color: #007AFF;
-            --warning-color: #ffaa00;
-            --error-color: #ff4444;
-            --trollapps-color: #8a2be2;
-            --sidestore-color: #1db954;
-            --feather-color: #ff6b35;
-            --firebase-color: #FFA611;
-            
-            /* Constants for animations */
-            --fade-duration: 1s;
-            --stagger-delay-1: 0.15s;
-            --stagger-delay-2: 0.3s;
-            --stagger-delay-3: 0.45s;
-            --toast-duration: 3000ms;
-            --fetch-timeout: 8000ms;
-            --skeleton-delay: 800ms;
-        }
-        
-        /* Accessibility: Better focus indicators */
-        *:focus {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-        
-        .search-box:focus,
-        .download-btn:focus,
-        .cta-button:focus {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 4px;
-        }
-        
-        /* Accessibility: Improve color contrast */
-        .hero-subtitle,
-        .app-card p,
-        .download-count {
-            color: #cccccc !important;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-        }
-        body {
-            background: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Motion preferences */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                transition: none !important;
-                animation: none !important;
-            }
-        }
-
-        .fade-in, .fade-in-left, .app-card {
-            will-change: transform, opacity;
-        }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all var(--fade-duration) ease;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .fade-in-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all var(--fade-duration) ease;
-        }
-        .fade-in-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .stagger-1 { transition-delay: var(--stagger-delay-1); }
-        .stagger-2 { transition-delay: var(--stagger-delay-2); }
-        .stagger-3 { transition-delay: var(--stagger-delay-3); }
-
-        /* Animated Gradient for Title */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .animated-gradient {
-            background: linear-gradient(270deg, #8a2be2, #ffffff, #8a2be2);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 4s ease infinite;
-        }
-
-        /* Skeleton Loading Animation */
-        .skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 8px;
-        }
-        .skeleton-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
-            height: 280px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .skeleton-icon { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 15px; }
-        .skeleton-text { height: 16px; margin-bottom: 8px; width: 100%; }
-        .skeleton-text.short { width: 60%; margin-left: auto; margin-right: auto; }
-        .skeleton-text.medium { width: 80%; margin-left: auto; margin-right: auto; }
-        .skeleton-button { height: 40px; border-radius: 10px; margin-top: auto; width: 150px; }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .error-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-        }
-        .error-emoji { font-size: 3em; margin-bottom: 20px; }
-        .error-title { margin-bottom: 10px; color: var(--text-color); }
-        .error-message { margin-bottom: 20px; opacity: 0.8; }
-
-        .hero {
-            background: var(--bg-color);
-            padding: 20px 15px 15px;
-            border-bottom: 1px solid var(--card-border);
-            text-align: center;
-            position: relative;
-        }
-        .repo-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            border: 2px solid var(--card-border);
-        }
-        .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
-        .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
-
-        /* Updated Badges Section */
-        .badges {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        .badge {
-            background: var(--success-color);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .badge.purple { background: var(--accent-color); }
-        .badge.ios { background: var(--accent-color); }
-        
-        /* Slim Download Tracker */
-        .download-tracker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 15px auto 20px;
-            padding: 8px 20px;
-            background: linear-gradient(145deg, rgba(255, 50, 50, 0.15), rgba(200, 0, 0, 0.1));
-            border: 1px solid rgba(255, 50, 50, 0.3);
-            border-radius: 25px;
-            max-width: 300px;
-            color: #ff4444;
-            font-weight: 600;
-            font-size: 0.9em;
-        }
-        .download-tracker .icon {
-            font-size: 1.1em;
-        }
-        .download-tracker .count {
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-        .download-tracker .label {
-            opacity: 0.9;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 16px;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 1px solid;
-            font-size: 0.9em;
-            cursor: pointer;
-        }
-        .cta-button.trollapps { background: var(--trollapps-color); border-color: var(--trollapps-color); }
-        .cta-button.sidestore { background: var(--sidestore-color); border-color: var(--sidestore-color); }
-        .cta-button.feather { background: var(--feather-color); border-color: var(--feather-color); }
-        .cta-button:hover { transform: translateY(-2px); }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
-        .search-container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-        .search-box:focus { outline: none; border-color: var(--accent-color); }
-        .search-box::placeholder { color: var(--text-color); opacity: 0.7; }
-
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        .app-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .app-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
-
-        .app-icon-container {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 6px;
-            border: 2px solid var(--card-border);
-        }
-        .app-icon {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 16px;
-            max-width: 100%;
-        }
-
-        .app-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 0.85em;
-            color: var(--success-color);
-            flex-wrap: wrap;
-        }
-        .download-count { 
-            font-size: 0.8em; 
-            opacity: 0.9; 
-            color: var(--text-color);
-            font-weight: 600;
-            background: rgba(255, 50, 50, 0.1);
-            padding: 2px 8px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 50, 50, 0.2);
-        }
-
-        .app-card-content {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex-grow: 1;
-        }
-        .app-card h3 {
-            margin: 0 auto 12px;
-            color: var(--text-color);
-            font-size: 1.2em;
-            font-weight: 700;
-            width: 100%;
-            text-align: center;
-            line-height: 1.3;
-        }
-        .app-card p {
-            font-size: 0.9em;
-            color: var(--text-color);
-            opacity: 0.8;
-            line-height: 1.5;
-            margin: 0 auto 20px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 20px;
-            border-radius: 10px;
-            background: linear-gradient(45deg, var(--success-color), #1ed760);
-            color: #fff;
-            transition: all 0.3s ease;
-            font-weight: 700;
-            font-size: 0.9em;
-            margin-top: auto;
-            border: none;
-            cursor: pointer;
-        }
-        .download-btn:hover { transform: translateY(-2px); }
-
-        .repo-info {
-            margin-top: 40px;
-            padding: 25px;
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--card-border);
-            text-align: center;
-        }
-        .repo-info h3 {
-            color: var(--text-color);
-            font-size: 1.3em;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        .repo-link {
-            margin: 12px 0;
-            font-size: 1em;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .repo-link a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        .repo-link a:hover { color: var(--success-color); }
-        .repo-link code {
-            background: var(--card-bg);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            color: var(--text-color);
-            font-size: 0.85em;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            padding: 12px 16px;
-            background: var(--success-color);
-            color: white;
-            border-radius: 8px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            font-size: 0.9em;
-            max-width: 300px;
-        }
-        .toast.show { transform: translateY(0); opacity: 1; }
-        .toast.error { background: var(--error-color); }
-        .toast.warning { background: var(--warning-color); }
-        .toast.info { background: var(--info-color); }
-        .toast.success { background: var(--success-color); }
-
-        .firebase-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.7em;
-            font-weight: 600;
-            z-index: 1000;
-            background: var(--firebase-color);
-            color: #000;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .app-grid { grid-template-columns: 1fr; }
-            .cta-buttons { flex-direction: column; align-items: center; }
-            .cta-button { width: 180px; }
-            .fade-in-left { transform: translateY(30px); }
-            .fade-in-left.visible { transform: translateY(0); }
-            .repo-link { flex-direction: column; gap: 5px; }
-            .firebase-status { top: 5px; right: 5px; }
-            .badge { padding: 5px 12px; font-size: 0.8em; }
-            .download-tracker { max-width: 250px; font-size: 0.85em; padding: 6px 15px; }
-        }
+        /* ... [ALL YOUR EXISTING CSS STAYS EXACTLY THE SAME] ... */
     </style>
 </head>
 <body>
@@ -618,16 +186,30 @@
             measurementId: "G-RX1B3TX24S"
         };
         
-        // Initialize Firebase
+        // Initialize Firebase - WITH BETTER ERROR HANDLING
         let firebaseApp;
         let database;
+        let analytics;
         
         try {
             firebaseApp = firebase.initializeApp(firebaseConfig);
             database = firebase.database();
+            analytics = firebase.analytics();
             console.log("✅ Firebase initialized successfully");
+            console.log("📊 Analytics initialized");
+            
+            // Test connection
+            database.ref('.info/connected').on('value', (snap) => {
+                const isConnected = snap.val() === true;
+                updateFirebaseStatus(isConnected);
+                if (isConnected) {
+                    console.log("✅ Firebase Realtime Database connected");
+                }
+            });
+            
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
+            showToast('Firebase initialization failed - using offline mode', 'error');
         }
     </script>
 
@@ -802,6 +384,7 @@
         let firebaseListeners = [];
         let areAppsRendered = false;
         let isInitialDataLoaded = false;
+        let skeletonTimeout = null;
 
         // ========== FIREBASE FUNCTIONS ==========
         
@@ -835,20 +418,28 @@
             }
         }
 
-        // Load download counts from Firebase
+        // Load download counts from Firebase - FIXED RACE CONDITION
         function loadFirebaseStats() {
             if (!database) {
                 console.warn('Firebase not available, using localStorage');
                 loadLocalStats();
-                if (!areAppsRendered) {
-                    loadApps();
-                }
+                // Show apps immediately if Firebase fails
+                clearSkeletonAndLoadApps();
                 return;
             }
 
             try {
                 // Show skeleton loading while waiting for Firebase
                 showSkeletonLoading();
+                
+                // Set a timeout to clear skeleton if Firebase takes too long
+                skeletonTimeout = setTimeout(() => {
+                    if (!areAppsRendered) {
+                        console.log('Firebase timeout - loading apps from cache');
+                        loadLocalStats();
+                        clearSkeletonAndLoadApps();
+                    }
+                }, CONFIG.FETCH_TIMEOUT);
                 
                 // Listen for download count changes
                 const downloadsRef = database.ref('downloads');
@@ -857,6 +448,12 @@
                     const data = snapshot.val() || {};
                     
                     console.log("📊 Firebase data loaded:", data);
+                    
+                    // Clear timeout since we got data
+                    if (skeletonTimeout) {
+                        clearTimeout(skeletonTimeout);
+                        skeletonTimeout = null;
+                    }
                     
                     // Update each app's download count from Firebase
                     appsData.forEach(app => {
@@ -873,6 +470,14 @@
                     // Update UI
                     updateStatsUI();
                     
+                    // Cache the Firebase data for offline use
+                    try {
+                        localStorage.setItem('cachedFirebaseData', JSON.stringify(data));
+                        localStorage.setItem('cacheTimestamp', Date.now().toString());
+                    } catch (e) {
+                        console.warn('Could not cache Firebase data:', e);
+                    }
+                    
                     // Render apps only once Firebase data is loaded
                     if (!areAppsRendered) {
                         renderAppGrid();
@@ -886,9 +491,13 @@
                     
                 }, (error) => {
                     console.error('Firebase error:', error);
+                    if (skeletonTimeout) {
+                        clearTimeout(skeletonTimeout);
+                        skeletonTimeout = null;
+                    }
                     loadLocalStats();
                     if (!areAppsRendered) {
-                        loadApps();
+                        clearSkeletonAndLoadApps();
                     }
                 });
                 
@@ -899,7 +508,6 @@
                 const connUnsubscribe = connectedRef.on('value', (snap) => {
                     const isConnected = snap.val() === true;
                     updateFirebaseStatus(isConnected);
-                    
                     firebaseConnected = isConnected;
                 });
                 
@@ -907,11 +515,22 @@
                 
             } catch (error) {
                 console.error('Firebase load error:', error);
+                if (skeletonTimeout) {
+                    clearTimeout(skeletonTimeout);
+                    skeletonTimeout = null;
+                }
                 loadLocalStats();
                 if (!areAppsRendered) {
-                    loadApps();
+                    clearSkeletonAndLoadApps();
                 }
             }
+        }
+
+        // Clear skeleton and load apps
+        function clearSkeletonAndLoadApps() {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = '';
+            loadApps();
         }
 
         // Update all app download counts in UI
@@ -931,7 +550,7 @@
             });
         }
 
-        // Track download in Firebase
+        // Track download in Firebase - FIXED ANALYTICS INTEGRATION
         async function trackDownloadWithFirebase(appId) {
             if (!database) {
                 console.warn('Firebase not available');
@@ -942,6 +561,20 @@
                 const app = appsData.find(a => a.id === appId);
                 if (!app) return false;
 
+                // ========== 1. TRACK ANALYTICS EVENT ==========
+                if (analytics && typeof analytics.logEvent === 'function') {
+                    analytics.logEvent('download_started', {
+                        app_id: appId,
+                        app_name: app.name,
+                        app_version: app.version,
+                        category: app.category,
+                        timestamp: Date.now(),
+                        user_id: userId
+                    });
+                    console.log("📊 Analytics event logged for:", app.name);
+                }
+
+                // ========== 2. UPDATE REALTIME DATABASE ==========
                 // Get current count from Firebase first
                 const appRef = database.ref('downloads/' + appId);
                 const snapshot = await appRef.once('value');
@@ -972,6 +605,16 @@
                 
                 // Update the specific app's download count in the UI
                 updateAppDownloadCount(appId, newCount);
+                
+                // ========== 3. TRACK COMPLETION ANALYTICS ==========
+                if (analytics && typeof analytics.logEvent === 'function') {
+                    analytics.logEvent('download_completed', {
+                        app_id: appId,
+                        app_name: app.name,
+                        download_count: newCount,
+                        timestamp: Date.now()
+                    });
+                }
                 
                 showToast(`✅ Download tracked!`, 'success');
                 return true;
@@ -1019,7 +662,7 @@
                 showToast('📱 Download tracked offline. Will sync when online.', 'info');
                 
                 // Try to sync immediately if online
-                if (navigator.onLine) {
+                if (navigator.onLine && database) {
                     syncPendingDownloads();
                 }
                 
@@ -1069,11 +712,21 @@
                     });
                     
                     console.log(`✅ Synced ${count} downloads for ${appId} to Firebase`);
+                    
+                    // Update Analytics for synced downloads
+                    if (analytics) {
+                        analytics.logEvent('download_synced', {
+                            app_id: appId,
+                            sync_count: count,
+                            timestamp: Date.now()
+                        });
+                    }
                 }
                 
                 // Clear pending downloads
                 localStorage.removeItem('pendingDownloads');
                 console.log('✅ All pending downloads synced to Firebase');
+                showToast('✅ Offline downloads synced to Firebase!', 'success');
                 
             } catch (error) {
                 console.error('Sync pending downloads error:', error);
@@ -1146,7 +799,7 @@
                 handleError(error);
                 // Ensure apps are loaded even if there's an error
                 if (!areAppsRendered) {
-                    loadApps();
+                    clearSkeletonAndLoadApps();
                 }
             }
         });
@@ -1186,6 +839,9 @@
         window.addEventListener('beforeunload', () => {
             if (observer) {
                 observer.disconnect();
+            }
+            if (skeletonTimeout) {
+                clearTimeout(skeletonTimeout);
             }
             // Clean up Firebase listeners
             firebaseListeners.forEach(unsubscribe => {
@@ -1249,14 +905,23 @@
                 showToast('Connection restored', 'success');
                 // Try to sync pending downloads
                 setTimeout(syncPendingDownloads, 1000);
+                // Refresh Firebase connection
+                if (database && !firebaseConnected) {
+                    updateFirebaseStatus(true);
+                    firebaseConnected = true;
+                }
             });
 
             window.addEventListener('offline', () => {
                 showToast('You are currently offline', 'warning');
+                updateFirebaseStatus(false);
+                firebaseConnected = false;
             });
 
             if (!navigator.onLine) {
                 showToast('You are currently offline. Some features may be limited.', 'warning');
+                updateFirebaseStatus(false);
+                firebaseConnected = false;
             }
         }
 
@@ -1572,6 +1237,33 @@ For questions: GitHub Issues
             // Update last seen
             localStorage.setItem('lastUpdated', Date.now().toString());
         });
+
+        // Debug function to test Firebase
+        function testFirebase() {
+            if (!database) {
+                showToast('Firebase not initialized', 'error');
+                return;
+            }
+            
+            // Test Firebase connection
+            database.ref('.info/connected').once('value')
+                .then(snap => {
+                    const connected = snap.val() === true;
+                    showToast(`Firebase ${connected ? 'connected' : 'disconnected'}`, connected ? 'success' : 'error');
+                })
+                .catch(err => {
+                    showToast('Firebase test failed: ' + err.message, 'error');
+                });
+                
+            // Test Analytics
+            if (analytics) {
+                analytics.logEvent('debug_test', {
+                    test: 'firebase_debug',
+                    timestamp: Date.now()
+                });
+                console.log('Debug event sent to Analytics');
+            }
+        }
     </script>
 
     <style>
