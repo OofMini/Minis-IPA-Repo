@@ -1,4 +1,4 @@
-// app.js - Main Application JavaScript
+// app.js - Main Application JavaScript with Firebase Tracking
 
 // ========== APP CONFIGURATION ==========
 const CONFIG = {
@@ -135,6 +135,21 @@ let deferredPrompt;
 let searchTimeout;
 let observer = null;
 let totalDownloads = 0;
+let firebaseApp = null;
+let database = null;
+let firebaseConnected = false;
+
+// ========== FIREBASE CONFIGURATION ==========
+const firebaseConfig = {
+    apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
+    authDomain: "minis-repo-tracking.firebaseapp.com",
+    databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
+    projectId: "minis-repo-tracking",
+    storageBucket: "minis-repo-tracking.firebasestorage.app",
+    messagingSenderId: "832281839494",
+    appId: "1:832281839494:web:6abe106a54100634838e07",
+    measurementId: "G-RX1B3TX24S"
+};
 
 // ========== SIMPLE INITIALIZATION ==========
 
@@ -150,30 +165,284 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeScrollAnimations();
     setupPWA();
     
-    // Try to load Firebase in background (but don't wait for it)
+    // Initialize Firebase immediately (but don't block app display)
     setTimeout(() => {
-        tryLoadFirebase();
-    }, 1000);
+        initializeFirebase();
+    }, 100);
     
     console.log("✅ All apps should now be visible");
 });
 
-// Load apps IMMEDIATELY - no waiting, no skeletons
+// ========== FIREBASE FUNCTIONS ==========
+
+function initializeFirebase() {
+    // Only try if Firebase is available
+    if (typeof firebase === 'undefined') {
+        console.log("❌ Firebase SDK not loaded");
+        updateFirebaseStatus(false);
+        return;
+    }
+    
+    try {
+        // Initialize Firebase
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        
+        console.log("✅ Firebase initialized successfully");
+        
+        // Test connection
+        const connectedRef = database.ref('.info/connected');
+        connectedRef.on('value', (snap) => {
+            firebaseConnected = snap.val() === true;
+            updateFirebaseStatus(firebaseConnected);
+            
+            if (firebaseConnected) {
+                console.log("✅ Firebase connected");
+                showToast('✅ Live tracking enabled', 'success');
+                // Load initial stats and sync pending downloads
+                loadFirebaseStats();
+                syncPendingDownloads();
+            } else {
+                console.log("⚠️ Firebase disconnected");
+            }
+        });
+        
+    } catch (error) {
+        console.error("❌ Firebase initialization failed:", error);
+        updateFirebaseStatus(false);
+    }
+}
+
+function updateFirebaseStatus(connected) {
+    const statusEl = document.getElementById('firebaseStatus');
+    if (!statusEl) return;
+    
+    const dotEl = document.getElementById('statusDot');
+    const textEl = document.getElementById('statusText');
+    
+    if (connected) {
+        statusEl.style.display = 'flex';
+        statusEl.style.background = 'var(--success-color)';
+        dotEl.textContent = '●';
+        textEl.textContent = 'Live';
+        dotEl.style.color = '#fff';
+    } else {
+        statusEl.style.display = 'flex';
+        statusEl.style.background = 'var(--warning-color)';
+        dotEl.textContent = '○';
+        textEl.textContent = 'Offline';
+        dotEl.style.color = '#000';
+    }
+}
+
+// Load download counts from Firebase
+function loadFirebaseStats() {
+    if (!database) return;
+    
+    const downloadsRef = database.ref('downloads');
+    
+    downloadsRef.on('value', (snapshot) => {
+        const data = snapshot.val() || {};
+        
+        console.log("📊 Firebase data loaded:", data);
+        
+        // Update each app's download count from Firebase
+        appsData.forEach(app => {
+            if (data[app.id] && data[app.id].count !== undefined) {
+                app.downloads = parseInt(data[app.id].count) || 0;
+            } else {
+                app.downloads = 0;
+            }
+        });
+        
+        // Update UI
+        updateTotalDownloads();
+        updateAllAppDownloadCounts();
+        
+    }, (error) => {
+        console.error('Firebase load error:', error);
+    });
+}
+
+// Track download to Firebase
+async function trackDownloadToFirebase(appId) {
+    if (!database) {
+        console.log("❌ Firebase database not available");
+        return false;
+    }
+    
+    try {
+        const app = appsData.find(a => a.id === appId);
+        if (!app) {
+            console.log("❌ App not found:", appId);
+            return false;
+        }
+        
+        console.log("🔄 Tracking download for:", app.name);
+        
+        // Use Firebase transaction for atomic increment
+        const appRef = database.ref('downloads/' + appId);
+        
+        // Get current data
+        const snapshot = await appRef.once('value');
+        const currentData = snapshot.val() || {};
+        
+        // Increment count
+        const newCount = (parseInt(currentData.count) || 0) + 1;
+        
+        // Update Firebase
+        await appRef.update({
+            count: newCount,
+            lastDownload: firebase.database.ServerValue.TIMESTAMP,
+            appName: app.name,
+            appVersion: app.version,
+            lastUpdated: Date.now()
+        });
+        
+        console.log(`✅ Firebase updated: ${app.name} = ${newCount} downloads`);
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Firebase tracking error:', error);
+        console.error('Error details:', error.message);
+        return false;
+    }
+}
+
+// Store pending downloads when offline
+function storePendingDownload(appId) {
+    try {
+        const app = appsData.find(a => a.id === appId);
+        if (!app) return;
+        
+        let pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+        pendingDownloads.push({
+            appId: appId,
+            timestamp: Date.now(),
+            appName: app.name
+        });
+        localStorage.setItem('pendingDownloads', JSON.stringify(pendingDownloads));
+        
+        console.log(`📱 Offline download stored for ${app.name}`);
+        showToast('📱 Download tracked offline - will sync when online', 'info');
+        
+    } catch (error) {
+        console.error('Error storing pending download:', error);
+    }
+}
+
+// Sync pending downloads when back online
+async function syncPendingDownloads() {
+    if (!database || !firebaseConnected) return;
+    
+    try {
+        const pendingDownloads = JSON.parse(localStorage.getItem('pendingDownloads') || '[]');
+        if (pendingDownloads.length === 0) return;
+        
+        console.log(`🔄 Syncing ${pendingDownloads.length} pending downloads...`);
+        
+        // Group by appId
+        const downloadsByApp = {};
+        pendingDownloads.forEach(download => {
+            if (!downloadsByApp[download.appId]) {
+                downloadsByApp[download.appId] = 0;
+            }
+            downloadsByApp[download.appId]++;
+        });
+        
+        // Sync each app
+        for (const [appId, count] of Object.entries(downloadsByApp)) {
+            const appRef = database.ref('downloads/' + appId);
+            const snapshot = await appRef.once('value');
+            const currentData = snapshot.val() || {};
+            
+            const newCount = (parseInt(currentData.count) || 0) + count;
+            
+            await appRef.update({
+                count: newCount,
+                lastDownload: firebase.database.ServerValue.TIMESTAMP,
+                lastUpdated: Date.now(),
+                syncedFromOffline: true
+            });
+            
+            console.log(`✅ Synced ${count} downloads for ${appId}`);
+        }
+        
+        // Clear pending downloads
+        localStorage.removeItem('pendingDownloads');
+        console.log('✅ All pending downloads synced to Firebase');
+        
+        // Refresh stats
+        loadFirebaseStats();
+        
+        if (pendingDownloads.length > 0) {
+            showToast(`✅ Synced ${pendingDownloads.length} offline downloads`, 'success');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error syncing pending downloads:', error);
+    }
+}
+
+// ========== MAIN DOWNLOAD FUNCTION ==========
+
+async function trackDownload(appId) {
+    try {
+        const app = appsData.find(a => a.id === appId);
+        if (!app) {
+            showToast('App not found', 'error');
+            return;
+        }
+
+        // Add timestamp to prevent caching
+        const downloadUrl = app.downloadUrl + '?t=' + Date.now();
+        
+        // Step 1: Update local count immediately (for instant UI feedback)
+        app.downloads = (app.downloads || 0) + 1;
+        updateTotalDownloads();
+        updateAppDownloadCount(appId, app.downloads);
+        
+        // Step 2: Try to track with Firebase
+        let firebaseTracked = false;
+        if (database && firebaseConnected) {
+            firebaseTracked = await trackDownloadToFirebase(appId);
+        } else {
+            // Store offline for later sync
+            storePendingDownload(appId);
+        }
+        
+        // Step 3: Open download
+        setTimeout(() => {
+            window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+        }, 300);
+        
+        // Step 4: Show feedback
+        if (firebaseTracked) {
+            showToast(`✅ ${app.name} download tracked live!`, 'success');
+        } else if (!firebaseConnected) {
+            showToast(`✅ ${app.name} - Downloading... (offline mode)`, 'info');
+        } else {
+            showToast(`✅ ${app.name} - Downloading...`, 'success');
+        }
+        
+    } catch (error) {
+        console.error('Download error:', error);
+        showToast('Download failed', 'error');
+    }
+}
+
+// ========== APP LOADING FUNCTIONS ==========
+
 function loadAppsImmediately() {
-    // Clear any skeleton loading
     const appGrid = document.getElementById('appGrid');
     if (appGrid) {
         appGrid.innerHTML = '';
     }
     
-    // Render all apps immediately
     renderAppGrid();
-    
-    // Update total downloads
     updateTotalDownloads();
 }
 
-// Render all apps
 function renderAppGrid() {
     const appGrid = document.getElementById('appGrid');
     if (!appGrid) return;
@@ -204,11 +473,8 @@ function renderAppGrid() {
         const safeDescription = escapeHtml(app.description);
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
-        // Get download count
         const downloadCount = app.downloads || 0;
         const countDisplay = formatNumber(downloadCount) + ' downloads';
-        
-        // Add cache-busting timestamp to icon URLs
         const iconUrl = app.icon + '?t=' + Date.now();
         
         return `
@@ -234,7 +500,6 @@ function renderAppGrid() {
         `;
     }).join('');
 
-    // Add animation observers
     setTimeout(() => {
         appGrid.querySelectorAll('.app-card').forEach(card => {
             if (observer) observer.observe(card);
@@ -242,93 +507,8 @@ function renderAppGrid() {
     }, 100);
 }
 
-// Try to load Firebase in background
-function tryLoadFirebase() {
-    // Only try if Firebase is available
-    if (typeof firebase === 'undefined') {
-        console.log("Firebase not available, skipping");
-        return;
-    }
-    
-    try {
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
-            authDomain: "minis-repo-tracking.firebaseapp.com",
-            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
-            projectId: "minis-repo-tracking",
-            storageBucket: "minis-repo-tracking.firebasestorage.app",
-            messagingSenderId: "832281839494",
-            appId: "1:832281839494:web:6abe106a54100634838e07",
-            measurementId: "G-RX1B3TX24S"
-        };
-        
-        // Initialize Firebase
-        const firebaseApp = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        
-        console.log("✅ Firebase initialized in background");
-        
-        // Update Firebase status
-        updateFirebaseStatus(true);
-        
-        // Load download counts
-        loadFirebaseStats(database);
-        
-    } catch (error) {
-        console.log("Firebase failed to load, but that's OK - apps are already visible");
-        updateFirebaseStatus(false);
-    }
-}
+// ========== UTILITY FUNCTIONS ==========
 
-// Update Firebase status
-function updateFirebaseStatus(connected) {
-    const statusEl = document.getElementById('firebaseStatus');
-    if (!statusEl) return;
-    
-    const dotEl = document.getElementById('statusDot');
-    const textEl = document.getElementById('statusText');
-    
-    if (connected) {
-        statusEl.style.display = 'flex';
-        statusEl.style.background = 'var(--success-color)';
-        dotEl.textContent = '●';
-        textEl.textContent = 'Live';
-        dotEl.style.color = '#fff';
-    } else {
-        statusEl.style.display = 'flex';
-        statusEl.style.background = 'var(--warning-color)';
-        dotEl.textContent = '○';
-        textEl.textContent = 'Offline';
-        dotEl.style.color = '#000';
-    }
-}
-
-// Load Firebase stats
-function loadFirebaseStats(database) {
-    if (!database) return;
-    
-    const downloadsRef = database.ref('downloads');
-    
-    downloadsRef.on('value', (snapshot) => {
-        const data = snapshot.val() || {};
-        
-        // Update each app's download count from Firebase
-        appsData.forEach(app => {
-            if (data[app.id] && data[app.id].count !== undefined) {
-                app.downloads = parseInt(data[app.id].count) || 0;
-            }
-        });
-        
-        // Update UI
-        updateTotalDownloads();
-        updateAllAppDownloadCounts();
-        
-    }, (error) => {
-        console.error('Firebase error:', error);
-    });
-}
-
-// Update all app download counts
 function updateAllAppDownloadCounts() {
     const appCards = document.querySelectorAll('.app-card');
     appCards.forEach(card => {
@@ -345,7 +525,16 @@ function updateAllAppDownloadCounts() {
     });
 }
 
-// Update total downloads display
+function updateAppDownloadCount(appId, count) {
+    const appCard = document.querySelector(`.app-card[data-app-id="${appId}"]`);
+    if (appCard) {
+        const downloadCountElement = appCard.querySelector('.download-count');
+        if (downloadCountElement) {
+            downloadCountElement.textContent = formatNumber(count) + ' downloads';
+        }
+    }
+}
+
 function updateTotalDownloads() {
     totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
     const totalDownloadsEl = document.getElementById('totalDownloads');
@@ -353,8 +542,6 @@ function updateTotalDownloads() {
         totalDownloadsEl.textContent = formatNumber(totalDownloads);
     }
 }
-
-// ========== UTILITY FUNCTIONS ==========
 
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -385,44 +572,7 @@ function showToast(message, type = 'info') {
     setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
 }
 
-// ========== EVENT HANDLERS ==========
-
-function trackDownload(appId) {
-    try {
-        const app = appsData.find(a => a.id === appId);
-        if (!app) {
-            showToast('App not found', 'error');
-            return;
-        }
-
-        // Add timestamp to prevent caching
-        const downloadUrl = app.downloadUrl + '?t=' + Date.now();
-        
-        // Open download
-        window.open(downloadUrl, '_blank', 'noopener,noreferrer');
-        
-        // Update download count locally
-        app.downloads = (app.downloads || 0) + 1;
-        updateTotalDownloads();
-        updateAppDownloadCount(appId, app.downloads);
-        
-        showToast(`Downloading ${app.name}...`, 'success');
-        
-    } catch (error) {
-        console.error('Download error:', error);
-        showToast('Download failed', 'error');
-    }
-}
-
-function updateAppDownloadCount(appId, count) {
-    const appCard = document.querySelector(`.app-card[data-app-id="${appId}"]`);
-    if (appCard) {
-        const downloadCountElement = appCard.querySelector('.download-count');
-        if (downloadCountElement) {
-            downloadCountElement.textContent = formatNumber(count) + ' downloads';
-        }
-    }
-}
+// ========== OTHER FUNCTIONS ==========
 
 function addToApp(appName, manifestPath) {
     try {
@@ -448,8 +598,6 @@ function addToApp(appName, manifestPath) {
         showToast('Failed to add repository', 'error');
     }
 }
-
-// ========== SETUP FUNCTIONS ==========
 
 function initializeScrollAnimations() {
     if (!('IntersectionObserver' in window)) {
@@ -484,7 +632,6 @@ function setupEventListeners() {
             }, CONFIG.SEARCH_DEBOUNCE);
         });
         
-        // Keyboard shortcut for search
         document.addEventListener('keydown', (e) => {
             if (e.key === '/' && document.activeElement !== searchBox) {
                 e.preventDefault();
@@ -492,6 +639,15 @@ function setupEventListeners() {
             }
         });
     }
+    
+    window.addEventListener('online', () => {
+        showToast('🌐 Back online - syncing data...', 'success');
+        setTimeout(syncPendingDownloads, 1000);
+    });
+    
+    window.addEventListener('offline', () => {
+        showToast('📵 You are offline - downloads will sync later', 'warning');
+    });
 }
 
 function setupPWA() {
@@ -539,12 +695,10 @@ function installApp() {
     }
 }
 
-// Privacy info
 function showPrivacyInfo() {
     showToast('Anonymous download tracking only. No personal data collected.', 'info');
 }
 
-// Reset local data
 function resetLocalData() {
     if (confirm('Clear all local data and cache?')) {
         localStorage.clear();
