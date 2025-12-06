@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- FIXED: Updated Content Security Policy to allow Firebase -->
+    <!-- UPDATED: Correct Content Security Policy for Firebase and GitHub downloads -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
-                   img-src https: data:; 
+                   img-src https: data: blob:; 
                    script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.googleapis.com; 
-                   style-src 'self' 'unsafe-inline'; 
+                   style-src 'self' 'unsafe-inline' https:; 
                    connect-src 'self' 
                      https://*.firebaseio.com 
                      https://*.googleapis.com 
-                     https://firebaseinstallations.googleapis.com;
-                   frame-src https://*.firebaseio.com;">
+                     https://firebaseinstallations.googleapis.com
+                     https://minis-repo-tracking-default-rtdb.firebaseio.com
+                     wss://minis-repo-tracking-default-rtdb.firebaseio.com
+                     https://*.firebasedatabase.app;
+                   frame-src https://*.firebaseio.com https://github.com;
+                   media-src https:;
+                   object-src 'none';
+                   base-uri 'self';
+                   form-action 'self';
+                   upgrade-insecure-requests;">
     
     <title>Mini's IPA Repo - Tweaked iOS Apps</title>
     <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
@@ -42,13 +50,12 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- FIXED: Use modular Firebase SDK v9+ -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-        
-        // Firebase configuration
+    <!-- Firebase SDK v9 Compat (for simplicity) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Firebase configuration - YOUR ACTUAL CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
             authDomain: "minis-repo-tracking.firebaseapp.com",
@@ -56,53 +63,50 @@
             projectId: "minis-repo-tracking",
             storageBucket: "minis-repo-tracking.firebasestorage.app",
             messagingSenderId: "832281839494",
-            appId: "1:832281839494:web:6abe106a54100634838e07"
+            appId: "1:832281839494:web:6abe106a54100634838e07",
+            measurementId: "G-RX1B3TX24S"
         };
         
         // Initialize Firebase
         let app, database;
         try {
-            app = initializeApp(firebaseConfig);
-            database = getDatabase(app);
+            app = firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
             console.log("✅ Firebase initialized successfully");
             
             // Test connection
-            const connectedRef = ref(database, '.info/connected');
-            onValue(connectedRef, (snap) => {
+            const connectedRef = database.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
+                const statusEl = document.getElementById('firebaseStatus');
+                if (!statusEl) return;
+                
+                statusEl.style.display = 'flex';
                 if (snap.val() === true) {
                     console.log("✅ Firebase connected");
-                    updateFirebaseStatus(true);
+                    statusEl.style.background = '#1db954';
+                    statusEl.innerHTML = '<span style="color:#fff">●</span><span style="color:#fff">Live</span>';
                 } else {
                     console.log("⚠️ Firebase disconnected");
-                    updateFirebaseStatus(false);
+                    statusEl.style.background = '#ffaa00';
+                    statusEl.innerHTML = '<span style="color:#000">○</span><span style="color:#000">Offline</span>';
                 }
             });
             
-            // Make Firebase available globally
-            window.firebaseApp = app;
+            // Make Firebase available globally (Compat SDK style)
             window.firebaseDatabase = database;
-            window.firebaseRef = ref;
-            window.firebaseSet = set;
-            window.firebaseGet = get;
-            window.firebaseOnValue = onValue;
-            window.firebaseServerTimestamp = serverTimestamp;
+            window.firebaseRef = (db, path) => db.ref(path);
+            window.firebaseSet = (ref, data) => ref.set(data);
+            window.firebaseGet = (ref) => ref.once('value');
+            window.firebaseOnValue = (ref, callback, errorCallback) => ref.on('value', callback, errorCallback);
+            window.firebaseServerTimestamp = () => firebase.database.ServerValue.TIMESTAMP;
             
         } catch (error) {
             console.error("❌ Firebase initialization failed:", error);
-            updateFirebaseStatus(false);
-        }
-        
-        function updateFirebaseStatus(connected) {
             const statusEl = document.getElementById('firebaseStatus');
-            if (!statusEl) return;
-            
-            statusEl.style.display = 'flex';
-            if (connected) {
-                statusEl.style.background = '#1db954';
-                statusEl.innerHTML = '<span style="color:#fff">●</span><span style="color:#fff">Live</span>';
-            } else {
-                statusEl.style.background = '#ffaa00';
-                statusEl.innerHTML = '<span style="color:#000">○</span><span style="color:#000">Offline</span>';
+            if (statusEl) {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = '#ff4444';
+                statusEl.innerHTML = '<span style="color:#fff">✗</span><span style="color:#fff">Error</span>';
             }
         }
     </script>
@@ -201,16 +205,107 @@
             border-radius: 16px;
             padding: 20px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .app-icon-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 6px;
+            border: 2px solid var(--card-border);
+        }
+        
+        .app-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+            max-width: 100%;
+        }
+        
+        .app-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+            color: var(--success-color);
+            flex-wrap: wrap;
+        }
+        
+        .download-count { 
+            font-size: 0.8em; 
+            opacity: 0.9; 
+            color: var(--text-color);
+            font-weight: 600;
+            background: rgba(255, 50, 50, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 50, 50, 0.2);
+        }
+        
+        .app-card-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .app-card h3 {
+            margin: 0 auto 12px;
+            color: var(--text-color);
+            font-size: 1.2em;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .app-card p {
+            font-size: 0.9em;
+            color: var(--text-color);
+            opacity: 0.8;
+            line-height: 1.5;
+            margin: 0 auto 20px;
+            width: 100%;
+            text-align: center;
         }
         
         .download-btn {
-            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 24px;
             border-radius: 10px;
             background: linear-gradient(45deg, var(--success-color), #1ed760);
             color: #fff;
+            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-top: auto;
             border: none;
             cursor: pointer;
-            font-weight: 700;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .download-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
         }
         
         .toast {
@@ -221,11 +316,82 @@
             background: var(--success-color);
             color: white;
             border-radius: 8px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
-            display: none;
+            font-size: 0.9em;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .toast.show { display: block; }
+        .toast.show { 
+            transform: translateY(0); 
+            opacity: 1; 
+        }
+        
+        .toast.error { background: var(--error-color); }
+        .toast.warning { background: var(--warning-color); }
+        .toast.info { background: var(--info-color); }
+        .toast.success { background: var(--success-color); }
+        
+        /* Search box */
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 1em;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(160, 160, 255, 0.1);
+        }
+        
+        .search-box::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Stats */
+        .stats {
+            margin: 15px auto;
+            padding: 8px 20px;
+            background: rgba(255,50,50,0.15);
+            border: 1px solid rgba(255,50,50,0.3);
+            border-radius: 25px;
+            max-width: 300px;
+            color: #ff4444;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .app-grid { 
+                grid-template-columns: 1fr; 
+                padding: 0 10px;
+            }
+            
+            .app-card {
+                padding: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8em;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .app-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
     
     <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -244,22 +410,535 @@
             <span style="background:#1db954;padding:6px 14px;border-radius:20px;font-size:0.85em;font-weight:600;">✅ Active</span>
             <span style="background:#a0a0ff;padding:6px 14px;border-radius:20px;font-size:0.85em;font-weight:600;margin-left:8px;">📱 iOS 15+</span>
         </div>
-        <div style="margin:15px auto;padding:8px 20px;background:rgba(255,50,50,0.15);border:1px solid rgba(255,50,50,0.3);border-radius:25px;max-width:300px;color:#ff4444;font-weight:600;font-size:0.9em;">
+        <div class="stats">
             ⬇️ <span id="totalDownloads">0</span> Total Downloads
+        </div>
+        
+        <!-- Add to App buttons -->
+        <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button onclick="addToApp('TrollApps', 'manifests/trollapps.json')" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85em;">
+                ➕ Add to TrollApps
+            </button>
+            <button onclick="addToApp('SideStore', 'manifests/sidestore.json')" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85em;">
+                ➕ Add to SideStore
+            </button>
+            <button onclick="addToApp('Feather', 'manifests/feather.json')" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85em;">
+                ➕ Add to Feather
+            </button>
+            <button onclick="showPrivacyInfo()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85em;">
+                🔒 Privacy Info
+            </button>
         </div>
     </header>
 
     <main class="container">
-        <input type="text" id="searchBox" placeholder="🔍 Search apps..." style="width:100%;max-width:500px;margin:20px auto;display:block;padding:12px;border-radius:12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;">
+        <input type="text" id="searchBox" placeholder="🔍 Search apps (name, developer, category)" class="search-box">
         
         <div class="app-grid" id="appGrid">
             <!-- Apps will be loaded by app.js -->
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:#fff;opacity:0.7">
+                <h3>Loading apps...</h3>
+                <p>Please wait while we load the repository</p>
+            </div>
+        </div>
+        
+        <!-- Repository Info -->
+        <div style="margin-top:40px;padding:25px;background:var(--card-bg);border-radius:16px;border:1px solid var(--card-border);text-align:center;max-width:1000px;margin:40px auto;">
+            <h3 style="color:var(--text-color);font-size:1.3em;margin-bottom:20px;font-weight:700;">Repository Information</h3>
+            <div style="color:var(--text-color);opacity:0.8;line-height:1.6;">
+                <p>📦 <strong>Repository URL:</strong> <code style="background:rgba(255,255,255,0.1);padding:4px 10px;border-radius:6px;font-family:'Monaco','Menlo',monospace;">https://oofmini.github.io/Minis-IPA-Repo/</code></p>
+                <p style="margin-top:15px;">⚠️ These IPAs require sideloading apps like AltStore, TrollStore, or Scarlet.<br>All apps are tested and working. Download responsibly.</p>
+                <p style="margin-top:15px;font-size:0.9em;opacity:0.7;">
+                    If downloads don't start automatically, right-click the download button and select "Save Link As"
+                </p>
+            </div>
         </div>
     </main>
 
     <div class="toast" id="toast"></div>
 
-    <!-- FIXED: Load app.js AFTER Firebase is initialized -->
-    <script src="app.js" defer></script>
+    <!-- App JavaScript -->
+    <script>
+        // app.js - Complete JavaScript with Firebase and download tracking
+        
+        // ========== APP CONFIGURATION ==========
+        const CONFIG = {
+            SEARCH_DEBOUNCE: 300,
+            TOAST_DURATION: 3000
+        };
+
+        // ========== ALL 10 APPS DATA ==========
+        const appsData = [
+            {
+                id: 'eeveespotify',
+                name: 'EeveeSpotify',
+                developer: 'whoeevee',
+                description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png',
+                version: '9.1.0',
+                downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa',
+                downloads: 0,
+                category: 'Music',
+                size: '150 MB'
+            },
+            {
+                id: 'ytlite',
+                name: 'YTLite',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
+                version: '20.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa',
+                downloads: 0,
+                category: 'Video',
+                size: '180 MB'
+            },
+            {
+                id: 'ytmusicultimate',
+                name: 'YTMusicUltimate',
+                developer: 'dayanch96',
+                description: 'Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png',
+                version: '8.47.3',
+                downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa',
+                downloads: 0,
+                category: 'Music',
+                size: '120 MB'
+            },
+            {
+                id: 'neofreebird',
+                name: 'NeoFreeBird',
+                developer: 'NeoFreeBird',
+                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.45, NeoFreeBird v5.2',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png',
+                version: '11.45',
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa',
+                downloads: 0,
+                category: 'Social',
+                size: '110 MB'
+            },
+            {
+                id: 'scinsta',
+                name: 'SCInsta',
+                developer: 'SoCuul',
+                description: 'Tweaked Instagram premium, Instagram IPA 408.0.0, SCInsta v0.8.0',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png',
+                version: '408.0.0',
+                downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa',
+                downloads: 0,
+                category: 'Social',
+                size: '140 MB'
+            },
+            {
+                id: 'inshot',
+                name: 'InShotPro',
+                developer: 'IPAOMTK',
+                description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png',
+                version: '1.91.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa',
+                downloads: 0,
+                category: 'Photo & Video',
+                size: '220 MB'
+            },
+            {
+                id: 'appstoreplus',
+                name: 'Appstore++',
+                developer: 'cokernutx',
+                description: 'Appstore++ allows users to downgrade apps.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png',
+                version: '1.0.3',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa',
+                downloads: 0,
+                category: 'Utilities',
+                size: '15 MB'
+            },
+            {
+                id: 'itorrent',
+                name: 'iTorrent',
+                developer: 'XITRIX',
+                description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png',
+                version: '2.1.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa',
+                downloads: 0,
+                category: 'Utilities',
+                size: '25 MB'
+            },
+            {
+                id: 'livecontainer',
+                name: 'LiveContainer',
+                developer: 'hugeBlack',
+                description: 'Runs live production containers for streaming apps and runtime isolation.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png',
+                version: '3.6.1',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa',
+                downloads: 0,
+                category: 'Utilities',
+                size: '45 MB'
+            },
+            {
+                id: 'refacepro',
+                name: 'RefacePro (IOS 17+)',
+                developer: 'IPAOMTK',
+                description: 'Reface Premium Unlocked.',
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png',
+                version: '5.27.0',
+                downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa',
+                downloads: 0,
+                category: 'Entertainment',
+                size: '280 MB'
+            }
+        ];
+
+        let searchTerm = '';
+        let searchTimeout;
+        let totalDownloads = 0;
+
+        // ========== WAIT FOR FIREBASE TO BE READY ==========
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                if (window.firebaseDatabase) {
+                    resolve(true);
+                } else {
+                    // Check every 100ms for up to 5 seconds
+                    let attempts = 0;
+                    const interval = setInterval(() => {
+                        attempts++;
+                        if (window.firebaseDatabase) {
+                            clearInterval(interval);
+                            resolve(true);
+                        } else if (attempts >= 50) {
+                            clearInterval(interval);
+                            resolve(false);
+                        }
+                    }, 100);
+                }
+            });
+        }
+
+        // ========== INITIALIZE APP ==========
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log("🚀 DOM Loaded - Initializing...");
+            
+            // Show apps immediately
+            renderAppGrid();
+            setupEventListeners();
+            
+            // Wait for Firebase to be ready
+            const firebaseReady = await waitForFirebase();
+            
+            if (firebaseReady) {
+                console.log("✅ Firebase is ready, loading stats...");
+                loadFirebaseStats();
+            } else {
+                console.log("⚠️ Firebase not available, using local data");
+                showToast('Using cached data', 'warning');
+            }
+        });
+
+        // ========== LOAD FIREBASE STATS ==========
+        function loadFirebaseStats() {
+            if (!window.firebaseDatabase || !window.firebaseRef || !window.firebaseOnValue) {
+                console.log("Firebase SDK not available");
+                return;
+            }
+            
+            try {
+                const downloadsRef = window.firebaseRef(window.firebaseDatabase, 'downloads');
+                
+                window.firebaseOnValue(downloadsRef, (snapshot) => {
+                    const data = snapshot.val() || {};
+                    console.log("📊 Firebase data loaded:", data);
+                    
+                    // Update each app's download count
+                    appsData.forEach(app => {
+                        if (data[app.id] && data[app.id].count !== undefined) {
+                            app.downloads = parseInt(data[app.id].count) || 0;
+                        } else {
+                            app.downloads = 0;
+                        }
+                    });
+                    
+                    // Update UI
+                    updateStatsUI();
+                    updateAllAppDownloadCounts();
+                }, (error) => {
+                    console.error('Firebase error:', error);
+                    showToast('Failed to load stats', 'error');
+                });
+                
+            } catch (error) {
+                console.error('Firebase setup error:', error);
+            }
+        }
+
+        // ========== TRACK DOWNLOAD ==========
+        async function trackDownload(appId) {
+            try {
+                const app = appsData.find(a => a.id === appId);
+                if (!app) {
+                    showToast('App not found', 'error');
+                    return;
+                }
+
+                // Track in Firebase if available
+                if (window.firebaseDatabase && window.firebaseRef && window.firebaseSet && window.firebaseGet) {
+                    try {
+                        const appRef = window.firebaseRef(window.firebaseDatabase, 'downloads/' + appId);
+                        const snapshot = await window.firebaseGet(appRef);
+                        const currentData = snapshot.val();
+                        
+                        let newCount = currentData && currentData.count !== undefined 
+                            ? parseInt(currentData.count) + 1 
+                            : 1;
+                        
+                        await window.firebaseSet(appRef, {
+                            count: newCount,
+                            lastDownload: window.firebaseServerTimestamp(),
+                            appName: app.name,
+                            lastUpdated: Date.now()
+                        });
+                        
+                        console.log(`✅ Tracked: ${app.name} = ${newCount}`);
+                        
+                        // Update UI
+                        app.downloads = newCount;
+                        updateStatsUI();
+                        updateAppDownloadCount(appId, newCount);
+                        
+                    } catch (error) {
+                        console.error('Firebase tracking error:', error);
+                        showToast('⚠️ Tracking failed, but download continues', 'warning');
+                    }
+                } else {
+                    console.log('Firebase not available, download continues without tracking');
+                    showToast('Download started (offline mode)', 'info');
+                }
+                
+                // FIXED: Use direct download method for GitHub releases
+                startDownload(app.downloadUrl, app.name + '.ipa');
+                
+                showToast(`✅ Downloading ${app.name}...`, 'success');
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                showToast('Download failed', 'error');
+            }
+        }
+
+        // ========== FIXED DOWNLOAD FUNCTION ==========
+        function startDownload(url, filename) {
+            // Method 1: Create invisible download link
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            
+            // For GitHub releases, we need to force download behavior
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            
+            // Try to set download attribute
+            link.download = filename || 'app.ipa';
+            
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(link);
+            }, 100);
+            
+            // Fallback: Open in new window if above fails
+            setTimeout(() => {
+                const win = window.open(url, '_blank');
+                if (!win || win.closed || typeof win.closed === 'undefined') {
+                    // If popup blocked, show instructions
+                    showToast('Popup blocked! Right-click and "Save Link As"', 'warning');
+                }
+            }, 200);
+        }
+
+        // ========== UI UPDATE FUNCTIONS ==========
+        function updateStatsUI() {
+            totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+            const totalEl = document.getElementById('totalDownloads');
+            if (totalEl) {
+                totalEl.textContent = formatNumber(totalDownloads);
+            }
+        }
+
+        function updateAllAppDownloadCounts() {
+            const appCards = document.querySelectorAll('.app-card');
+            appCards.forEach(card => {
+                const appId = card.dataset.appId;
+                if (appId) {
+                    const app = appsData.find(a => a.id === appId);
+                    if (app) {
+                        const downloadCountElement = card.querySelector('.download-count');
+                        if (downloadCountElement) {
+                            downloadCountElement.textContent = formatNumber(app.downloads) + ' downloads';
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateAppDownloadCount(appId, count) {
+            const appCard = document.querySelector(`.app-card[data-app-id="${appId}"]`);
+            if (appCard) {
+                const downloadCountElement = appCard.querySelector('.download-count');
+                if (downloadCountElement) {
+                    downloadCountElement.textContent = formatNumber(count) + ' downloads';
+                }
+            }
+        }
+
+        // ========== RENDER APPS ==========
+        function renderAppGrid() {
+            const appGrid = document.getElementById('appGrid');
+            if (!appGrid) return;
+            
+            const filteredApps = appsData.filter(app => {
+                if (!searchTerm) return true;
+                const term = searchTerm.toLowerCase();
+                return app.name.toLowerCase().includes(term) ||
+                       app.description.toLowerCase().includes(term) ||
+                       app.developer.toLowerCase().includes(term) ||
+                       app.category.toLowerCase().includes(term);
+            });
+
+            if (filteredApps.length === 0) {
+                appGrid.innerHTML = `
+                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:#fff;opacity:0.7">
+                        <h3>No apps found</h3>
+                        <p>Try different search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            appGrid.innerHTML = filteredApps.map((app) => {
+                const safeName = escapeHtml(app.name);
+                const safeDeveloper = escapeHtml(app.developer);
+                const safeDescription = escapeHtml(app.description);
+                
+                return `
+                <article class="app-card" data-app-id="${app.id}">
+                    <div class="app-icon-container">
+                        <img src="${app.icon}" alt="${safeName}" class="app-icon" loading="lazy">
+                    </div>
+                    <div class="app-status">
+                        ✅ Fully Working • v${app.version}
+                        <span class="download-count">
+                            ${formatNumber(app.downloads)} downloads
+                        </span>
+                    </div>
+                    <div class="app-card-content">
+                        <h3>${safeName}</h3>
+                        <p>
+                            <span style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-size:0.8em;">${app.category}</span>
+                        </p>
+                        <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                        <p style="font-size:0.8em;opacity:0.7;margin:0 0 20px;">Size: ${app.size}</p>
+                        <button class="download-btn" onclick="trackDownload('${app.id}')">
+                            ⬇️ Download IPA
+                        </button>
+                    </div>
+                </article>
+                `;
+            }).join('');
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatNumber(num) {
+            num = parseInt(num) || 0;
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            toast.textContent = message;
+            toast.className = 'toast show';
+            
+            // Remove existing type classes
+            toast.classList.remove('error', 'warning', 'success', 'info');
+            
+            // Add the appropriate class
+            if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            } else if (type === 'success') {
+                toast.classList.add('success');
+            } else {
+                toast.classList.add('info');
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, CONFIG.TOAST_DURATION);
+        }
+
+        // ========== EVENT LISTENERS ==========
+        function setupEventListeners() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    const value = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        searchTerm = value.toLowerCase().trim();
+                        renderAppGrid();
+                    }, CONFIG.SEARCH_DEBOUNCE);
+                });
+            }
+        }
+
+        // ========== OTHER FUNCTIONS ==========
+        function addToApp(appName, manifestPath) {
+            try {
+                const schemes = {
+                    'TrollApps': 'trollapps',
+                    'SideStore': 'sidestore',
+                    'Feather': 'feather'
+                };
+                
+                const scheme = schemes[appName];
+                if (!scheme) {
+                    showToast(`Unknown app: ${appName}`, 'error');
+                    return;
+                }
+                
+                const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}`;
+                window.location.href = url;
+                
+                setTimeout(() => {
+                    showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
+                }, 1000);
+            } catch (error) {
+                showToast('Failed to add repository', 'error');
+            }
+        }
+
+        function showPrivacyInfo() {
+            showToast('Anonymous download tracking only. No personal data collected.', 'info');
+        }
+
+        // Make functions globally available
+        window.trackDownload = trackDownload;
+        window.addToApp = addToApp;
+        window.showPrivacyInfo = showPrivacyInfo;
+    </script>
 </body>
 </html>
