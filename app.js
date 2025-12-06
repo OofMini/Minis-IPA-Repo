@@ -1,4 +1,4 @@
-// app.js - FIXED VERSION with proper Firebase integration
+// app.js - FIXED VERSION with working download links
 
 // ========== APP CONFIGURATION ==========
 const CONFIG = {
@@ -255,10 +255,8 @@ async function trackDownload(appId) {
             showToast('Download started (offline mode)', 'info');
         }
         
-        // Open download
-        setTimeout(() => {
-            window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
-        }, 300);
+        // FIXED: Use direct download method for GitHub releases
+        startDownload(app.downloadUrl, app.name);
         
         showToast(`✅ Downloading ${app.name}...`, 'success');
         
@@ -266,6 +264,62 @@ async function trackDownload(appId) {
         console.error('Download error:', error);
         showToast('Download failed', 'error');
     }
+}
+
+// ========== NEW: FIXED DOWNLOAD FUNCTION ==========
+function startDownload(url, filename) {
+    // Method 1: Create invisible download link
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = url;
+    
+    // For GitHub releases, we need to force download behavior
+    // GitHub serves files with proper Content-Disposition headers
+    // But we need to ensure the link opens in a new tab
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    
+    // Try to set download attribute (works for same-origin or CORS-allowed)
+    link.download = filename || 'app.ipa';
+    
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    setTimeout(() => {
+        document.body.removeChild(link);
+    }, 100);
+    
+    // Fallback: Open in new window if above fails
+    setTimeout(() => {
+        const win = window.open(url, '_blank');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            // If popup blocked, show instructions
+            showToast('Popup blocked! Please allow popups for this site.', 'warning');
+            showDownloadInstructions(url);
+        }
+    }, 200);
+}
+
+function showDownloadInstructions(url) {
+    const instructions = `
+        <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;">
+            <div style="background:#222;padding:30px;border-radius:15px;max-width:500px;margin:20px;border:2px solid #1db954;">
+                <h3 style="color:#1db954;margin-bottom:15px;">Download Instructions</h3>
+                <p style="color:#fff;margin-bottom:20px;">Your browser blocked the automatic download. Here's how to download manually:</p>
+                <ol style="color:#fff;text-align:left;margin-left:20px;margin-bottom:20px;">
+                    <li>Right-click this link: <a href="${url}" style="color:#007AFF;word-break:break-all;">${url}</a></li>
+                    <li>Select "Save link as..." or "Download linked file"</li>
+                    <li>Save the .ipa file to your device</li>
+                </ol>
+                <button onclick="this.parentElement.parentElement.remove()" style="background:#1db954;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Got it</button>
+            </div>
+        </div>
+    `;
+    
+    const div = document.createElement('div');
+    div.innerHTML = instructions;
+    document.body.appendChild(div);
 }
 
 // ========== UI UPDATE FUNCTIONS ==========
@@ -334,26 +388,27 @@ function renderAppGrid() {
         
         return `
         <article class="app-card" data-app-id="${app.id}">
-            <div style="width:80px;height:80px;margin:0 auto 15px;">
-                <img src="${app.icon}" alt="${safeName}" style="width:100%;height:100%;object-fit:contain;border-radius:16px;">
+            <div class="app-icon-container">
+                <img src="${app.icon}" alt="${safeName}" class="app-icon" loading="lazy">
             </div>
-            <div style="margin-bottom:12px;font-size:0.85em;color:#1db954;">
+            <div class="app-status">
                 ✅ Fully Working • v${app.version}
-                <span class="download-count" style="font-size:0.8em;opacity:0.9;color:#fff;font-weight:600;background:rgba(255,50,50,0.1);padding:2px 8px;border-radius:10px;border:1px solid rgba(255,50,50,0.2);display:inline-block;margin-left:8px;">
+                <span class="download-count">
                     ${formatNumber(app.downloads)} downloads
                 </span>
             </div>
-            <h3 style="margin:0 0 12px;font-size:1.2em;">${safeName}</h3>
-            <p style="font-size:0.9em;opacity:0.8;margin:0 0 12px;">
-                <span style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-size:0.8em;">${app.category}</span>
-            </p>
-            <p style="font-size:0.9em;opacity:0.8;margin:0 0 20px;">
-                By <b>${safeDeveloper}</b><br>${safeDescription}
-            </p>
-            <p style="font-size:0.8em;opacity:0.7;margin:0 0 20px;">Size: ${app.size}</p>
-            <button class="download-btn" onclick="trackDownload('${app.id}')">
-                ⬇️ Download IPA
-            </button>
+            <div class="app-card-content">
+                <h3>${safeName}</h3>
+                <p>
+                    <span style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-size:0.8em;">${app.category}</span>
+                </p>
+                <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
+                <p style="font-size:0.8em;opacity:0.7;margin:0 0 20px;">Size: ${app.size}</p>
+                <button class="download-btn" onclick="trackDownload('${app.id}')">
+                    ⬇️ Download IPA
+                </button>
+                <p style="font-size:0.7em;opacity:0.5;margin-top:8px;">Right-click → Save Link As if download doesn't start</p>
+            </div>
         </article>
         `;
     }).join('');
@@ -380,10 +435,19 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     toast.className = 'toast show';
     
-    if (type === 'error') toast.style.background = '#ff4444';
-    else if (type === 'warning') toast.style.background = '#ffaa00';
-    else if (type === 'success') toast.style.background = '#1db954';
-    else toast.style.background = '#007AFF';
+    if (type === 'error') {
+        toast.style.background = '#ff4444';
+        toast.classList.add('error');
+    } else if (type === 'warning') {
+        toast.style.background = '#ffaa00';
+        toast.classList.add('warning');
+    } else if (type === 'success') {
+        toast.style.background = '#1db954';
+        toast.classList.add('success');
+    } else {
+        toast.style.background = '#007AFF';
+        toast.classList.add('info');
+    }
 
     setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
 }
@@ -440,3 +504,9 @@ function resetLocalData() {
         location.reload();
     }
 }
+
+// Make functions globally available
+window.trackDownload = trackDownload;
+window.addToApp = addToApp;
+window.showPrivacyInfo = showPrivacyInfo;
+window.resetLocalData = resetLocalData;
