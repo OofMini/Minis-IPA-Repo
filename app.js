@@ -1,4 +1,4 @@
-// app.js - Apps Show IMMEDIATELY, Firebase optional
+// app.js - FIXED VERSION with proper Firebase integration
 
 // ========== APP CONFIGURATION ==========
 const CONFIG = {
@@ -131,110 +131,89 @@ const appsData = [
 ];
 
 let searchTerm = '';
-let deferredPrompt;
 let searchTimeout;
-let observer = null;
 let totalDownloads = 0;
 
-// ========== INITIALIZE IMMEDIATELY ==========
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("🚀 DOM Loaded - Showing apps IMMEDIATELY");
-    
-    // STEP 1: Show apps FIRST (most important)
-    renderAppGrid();
-    
-    // STEP 2: Setup basic functionality
-    setupEventListeners();
-    initializeScrollAnimations();
-    setupPWA();
-    
-    // STEP 3: Try Firebase in background (optional)
-    setTimeout(() => {
-        if (typeof firebase !== 'undefined') {
-            console.log("🔥 Trying Firebase in background...");
-            initializeFirebase();
+// ========== WAIT FOR FIREBASE TO BE READY ==========
+function waitForFirebase() {
+    return new Promise((resolve) => {
+        if (window.firebaseDatabase) {
+            resolve(true);
+        } else {
+            // Check every 100ms for up to 5 seconds
+            let attempts = 0;
+            const interval = setInterval(() => {
+                attempts++;
+                if (window.firebaseDatabase) {
+                    clearInterval(interval);
+                    resolve(true);
+                } else if (attempts >= 50) {
+                    clearInterval(interval);
+                    resolve(false);
+                }
+            }, 100);
         }
-    }, 500);
-    
-    console.log("✅ Apps should be visible NOW");
-});
-
-// ========== RENDER APPS (SIMPLIFIED) ==========
-
-function renderAppGrid() {
-    const appGrid = document.getElementById('appGrid');
-    if (!appGrid) {
-        console.error("❌ Cannot find appGrid element!");
-        return;
-    }
-    
-    console.log("🎨 Rendering", appsData.length, "apps...");
-    
-    const filteredApps = appsData.filter(app => {
-        if (!searchTerm) return true;
-        const term = searchTerm.toLowerCase();
-        return app.name.toLowerCase().includes(term) ||
-               app.description.toLowerCase().includes(term) ||
-               app.developer.toLowerCase().includes(term) ||
-               app.category.toLowerCase().includes(term);
     });
-
-    if (filteredApps.length === 0) {
-        appGrid.innerHTML = `
-            <div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7">
-                <h3>No apps found</h3>
-                <p>Try different search terms</p>
-            </div>
-        `;
-        return;
-    }
-
-    appGrid.innerHTML = filteredApps.map((app, index) => {
-        const safeName = escapeHtml(app.name);
-        const safeDeveloper = escapeHtml(app.developer);
-        const safeDescription = escapeHtml(app.description);
-        const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
-        
-        // Add cache-busting to icon
-        const iconUrl = app.icon + '?t=' + Date.now();
-        
-        return `
-        <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${app.id}">
-            <div class="app-icon-container">
-                <img src="${iconUrl}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
-                     onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
-            </div>
-            <div class="app-status">
-                <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
-                <span class="download-count" aria-label="Download count">${app.downloads || 0} downloads</span>
-            </div>
-            <div class="app-card-content">
-                <h3>${safeName}</h3>
-                <p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>
-                <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
-                <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
-                <button class="download-btn" onclick="trackDownload('${app.id}')" aria-label="Download ${safeName} IPA">
-                    ⬇️ Download IPA
-                </button>
-            </div>
-        </article>
-        `;
-    }).join('');
-
-    // Initialize animations
-    setTimeout(() => {
-        appGrid.querySelectorAll('.app-card').forEach(card => {
-            if (observer) observer.observe(card);
-        });
-    }, 100);
-    
-    console.log("✅ Apps rendered successfully");
 }
 
-// ========== SIMPLE DOWNLOAD FUNCTION ==========
+// ========== INITIALIZE APP ==========
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log("🚀 DOM Loaded - Initializing...");
+    
+    // Show apps immediately
+    renderAppGrid();
+    setupEventListeners();
+    
+    // Wait for Firebase to be ready
+    const firebaseReady = await waitForFirebase();
+    
+    if (firebaseReady) {
+        console.log("✅ Firebase is ready, loading stats...");
+        loadFirebaseStats();
+    } else {
+        console.log("⚠️ Firebase not available, using local data");
+        showToast('Using cached data', 'warning');
+    }
+});
 
-function trackDownload(appId) {
+// ========== LOAD FIREBASE STATS ==========
+function loadFirebaseStats() {
+    if (!window.firebaseDatabase || !window.firebaseRef || !window.firebaseOnValue) {
+        console.log("Firebase SDK not available");
+        return;
+    }
+    
+    try {
+        const downloadsRef = window.firebaseRef(window.firebaseDatabase, 'downloads');
+        
+        window.firebaseOnValue(downloadsRef, (snapshot) => {
+            const data = snapshot.val() || {};
+            console.log("📊 Firebase data loaded:", data);
+            
+            // Update each app's download count
+            appsData.forEach(app => {
+                if (data[app.id] && data[app.id].count !== undefined) {
+                    app.downloads = parseInt(data[app.id].count) || 0;
+                } else {
+                    app.downloads = 0;
+                }
+            });
+            
+            // Update UI
+            updateStatsUI();
+            updateAllAppDownloadCounts();
+        }, (error) => {
+            console.error('Firebase error:', error);
+            showToast('Failed to load stats', 'error');
+        });
+        
+    } catch (error) {
+        console.error('Firebase setup error:', error);
+    }
+}
+
+// ========== TRACK DOWNLOAD ==========
+async function trackDownload(appId) {
     try {
         const app = appsData.find(a => a.id === appId);
         if (!app) {
@@ -242,22 +221,43 @@ function trackDownload(appId) {
             return;
         }
 
-        // Add timestamp to prevent caching
-        const downloadUrl = app.downloadUrl + '?t=' + Date.now();
-        
-        // Update local count
-        app.downloads = (app.downloads || 0) + 1;
-        updateAppDownloadCount(appId, app.downloads);
-        updateTotalDownloads();
-        
-        // Try Firebase if available
-        if (window.firebaseApp && window.database) {
-            trackDownloadToFirebase(appId);
+        // Track in Firebase if available
+        if (window.firebaseDatabase && window.firebaseRef && window.firebaseSet && window.firebaseGet) {
+            try {
+                const appRef = window.firebaseRef(window.firebaseDatabase, 'downloads/' + appId);
+                const snapshot = await window.firebaseGet(appRef);
+                const currentData = snapshot.val();
+                
+                let newCount = currentData && currentData.count !== undefined 
+                    ? parseInt(currentData.count) + 1 
+                    : 1;
+                
+                await window.firebaseSet(appRef, {
+                    count: newCount,
+                    lastDownload: window.firebaseServerTimestamp(),
+                    appName: app.name,
+                    lastUpdated: Date.now()
+                });
+                
+                console.log(`✅ Tracked: ${app.name} = ${newCount}`);
+                
+                // Update UI
+                app.downloads = newCount;
+                updateStatsUI();
+                updateAppDownloadCount(appId, newCount);
+                
+            } catch (error) {
+                console.error('Firebase tracking error:', error);
+                showToast('⚠️ Tracking failed, but download continues', 'warning');
+            }
+        } else {
+            console.log('Firebase not available, download continues without tracking');
+            showToast('Download started (offline mode)', 'info');
         }
         
         // Open download
         setTimeout(() => {
-            window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+            window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
         }, 300);
         
         showToast(`✅ Downloading ${app.name}...`, 'success');
@@ -268,106 +268,14 @@ function trackDownload(appId) {
     }
 }
 
-// ========== FIREBASE FUNCTIONS (OPTIONAL) ==========
-
-function initializeFirebase() {
-    if (typeof firebase === 'undefined') {
-        console.log("Firebase SDK not loaded");
-        return;
-    }
-    
-    try {
-        const firebaseConfig = {
-            apiKey: "AIzaSyB4DJCXr1tWbJijsOdBY8KDCuYGPaF4vfw",
-            authDomain: "minis-repo-tracking.firebaseapp.com",
-            databaseURL: "https://minis-repo-tracking-default-rtdb.firebaseio.com",
-            projectId: "minis-repo-tracking",
-            storageBucket: "minis-repo-tracking.firebasestorage.app",
-            messagingSenderId: "832281839494",
-            appId: "1:832281839494:web:6abe106a54100634838e07",
-            measurementId: "G-RX1B3TX24S"
-        };
-        
-        // Initialize
-        window.firebaseApp = firebase.initializeApp(firebaseConfig);
-        window.database = firebase.database();
-        
-        console.log("✅ Firebase initialized");
-        updateFirebaseStatus(true);
-        
-        // Load existing counts
-        loadFirebaseStats();
-        
-    } catch (error) {
-        console.log("Firebase init failed (optional):", error.message);
-        updateFirebaseStatus(false);
+// ========== UI UPDATE FUNCTIONS ==========
+function updateStatsUI() {
+    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
+    const totalEl = document.getElementById('totalDownloads');
+    if (totalEl) {
+        totalEl.textContent = formatNumber(totalDownloads);
     }
 }
-
-function updateFirebaseStatus(connected) {
-    const statusEl = document.getElementById('firebaseStatus');
-    if (!statusEl) return;
-    
-    statusEl.style.display = 'flex';
-    if (connected) {
-        statusEl.style.background = 'var(--success-color)';
-        statusEl.children[0].textContent = '●';
-        statusEl.children[1].textContent = 'Live';
-        showToast('✅ Firebase connected', 'success');
-    } else {
-        statusEl.style.background = 'var(--warning-color)';
-        statusEl.children[0].textContent = '○';
-        statusEl.children[1].textContent = 'Offline';
-    }
-}
-
-async function trackDownloadToFirebase(appId) {
-    if (!window.database) return;
-    
-    try {
-        const app = appsData.find(a => a.id === appId);
-        if (!app) return;
-        
-        const appRef = window.database.ref('downloads/' + appId);
-        const snapshot = await appRef.once('value');
-        const currentData = snapshot.val() || {};
-        const newCount = (parseInt(currentData.count) || 0) + 1;
-        
-        await appRef.update({
-            count: newCount,
-            lastDownload: firebase.database.ServerValue.TIMESTAMP,
-            appName: app.name,
-            lastUpdated: Date.now()
-        });
-        
-        console.log(`✅ Firebase: ${app.name} = ${newCount}`);
-        
-    } catch (error) {
-        console.log("Firebase tracking failed (optional):", error.message);
-    }
-}
-
-function loadFirebaseStats() {
-    if (!window.database) return;
-    
-    const downloadsRef = window.database.ref('downloads');
-    downloadsRef.on('value', (snapshot) => {
-        const data = snapshot.val() || {};
-        
-        // Update app counts
-        appsData.forEach(app => {
-            if (data[app.id] && data[app.id].count !== undefined) {
-                app.downloads = parseInt(data[app.id].count) || 0;
-            }
-        });
-        
-        // Update UI
-        updateAllAppDownloadCounts();
-        updateTotalDownloads();
-    });
-}
-
-// ========== UTILITY FUNCTIONS ==========
 
 function updateAllAppDownloadCounts() {
     const appCards = document.querySelectorAll('.app-card');
@@ -395,14 +303,63 @@ function updateAppDownloadCount(appId, count) {
     }
 }
 
-function updateTotalDownloads() {
-    totalDownloads = appsData.reduce((sum, app) => sum + app.downloads, 0);
-    const totalDownloadsEl = document.getElementById('totalDownloads');
-    if (totalDownloadsEl) {
-        totalDownloadsEl.textContent = formatNumber(totalDownloads);
+// ========== RENDER APPS ==========
+function renderAppGrid() {
+    const appGrid = document.getElementById('appGrid');
+    if (!appGrid) return;
+    
+    const filteredApps = appsData.filter(app => {
+        if (!searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        return app.name.toLowerCase().includes(term) ||
+               app.description.toLowerCase().includes(term) ||
+               app.developer.toLowerCase().includes(term) ||
+               app.category.toLowerCase().includes(term);
+    });
+
+    if (filteredApps.length === 0) {
+        appGrid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:#fff;opacity:0.7">
+                <h3>No apps found</h3>
+                <p>Try different search terms</p>
+            </div>
+        `;
+        return;
     }
+
+    appGrid.innerHTML = filteredApps.map((app) => {
+        const safeName = escapeHtml(app.name);
+        const safeDeveloper = escapeHtml(app.developer);
+        const safeDescription = escapeHtml(app.description);
+        
+        return `
+        <article class="app-card" data-app-id="${app.id}">
+            <div style="width:80px;height:80px;margin:0 auto 15px;">
+                <img src="${app.icon}" alt="${safeName}" style="width:100%;height:100%;object-fit:contain;border-radius:16px;">
+            </div>
+            <div style="margin-bottom:12px;font-size:0.85em;color:#1db954;">
+                ✅ Fully Working • v${app.version}
+                <span class="download-count" style="font-size:0.8em;opacity:0.9;color:#fff;font-weight:600;background:rgba(255,50,50,0.1);padding:2px 8px;border-radius:10px;border:1px solid rgba(255,50,50,0.2);display:inline-block;margin-left:8px;">
+                    ${formatNumber(app.downloads)} downloads
+                </span>
+            </div>
+            <h3 style="margin:0 0 12px;font-size:1.2em;">${safeName}</h3>
+            <p style="font-size:0.9em;opacity:0.8;margin:0 0 12px;">
+                <span style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-size:0.8em;">${app.category}</span>
+            </p>
+            <p style="font-size:0.9em;opacity:0.8;margin:0 0 20px;">
+                By <b>${safeDeveloper}</b><br>${safeDescription}
+            </p>
+            <p style="font-size:0.8em;opacity:0.7;margin:0 0 20px;">Size: ${app.size}</p>
+            <button class="download-btn" onclick="trackDownload('${app.id}')">
+                ⬇️ Download IPA
+            </button>
+        </article>
+        `;
+    }).join('');
 }
 
+// ========== UTILITY FUNCTIONS ==========
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -421,19 +378,17 @@ function showToast(message, type = 'info') {
     if (!toast) return;
     
     toast.textContent = message;
-    toast.className = 'toast';
+    toast.className = 'toast show';
+    
+    if (type === 'error') toast.style.background = '#ff4444';
+    else if (type === 'warning') toast.style.background = '#ffaa00';
+    else if (type === 'success') toast.style.background = '#1db954';
+    else toast.style.background = '#007AFF';
 
-    if (type === 'error') toast.classList.add('error');
-    else if (type === 'warning') toast.classList.add('warning');
-    else if (type === 'success') toast.classList.add('success');
-    else toast.classList.add('info');
-
-    toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
 }
 
-// ========== SETUP FUNCTIONS ==========
-
+// ========== EVENT LISTENERS ==========
 function setupEventListeners() {
     const searchBox = document.getElementById('searchBox');
     if (searchBox) {
@@ -445,83 +400,10 @@ function setupEventListeners() {
                 renderAppGrid();
             }, CONFIG.SEARCH_DEBOUNCE);
         });
-        
-        // Keyboard shortcut for search
-        document.addEventListener('keydown', (e) => {
-            if (e.key === '/' && document.activeElement !== searchBox) {
-                e.preventDefault();
-                searchBox.focus();
-            }
-        });
     }
 }
 
-function initializeScrollAnimations() {
-    if (!('IntersectionObserver' in window)) {
-        document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-            el.classList.add('visible');
-        });
-        return;
-    }
-
-    observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, {threshold: 0.1});
-
-    document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-function setupPWA() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
-            .catch((error) => {
-                console.log('Service Worker registration failed:', error);
-            });
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        setTimeout(showInstallPrompt, 3000);
-    });
-}
-
-function showInstallPrompt() {
-    if (!deferredPrompt) return;
-
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    
-    toast.textContent = 'Install Mini\'s IPA Repo? ';
-    
-    const installButton = document.createElement('button');
-    installButton.textContent = 'Install';
-    installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
-    installButton.onclick = installApp;
-    
-    toast.appendChild(installButton);
-    toast.classList.remove('error','warning','success','info');
-    toast.classList.add('toast','info','show');
-}
-
-function installApp() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                showToast('App installed successfully!', 'success');
-            }
-            deferredPrompt = null;
-        });
-    }
-}
-
+// ========== OTHER FUNCTIONS ==========
 function addToApp(appName, manifestPath) {
     try {
         const schemes = {
@@ -536,7 +418,7 @@ function addToApp(appName, manifestPath) {
             return;
         }
         
-        const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${Date.now()}`;
+        const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}`;
         window.location.href = url;
         
         setTimeout(() => {
