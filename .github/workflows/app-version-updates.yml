@@ -204,7 +204,7 @@ jobs:
           APP_KEYS=("inshot" "appstorepp" "itorrent" "livecontainer" "reface")
           
           declare -A APP_NAMES=(
-            ["inshot"]="InShot Pro"
+            ["inshot"]="InShotPro"
             ["appstorepp"]="Appstore++"
             ["itorrent"]="iTorrent"
             ["livecontainer"]="LiveContainer"
@@ -321,22 +321,6 @@ jobs:
                      .versions[0].date = $date | 
                      .localizedDescription = $desc)' "$file" > "$temp_file"
                 ;;
-              "feather.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$app_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .versionDate = $date |
-                     .versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
               "trollapps.json")
                 jq --arg app "$app_name" \
                    --arg bundle "$bundle_id" \
@@ -391,7 +375,7 @@ jobs:
             local app_version="$2"
             local workflow_file=".github/workflows/app-version-updates.yml"
             
-            if [ ! -f "$workflow_file" ]]; then
+            if [ ! -f "$workflow_file" ]; then
               echo "::warning::Workflow file not found"
               return 0
             fi
@@ -404,7 +388,7 @@ jobs:
           
           # Validate JSON files exist and are valid
           echo "📄 Validating JSON files..."
-          JSON_FILES=("sidestore.json" "feather.json" "trollapps.json")
+          JSON_FILES=("sidestore.json" "trollapps.json")
           for file in "${JSON_FILES[@]}"; do
             if [ ! -f "$file" ]; then
               echo "::error::$file not found"
@@ -568,7 +552,7 @@ jobs:
           fi
           
           # Stage changed files
-          git add sidestore.json feather.json trollapps.json
+          git add sidestore.json trollapps.json
           
           # Add index.html only if it was modified
           if [ -f index.html ] && ! git diff --quiet index.html 2>/dev/null; then
@@ -677,7 +661,6 @@ jobs:
             echo ""
             echo "### 📄 Files Processed:"
             echo "- \`sidestore.json\`"
-            echo "- \`feather.json\`"
             echo "- \`trollapps.json\`"
             if [ -f "index.html" ]; then
               echo "- \`index.html\`"
