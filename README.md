@@ -14,4 +14,3 @@
 - **Official Website**: https://oofmini.github.io/Minis-IPA-Repo/
 - **SideStore Manifest**: https://OofMini.github.io/Minis-IPA-Repo/sidestore.json
 - **TrollApps Manifest**: https://OofMini.github.io/Minis-IPA-Repo/trollapps.json
-- **Feather Manifest**: https://OofMini.github.io/Minis-IPA-Repo/feather.json
