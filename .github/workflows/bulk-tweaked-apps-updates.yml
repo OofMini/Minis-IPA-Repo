@@ -45,33 +45,33 @@ on:
         type: boolean
         default: true
         
-      # YTMusicUltimate (New)
+      # YTMusicUltimate
       ytmusicultimate_ipa_version:
         description: "YTMusicUltimate IPA Version"
-        default: "0.0.0"
+        default: "8.47.3"
         required: false
       ytmusicultimate_tweak_version:
         description: "YTMusicUltimate Tweak Version"
-        default: "v0.0.0"
+        default: "2.3.1"
         required: false
       update_ytmusicultimate:
         description: "Update YTMusicUltimate"
         type: boolean
-        default: false
+        default: true
         
-      # SCInsta (New)
+      # SCInsta
       scinsta_ipa_version:
         description: "SCInsta IPA Version"
-        default: "0.0.0"
+        default: "408.0.0"
         required: false
       scinsta_tweak_version:
         description: "SCInsta Tweak Version"
-        default: "v0.0.0"
+        default: "v0.8.0"
         required: false
       update_scinsta:
         description: "Update SCInsta"
         type: boolean
-        default: false
+        default: true
         
       # Global Inputs
       change_description:
@@ -251,7 +251,7 @@ jobs:
           declare -A APP_NAMES=(
             ["spotify"]="EeveeSpotify"
             ["youtube"]="YTLite"
-            ["x"]="X (NeoFreeBird)"
+            ["x"]="NeoFreeBird"
             ["ytmusicultimate"]="YTMusicUltimate"
             ["scinsta"]="SCInsta"
           )
@@ -373,22 +373,6 @@ jobs:
                      .versions[0].date = $date | 
                      .localizedDescription = $desc)' "$file" > "$temp_file"
                 ;;
-              "feather.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .versionDate = $date |
-                     .versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
               "trollapps.json")
                 jq --arg app "$app_name" \
                    --arg bundle "$bundle_id" \
@@ -459,7 +443,6 @@ jobs:
             local app_key="$1"
             local ipa_version="$2"
             local tweak_version="$3"
-            # FIXED: Updated to use the correct workflow filename
             local workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
             
             if [ ! -f "$workflow_file" ]; then
@@ -476,7 +459,7 @@ jobs:
           
           # Validate JSON files exist and are valid
           echo "📄 Validating JSON files..."
-          JSON_FILES=("sidestore.json" "feather.json" "trollapps.json")
+          JSON_FILES=("sidestore.json" "trollapps.json")
           for file in "${JSON_FILES[@]}"; do
             if [ ! -f "$file" ]; then
               echo "::error::$file not found"
@@ -643,7 +626,7 @@ jobs:
           fi
           
           # Stage changed files
-          git add sidestore.json feather.json trollapps.json
+          git add sidestore.json trollapps.json
           
           # Add index.html only if it was modified
           if [ -f index.html ] && ! git diff --quiet index.html 2>/dev/null; then
@@ -651,7 +634,6 @@ jobs:
           fi
           
           # Add workflow file if it was modified
-          # FIXED: Updated to use the correct workflow filename
           WORKFLOW_FILE=".github/workflows/bulk-tweaked-apps-updates.yml"
           if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
             git add "$WORKFLOW_FILE"
@@ -755,7 +737,6 @@ jobs:
             echo ""
             echo "### 📄 Files Processed:"
             echo "- \`sidestore.json\`"
-            echo "- \`feather.json\`"
             echo "- \`trollapps.json\`"
             if [ -f "index.html" ]; then
               echo "- \`index.html\`"
