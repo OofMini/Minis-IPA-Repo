@@ -36,7 +36,7 @@
       "name": "YTLite",
       "bundleIdentifier": "com.google.ios.youtube",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.47.3, YTLite v5.2b4.",
+      "localizedDescription": "Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.49.5, YTLite v5.2b4.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/ytliteplus-1.PNG",
@@ -45,8 +45,8 @@
       ],
       "versions": [
         {
-          "version": "20.47.3",
-          "date": "2025-11-28",
+          "version": "20.49.5",
+          "date": "2025-12-09",
           "downloadURL": "https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa",
           "size": 113351065,
           "localizedDescription": "Background playback, ads removed, picture-in-picture support"
@@ -64,7 +64,7 @@
       "name": "YTMusicUltimate",
       "bundleIdentifier": "com.google.ios.youtubemusic",
       "developerName": "dayanch96",
-      "localizedDescription": "Tweaked YouTube Music with enhanced features and no ads. YouTube Music IPA 8.47.3, YTMusicUltimate v2.3.1.",
+      "localizedDescription": "Tweaked YouTube Music with enhanced features and no ads. YouTube Music IPA 8.49.2, YTMusicUltimate 2.3.1.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/youtubemusic-1.png",
@@ -73,8 +73,8 @@
       ],
       "versions": [
         {
-          "version": "8.47.3",
-          "date": "2025-12-04",
+          "version": "8.49.2",
+          "date": "2025-12-09",
           "downloadURL": "https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa",
           "size": 257425408,
           "localizedDescription": "Premium unlocked, background playback, no ads"
@@ -92,7 +92,7 @@
       "name": "NeoFreeBird",
       "bundleIdentifier": "com.atebits.Tweetie2",
       "developerName": "NeoFreeBird",
-      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.45, NeoFreeBird v5.2.",
+      "localizedDescription": "Tweaked X with premium features and more. X IPA 11.46.1, NeoFreeBird v5.2.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/x-neofreebird-1.png",
@@ -101,8 +101,8 @@
       ],
       "versions": [
         {
-          "version": "11.45",
-          "date": "2025-12-04",
+          "version": "11.46.1",
+          "date": "2025-12-09",
           "downloadURL": "https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa",
           "size": 142816051,
           "localizedDescription": "TrollStore/SideStore build 5.2, custom features, performance improvements"
@@ -119,7 +119,7 @@
       "name": "SCInsta",
       "bundleIdentifier": "com.burbn.instagram",
       "developerName": "SoCuul",
-      "localizedDescription": "Tweaked Instagram with additional features and enhanced privacy. Instagram IPA 408.0.0, SCInsta v0.8.0.",
+      "localizedDescription": "Tweaked Instagram with additional features and enhanced privacy. Instagram IPA 409.0.0, SCInsta v0.8.0.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/scinsta-1.png",
@@ -128,8 +128,8 @@
       ],
       "versions": [
         {
-          "version": "408.0.0",
-          "date": "2025-12-02",
+          "version": "409.0.0",
+          "date": "2025-12-09",
           "downloadURL": "https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_0.8.0.ipa",
           "size": 407400000,
           "localizedDescription": "Tweaked Instagram"
