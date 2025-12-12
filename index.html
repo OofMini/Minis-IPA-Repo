@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; img-src https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     
@@ -20,13 +19,12 @@
     <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
     <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Prevent caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
+ 
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -34,7 +32,6 @@
     <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
     <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 
-    <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -439,13 +436,11 @@
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
         <p class="hero-subtitle">Premium tweaked iOS applications for iOS 15+</p>
 
-        <!-- Updated Badges - Only Active and iOS 15+ -->
         <div class="badges" role="status" aria-live="polite">
             <span class="badge" aria-label="Repository status active">✅ Active</span>
             <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
         </div>
 
-        <!-- CTA Buttons -->
         <nav class="cta-buttons" aria-label="Add repository to app">
             <button class="cta-button trollapps" onclick="addToApp('TrollApps', 'trollapps.json')" aria-label="Add repository to TrollApps">
                 <span role="img" aria-hidden="true">📱</span> Add to TrollApps
@@ -457,17 +452,14 @@
     </header>
 
     <main class="container" role="main">
-        <!-- Search box -->
         <section class="search-container fade-in" aria-labelledby="search-title">
             <h2 id="search-title" class="visually-hidden">Search apps</h2>
             <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
                    aria-label="Search apps by name or description" autocomplete="off">
         </section>
 
-        <!-- App grid -->
         <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
 
-        <!-- Repo info -->
         <section class="repo-info fade-in" aria-labelledby="repo-info-title">
             <h3 id="repo-info-title">📦 Repository Information</h3>
 
@@ -539,16 +531,20 @@
             }
         }
 
-        // Prevent caching by adding timestamp to requests
+        // Generate timestamp for downloads ONLY to prevent stale binaries
+        // We do NOT use this for images to allow caching
         const timestamp = new Date().getTime();
 
+        // FIXED: Used backticks (`) for multi-line descriptions
+        // FIXED: Removed timestamp from image icons to improve performance/caching
         const appsData = [
             {
                 id: 'eeveespotify',
                 name: 'EeveeSpotify',
                 developer: 'whoeevee',
-                description: 'Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA 9.1.0, EeveeSpotify v6.2.2',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png?' + timestamp,
+                description: `Tweaked Spotify with premium features unlocked, no ads, and enhanced playback.
+Spotify IPA 9.1.0, EeveeSpotify v6.2.2`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/EeveeSpotify.png',
                 version: '9.1.0',
                 downloadUrl: 'https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa?timestamp=' + timestamp,
                 category: 'Music',
@@ -558,8 +554,9 @@
                 id: 'ytlite',
                 name: 'YTLite',
                 developer: 'dayanch96',
-                description: 'Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA 20.49.5, YTLite v5.2b4',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG?' + timestamp,
+                description: `Tweaked YouTube with background playback, no ads, and picture-in-picture.
+YouTube IPA 20.49.5, YTLite v5.2b4`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubePlus_5.2b3.PNG',
                 version: '20.49.5',
                 downloadUrl: 'https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_5.2b4.ipa?timestamp=' + timestamp,
                 category: 'Video',
@@ -569,8 +566,9 @@
                 id: 'ytmusicultimate',
                 name: 'YTMusicUltimate',
                 developer: 'dayanch96',
-                description: 'Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png?' + timestamp,
+                description: `Tweaked YouTube Music with premium features unlocked, background playback, and no ads.
+Youtube Music IPA 8.47.3, YTMusicUltimate 2.3.1`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/YouTubeMusic.png',
                 version: '8.49.2',
                 downloadUrl: 'https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa?timestamp=' + timestamp,
                 category: 'Music',
@@ -580,10 +578,11 @@
                 id: 'neofreebird',
                 name: 'NeoFreeBird',
                 developer: 'NeoFreeBird',
-                description: 'Tweaked Twitter/X with premium features and more. X IPA 11.46.1, NeoFreeBird v5.2',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png?' + timestamp,
+                description: `Tweaked Twitter/X with premium features and more.
+X IPA 11.46.1, NeoFreeBird v5.2`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/NeoFreeBird.png',
                 version: '11.46.1',
-                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded.ipa?timestamp=' + timestamp,
+                downloadUrl: 'https://github.com/OofMini/tweak/releases/download/New/NeoFreeBird-sideloaded_5.2_11.46.1.ipa?timestamp=' + timestamp,
                 category: 'Social',
                 size: '110 MB'
             },
@@ -591,8 +590,8 @@
                 id: 'scinsta',
                 name: 'SCInsta',
                 developer: 'SoCuul',
-                description: 'Tweaked Instagram premium, Instagram IPA 409.0.0, SCInsta v0.8.0',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png?' + timestamp,
+                description: `Tweaked Instagram premium, Instagram IPA 409.0.0, SCInsta v0.8.0`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/SCInsta.png',
                 version: '409.0.0',
                 downloadUrl: 'https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_sideloaded_v0.8.0.ipa?timestamp=' + timestamp,
                 category: 'Social',
@@ -602,8 +601,9 @@
                 id: 'inshot',
                 name: 'InShotPro',
                 developer: 'IPAOMTK',
-                description: 'Pro video editor with premium filters, tools, and no watermark. App v1.91.1.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png?' + timestamp,
+                description: `Pro video editor with premium filters, tools, and no watermark.
+App v1.91.1.`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/Inshot.png',
                 version: '1.91.1',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa?timestamp=' + timestamp,
                 category: 'Photo & Video',
@@ -613,8 +613,8 @@
                 id: 'appstoreplus',
                 name: 'Appstore++',
                 developer: 'cokernutx',
-                description: 'Appstore++ allows users to downgrade apps.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png?' + timestamp,
+                description: `Appstore++ allows users to downgrade apps.`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png',
                 version: '1.0.3',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/App++/AppStore++_TrollStore_v1.0.3-2.ipa?timestamp=' + timestamp,
                 category: 'Utilities',
@@ -624,8 +624,8 @@
                 id: 'itorrent',
                 name: 'iTorrent',
                 developer: 'XITRIX',
-                description: 'Lightweight torrent client for downloading and managing torrent files on-device.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png?' + timestamp,
+                description: `Lightweight torrent client for downloading and managing torrent files on-device.`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/itorrent.png',
                 version: '2.1.0',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa?timestamp=' + timestamp,
                 category: 'Utilities',
@@ -635,8 +635,8 @@
                 id: 'livecontainer',
                 name: 'LiveContainer',
                 developer: 'hugeBlack',
-                description: 'Runs live production containers for streaming apps and runtime isolation.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png?' + timestamp,
+                description: `Runs live production containers for streaming apps and runtime isolation.`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/livecontainer.png',
                 version: '3.6.1',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa?timestamp=' + timestamp,
                 category: 'Utilities',
@@ -646,8 +646,8 @@
                 id: 'refacepro',
                 name: 'RefacePro (IOS 17+)',
                 developer: 'IPAOMTK',
-                description: 'Reface Premium Unlocked.',
-                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png?' + timestamp,
+                description: `Reface Premium Unlocked.`,
+                icon: 'https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png',
                 version: '5.27.0',
                 downloadUrl: 'https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa?timestamp=' + timestamp,
                 category: 'Entertainment',
@@ -760,7 +760,6 @@
                     </button>
                 </div>
             `;
-            
             setTimeout(() => {
                 const element = appGrid.querySelector('.fade-in');
                 if (element && observer) observer.observe(element);
@@ -799,11 +798,12 @@
                 const safeDescription = escapeHtml(app.description);
                 const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
                 
+                // FIXED: Image error handling doesn't use timestamp on fallback to avoid looping
                 return `
                 <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
                     <div class="app-icon-container">
                         <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
-                             onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png?${timestamp}'">
+                             onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
                     </div>
                     <div class="app-status">
                         <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
@@ -843,7 +843,6 @@
 
                 // Open download
                 window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
-                
                 showToast(`✅ Downloading ${app.name}`, 'success');
 
             } catch (error) {
@@ -852,19 +851,26 @@
         }
 
         // Consolidated add function
-        function addToApp(appName, manifestPath) {
+        // FIXED: URL encoding and dynamic pathing
+        function addToApp(appName, manifestFile) {
             try {
                 const schemes = {
                     'TrollApps': 'trollapps',
                     'SideStore': 'sidestore'
                 };
-                
+
                 const scheme = schemes[appName];
                 if (!scheme) {
                     throw new Error(`Unknown app: ${appName}`);
                 }
                 
-                const url = `${scheme}://add-repo?url=https://oofmini.github.io/Minis-IPA-Repo/${manifestPath}?${timestamp}`;
+                // Dynamically get current URL path (removes index.html if present)
+                const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                const fullManifestUrl = `${baseUrl}${manifestFile}?${timestamp}`;
+                
+                // Properly encode the URL so the receiving app parses it correctly
+                const url = `${scheme}://add-repo?url=${encodeURIComponent(fullManifestUrl)}`;
+                
                 window.location.href = url;
                 
                 setTimeout(() => {
@@ -892,7 +898,8 @@
         // PWA Features
         function setupPWA() {
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/Minis-IPA-Repo/sw.js')
+                // FIXED: Use relative path for better portability
+                navigator.serviceWorker.register('./sw.js')
                     .then((registration) => {
                         console.log('Service Worker registered successfully:', registration.scope);
                     })
@@ -910,7 +917,6 @@
 
         function showInstallPrompt() {
             if (!deferredPrompt) return;
-
             const toast = document.getElementById('toast');
             toast.textContent = 'Install Mini\'s IPA Repo? ';
             
@@ -918,7 +924,6 @@
             installButton.textContent = 'Install';
             installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
             installButton.onclick = installApp;
-            
             toast.appendChild(installButton);
             toast.classList.remove('error','warning','success','info');
             toast.classList.add('toast','info','show');
