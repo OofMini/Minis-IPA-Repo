@@ -26,6 +26,10 @@
       ],
       "tintColor": "#1DB954",
       "subtitle": "Tweaked Spotify client",
+      "permissions": [
+        "background-audio",
+        "media-access"
+      ],
       "minimumOSVersion": "16.1"
     },
     {
@@ -50,6 +54,10 @@
       ],
       "tintColor": "#FF0000",
       "subtitle": "Tweaked YouTube with premium features",
+      "permissions": [
+        "background-audio",
+        "pip"
+      ],
       "minimumOSVersion": "16.0"
     },
     {
@@ -74,6 +82,10 @@
       ],
       "tintColor": "#FF0000",
       "subtitle": "Tweaked YouTube Music with premium features",
+      "permissions": [
+        "background-audio",
+        "media-access"
+      ],
       "minimumOSVersion": "16.0"
     },
     {
@@ -98,6 +110,9 @@
       ],
       "tintColor": "#1DA1F2",
       "subtitle": "Tweaked Twitter/X",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -122,6 +137,9 @@
       ],
       "tintColor": "#000000",
       "subtitle": "Tweaked Instgram with premium features",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -146,6 +164,10 @@
       ],
       "tintColor": "#FF2D55",
       "subtitle": "Unlocked Pro video editor",
+      "permissions": [
+        "media-access",
+        "camera"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -170,6 +192,9 @@
       ],
       "tintColor": "#0A84FF",
       "subtitle": "App manager / sideload helper",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -194,6 +219,9 @@
       ],
       "tintColor": "#34C759",
       "subtitle": "Torrent client",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "17.0"
     },
     {
@@ -218,6 +246,9 @@
       ],
       "tintColor": "#FF2D55",
       "subtitle": "Live streaming container",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "15.0"
     },
     {
@@ -242,6 +273,9 @@
       ],
       "tintColor": "#00C7BE",
       "subtitle": "Face swap and deepfake editor",
+      "permissions": [
+        "network"
+      ],
       "minimumOSVersion": "17.0"
     }
   ]
