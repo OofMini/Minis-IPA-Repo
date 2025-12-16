@@ -20,7 +20,7 @@ on:
       # YouTube (YTLite)
       youtube_ipa_version:
         description: "YouTube IPA Version"
-        default: "20.49.5"
+        default: "20.50.9"
         required: false
       youtube_tweak_version:
         description: "YouTube Tweak Version"
@@ -34,7 +34,7 @@ on:
       # X (NeoFreeBird)
       x_ipa_version:
         description: "X IPA Version"
-        default: "11.46.1"
+        default: "11.48"
         required: false
       x_tweak_version:
         description: "X Tweak Version"
@@ -48,7 +48,7 @@ on:
       # YTMusicUltimate
       ytmusicultimate_ipa_version:
         description: "YTMusicUltimate IPA Version"
-        default: "8.49.2"
+        default: "8.50.2"
         required: false
       ytmusicultimate_tweak_version:
         description: "YTMusicUltimate Tweak Version"
