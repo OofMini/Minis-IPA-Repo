@@ -11,6 +11,6 @@
 - RefacePro (by IPAOMTK)
 
 ### 🔗 Repository Information
-- **Official Website**: https://oofmini.github.io/Minis-IPA-Repo/
-- **SideStore Manifest**: https://OofMini.github.io/Minis-IPA-Repo/sidestore.json
-- **TrollApps Manifest**: https://OofMini.github.io/Minis-IPA-Repo/trollapps.json
+- **Official Website**: https://oofmini.github.io/Minis-Repo/
+- **SideStore Manifest**: https://OofMini.github.io/Minis-Repo/sidestore.json
+- **TrollApps Manifest**: https://OofMini.github.io/Minis-Repo/trollapps.json
