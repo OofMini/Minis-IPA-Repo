@@ -171,33 +171,6 @@
       "minimumOSVersion": "15.0"
     },
     {
-      "name": "Appstore++",
-      "bundleIdentifier": "com.cokepokes.AppStorePlus",
-      "developerName": "cokernutx",
-      "localizedDescription": "Appstore++ allows users to downgrade apps.",
-      "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore.png",
-      "screenshotURLs": [
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-1.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-2.png",
-        "https://OofMini.github.io/Minis-IPA-Repo/apps/appstore-3.png"
-      ],
-      "versions": [
-        {
-          "version": "1.0.3",
-          "date": "2025-10-06",
-          "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa",
-          "size": 17616076,
-          "localizedDescription": "Appstore++ allows users to downgrade apps."
-        }
-      ],
-      "tintColor": "#0A84FF",
-      "subtitle": "App manager / sideload helper",
-      "permissions": [
-        "network"
-      ],
-      "minimumOSVersion": "15.0"
-    },
-    {
       "name": "iTorrent",
       "bundleIdentifier": "org.xitrix.iTorrent2",
       "developerName": "XITRIX",
