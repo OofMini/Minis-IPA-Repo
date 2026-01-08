@@ -31,7 +31,7 @@ jobs:
   delete-runs:
     name: "Delete Old Workflow Runs"
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # Increased timeout to 60 minutes
+    timeout-minutes: 60
     
     steps:
       - name: "Delete Workflow Runs"
@@ -55,54 +55,46 @@ jobs:
             fi
             
             echo "🔍 Processing '$workflow_name'..."
-
-            # OPTIMIZATION: If we don't need to retain the latest, use the fast --all flag
-            if [[ "$RETAIN_LATEST" != "true" ]]; then
-               echo "⚡ Fast mode: Deleting ALL runs via API..."
-               # We ignore errors in case the workflow has 0 runs
-               gh run delete --workflow "$workflow_name" --all || echo "   (No runs found or already deleted)"
-               echo "✅ Cleared all runs for '$workflow_name'"
-               echo "----------------------------------------"
-               return
-            fi
             
-            # SLOW MODE: We must retain the latest, so we list and delete by ID
+            # Loop until no runs remain (handling pagination manually)
             while true; do
-              # Fetch larger batch (500)
-              RUNS=$(gh run list --workflow "$workflow_name" --limit 500 --json databaseId,status || true)
+              # Fetch runs (Limit 1000 per page to maximize throughput)
+              RUNS=$(gh run list --workflow "$workflow_name" --limit 1000 --json databaseId,status || true)
               
-              if [[ -z "$RUNS" ]]; then
-                echo "⚠️ Could not fetch runs for '$workflow_name'."
-                break
-              fi
-
-              COUNT=$(echo "$RUNS" | jq length)
-              
-              if [[ "$COUNT" -eq 0 ]]; then
-                echo "✅ No more runs to delete for '$workflow_name'"
-                break
-              fi
-
-              echo "   Found batch of $COUNT runs..."
-              
-              # Determine IDs to delete (Skip index 0 to keep latest)
-              RUN_IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
-              
-              # If we found runs but list is empty after filtering (meaning only 1 run existed), we are done
-              if [[ -z "$RUN_IDS" ]]; then
-                echo "🛡️ Only the latest run remains. Cleanup complete."
+              # Check if runs were returned
+              if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
+                echo "✅ No (more) runs found for '$workflow_name'."
                 break
               fi
               
-              # Delete in parallel (Increased to 10 threads)
-              echo "$RUN_IDS" | xargs -P 10 -I {} sh -c 'gh run delete {} --quiet' || true
+              # Extract IDs based on retention policy
+              if [[ "$RETAIN_LATEST" == "true" ]]; then
+                # Drop the first item (latest run)
+                IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
+                
+                # If IDs is empty, it means only 1 run existed (the one we kept)
+                if [[ -z "$IDS" ]]; then
+                  echo "🛡️ Latest run preserved. Cleanup complete."
+                  break
+                fi
+              else
+                # Get ALL IDs
+                IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
+              fi
               
-              echo "   🗑️ Batch deleted."
+              COUNT=$(echo "$IDS" | wc -w)
+              echo "   🗑️ Deleting batch of $COUNT runs..."
+              
+              # Batch delete using xargs:
+              # -n 50: Pass 50 IDs per command call (Reduces API overhead)
+              # -P 5:  Run 5 delete commands in parallel (Increases speed)
+              echo "$IDS" | xargs -n 50 -P 5 gh run delete || true
+              
             done
             echo "----------------------------------------"
           }
           
-          echo "🧹 Starting Cleanup..."
+          echo "🧹 Starting Fast Cleanup..."
           echo "----------------------------------------"
           
           # 1. App Version Updates
@@ -114,4 +106,4 @@ jobs:
           # 3. Pages Build and Deployment
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
-          echo "🎉 Done."
+          echo "🎉 All requested cleanups finished."
