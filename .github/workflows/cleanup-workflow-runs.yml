@@ -31,7 +31,7 @@ jobs:
   delete-runs:
     name: "Delete Old Workflow Runs"
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 360 # Increased to 6 hours for large history
     
     steps:
       - name: "Delete Workflow Runs"
@@ -56,45 +56,56 @@ jobs:
             
             echo "🔍 Processing '$workflow_name'..."
             
-            # Loop until no runs remain (handling pagination manually)
-            while true; do
-              # Fetch runs (Limit 1000 per page to maximize throughput)
+            # Counter to prevent infinite loops if API fails
+            local loop_count=0
+            local max_loops=1000
+            
+            while [ $loop_count -lt $max_loops ]; do
+              # 1. Fetch runs (Limit 1000)
+              echo "   [Loop $loop_count] Fetching run list..."
               RUNS=$(gh run list --workflow "$workflow_name" --limit 1000 --json databaseId,status || true)
               
-              # Check if runs were returned
               if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
                 echo "✅ No (more) runs found for '$workflow_name'."
                 break
               fi
               
-              # Extract IDs based on retention policy
+              # 2. Extract IDs
               if [[ "$RETAIN_LATEST" == "true" ]]; then
-                # Drop the first item (latest run)
+                # Keep index 0 (latest)
                 IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
-                
-                # If IDs is empty, it means only 1 run existed (the one we kept)
+                # If IDs is empty here, we only have 1 run left (the one to keep)
                 if [[ -z "$IDS" ]]; then
                   echo "🛡️ Latest run preserved. Cleanup complete."
                   break
                 fi
               else
-                # Get ALL IDs
+                # Delete all
                 IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
               fi
               
               COUNT=$(echo "$IDS" | wc -w)
               echo "   🗑️ Deleting batch of $COUNT runs..."
               
-              # Batch delete using xargs:
-              # -n 50: Pass 50 IDs per command call (Reduces API overhead)
-              # -P 5:  Run 5 delete commands in parallel (Increases speed)
-              echo "$IDS" | xargs -n 50 -P 5 gh run delete || true
+              # 3. Delete Batch
+              # -n 30: Smaller batch size per call to ensure stability
+              # -P 2:  Reduced parallelism to avoid GitHub Rate Limiting/Throttling
+              echo "$IDS" | xargs -n 30 -P 2 gh run delete || true
               
+              ((loop_count++))
+              
+              # Small sleep to be nice to the API
+              sleep 2
             done
+            
+            if [ $loop_count -eq $max_loops ]; then
+              echo "⚠️ Hit max loop limit. There may still be runs left."
+            fi
+            
             echo "----------------------------------------"
           }
           
-          echo "🧹 Starting Fast Cleanup..."
+          echo "🧹 Starting Robust Cleanup..."
           echo "----------------------------------------"
           
           # 1. App Version Updates
@@ -106,4 +117,4 @@ jobs:
           # 3. Pages Build and Deployment
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
-          echo "🎉 All requested cleanups finished."
+          echo "🎉 Cleanup finished."
