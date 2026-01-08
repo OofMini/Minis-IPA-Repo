@@ -3,7 +3,7 @@ name: App Version Updates
 on:
   workflow_dispatch:
     inputs:
-      # Apps with only version updates (5 apps × 2 inputs = 10 inputs)
+      # Apps with only version updates
       inshot_version:
         description: "InShot App Version"
         default: "1.91.1"
@@ -49,7 +49,7 @@ on:
         type: boolean
         default: false
         
-      # Global Inputs (2 inputs)
+      # Global Inputs
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # STEP 1: Checkout repository
+      # STEP 1: Checkout repository (Authenticates git automatically)
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
@@ -78,24 +78,16 @@ jobs:
       # STEP 2: Setup dependencies and validate inputs
       - name: "Setup dependencies and validate inputs"
         env:
-          # Pass all inputs as environment variables
           INSHOT_VERSION: ${{ github.event.inputs.inshot_version }}
           UPDATE_INSHOT: ${{ github.event.inputs.update_inshot }}
-          
           APPSTOREPP_VERSION: ${{ github.event.inputs.appstorepp_version }}
           UPDATE_APPSTOREPP: ${{ github.event.inputs.update_appstorepp }}
-          
           ITORRENT_VERSION: ${{ github.event.inputs.itorrent_version }}
           UPDATE_ITORRENT: ${{ github.event.inputs.update_itorrent }}
-          
           LIVECONTAINER_VERSION: ${{ github.event.inputs.livecontainer_version }}
           UPDATE_LIVECONTAINER: ${{ github.event.inputs.update_livecontainer }}
-          
           REFACE_VERSION: ${{ github.event.inputs.reface_version }}
           UPDATE_REFACE: ${{ github.event.inputs.update_reface }}
-          
-          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
-          CHANGE_DESCRIPTION: ${{ github.event.inputs.change_description }}
         run: |
           set -e
           
@@ -106,52 +98,29 @@ jobs:
           
           echo "🔍 Validating inputs..."
           
-          # Function to validate version format
           validate_version() {
             local version="$1"
             local app_name="$2"
-            local version_type="$3"
             
             if [[ -z "$version" ]]; then
-              echo "::error::$app_name $version_type cannot be empty"
+              echo "::error::$app_name version cannot be empty"
               exit 1
             fi
             
-            # Stricter version validation: ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+\.[0-9]+[a-z0-9]*$ ]]; then
-              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4'), got: $version"
+            # Strict semantic version validation (Matches both 1.0 and 1.0.0 styles)
+            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
+              echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or v1.2"
               exit 1
             fi
           }
           
-          # Check if any app is enabled
           ANY_ENABLED=false
           
-          # Check each app
-          if [[ "$UPDATE_INSHOT" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$INSHOT_VERSION" "InShot" "App version"
-          fi
-          
-          if [[ "$UPDATE_APPSTOREPP" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$APPSTOREPP_VERSION" "AppStore++" "App version"
-          fi
-          
-          if [[ "$UPDATE_ITORRENT" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$ITORRENT_VERSION" "iTorrent" "App version"
-          fi
-          
-          if [[ "$UPDATE_LIVECONTAINER" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$LIVECONTAINER_VERSION" "LiveContainer" "App version"
-          fi
-          
-          if [[ "$UPDATE_REFACE" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$REFACE_VERSION" "Reface" "App version"
-          fi
+          if [[ "$UPDATE_INSHOT" == "true" ]]; then ANY_ENABLED=true; validate_version "$INSHOT_VERSION" "InShot"; fi
+          if [[ "$UPDATE_APPSTOREPP" == "true" ]]; then ANY_ENABLED=true; validate_version "$APPSTOREPP_VERSION" "AppStore++"; fi
+          if [[ "$UPDATE_ITORRENT" == "true" ]]; then ANY_ENABLED=true; validate_version "$ITORRENT_VERSION" "iTorrent"; fi
+          if [[ "$UPDATE_LIVECONTAINER" == "true" ]]; then ANY_ENABLED=true; validate_version "$LIVECONTAINER_VERSION" "LiveContainer"; fi
+          if [[ "$UPDATE_REFACE" == "true" ]]; then ANY_ENABLED=true; validate_version "$REFACE_VERSION" "Reface"; fi
           
           if [[ "$ANY_ENABLED" == "false" ]]; then
             echo "::notice::No apps enabled for update. Exiting."
@@ -160,74 +129,39 @@ jobs:
           
           echo "✅ Input validation complete"
           
-          # Configure Git for PAT authentication
-          echo "⚙️ Configuring Git..."
+          # Git is already configured by actions/checkout using the PAT token
+          echo "⚙️ Configuring Git User..."
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
-          echo "✅ Git configured for PAT authentication"
 
       # STEP 3: Process all repository updates
       - name: "Process all repository updates"
         id: update-files
         env:
-          # App versions
+          # Inputs passed via env vars to prevent injection
           INSHOT_VERSION: ${{ github.event.inputs.inshot_version }}
           UPDATE_INSHOT: ${{ github.event.inputs.update_inshot }}
-          
           APPSTOREPP_VERSION: ${{ github.event.inputs.appstorepp_version }}
           UPDATE_APPSTOREPP: ${{ github.event.inputs.update_appstorepp }}
-          
           ITORRENT_VERSION: ${{ github.event.inputs.itorrent_version }}
           UPDATE_ITORRENT: ${{ github.event.inputs.update_itorrent }}
-          
           LIVECONTAINER_VERSION: ${{ github.event.inputs.livecontainer_version }}
           UPDATE_LIVECONTAINER: ${{ github.event.inputs.update_livecontainer }}
-          
           REFACE_VERSION: ${{ github.event.inputs.reface_version }}
           UPDATE_REFACE: ${{ github.event.inputs.update_reface }}
-          
-          # Global
           UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
         run: |
           set -e
-          
-          # Setup error handling and cleanup
           trap 'rm -f *.tmp *.bak' EXIT ERR
           
-          # Get current date
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
           echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
-          echo "📅 Processing date: $CURRENT_DATE"
           
-          # Define app configuration for version-only apps
           APP_KEYS=("inshot" "appstorepp" "itorrent" "livecontainer" "reface")
           
-          declare -A APP_NAMES=(
-            ["inshot"]="InShotPro"
-            ["appstorepp"]="Appstore++"
-            ["itorrent"]="iTorrent"
-            ["livecontainer"]="LiveContainer"
-            ["reface"]="RefacePro (IOS 17+)"
-          )
-          
-          declare -A APP_BUNDLES=(
-            ["inshot"]="com.inshot.video"
-            ["appstorepp"]="com.apple.AppStore"
-            ["itorrent"]="ru.nonamelabs.iTorrent"
-            ["livecontainer"]="com.kdt.livecontainer"
-            ["reface"]="com.neocortext.reface"
-          )
-          
-          declare -A APP_HTML_IDS=(
-            ["inshot"]="inshot"
-            ["appstorepp"]="appstoreplus"
-            ["itorrent"]="itorrent"
-            ["livecontainer"]="livecontainer"
-            ["reface"]="refacepro"
-          )
-          
-          # Static URLs for all version-only apps
+          declare -A APP_NAMES=( ["inshot"]="InShotPro" ["appstorepp"]="Appstore++" ["itorrent"]="iTorrent" ["livecontainer"]="LiveContainer" ["reface"]="RefacePro (IOS 17+)" )
+          declare -A APP_BUNDLES=( ["inshot"]="com.inshot.video" ["appstorepp"]="com.apple.AppStore" ["itorrent"]="ru.nonamelabs.iTorrent" ["livecontainer"]="com.kdt.livecontainer" ["reface"]="com.neocortext.reface" )
+          declare -A APP_HTML_IDS=( ["inshot"]="inshot" ["appstorepp"]="appstoreplus" ["itorrent"]="itorrent" ["livecontainer"]="livecontainer" ["reface"]="refacepro" )
           declare -A APP_URL_PATTERNS=(
             ["inshot"]="static:https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa"
             ["appstorepp"]="static:https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa"
@@ -235,8 +169,6 @@ jobs:
             ["livecontainer"]="static:https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa"
             ["reface"]="static:https://github.com/OofMini/Minis-Heap/releases/download/Reface/Reface.ipa"
           )
-          
-          # Descriptions for version-only apps (no tweak version in description)
           declare -A APP_DESCRIPTIONS=(
             ["inshot"]="Pro video editor with premium filters, tools, and no watermark. App v%s."
             ["appstorepp"]="Appstore++ allows users to downgrade apps."
@@ -244,257 +176,85 @@ jobs:
             ["livecontainer"]="Runs live production containers for streaming apps and runtime isolation."
             ["reface"]="Reface Premium Unlocked."
           )
+          declare -A APP_TOGGLES=( ["inshot"]="$UPDATE_INSHOT" ["appstorepp"]="$UPDATE_APPSTOREPP" ["itorrent"]="$UPDATE_ITORRENT" ["livecontainer"]="$UPDATE_LIVECONTAINER" ["reface"]="$UPDATE_REFACE" )
+          declare -A APP_VERSIONS=( ["inshot"]="$INSHOT_VERSION" ["appstorepp"]="$APPSTOREPP_VERSION" ["itorrent"]="$ITORRENT_VERSION" ["livecontainer"]="$LIVECONTAINER_VERSION" ["reface"]="$REFACE_VERSION" )
           
-          # Map environment variables to app configurations
-          declare -A APP_TOGGLES=(
-            ["inshot"]="$UPDATE_INSHOT"
-            ["appstorepp"]="$UPDATE_APPSTOREPP"
-            ["itorrent"]="$UPDATE_ITORRENT"
-            ["livecontainer"]="$UPDATE_LIVECONTAINER"
-            ["reface"]="$UPDATE_REFACE"
-          )
-          
-          declare -A APP_VERSIONS=(
-            ["inshot"]="$INSHOT_VERSION"
-            ["appstorepp"]="$APPSTOREPP_VERSION"
-            ["itorrent"]="$ITORRENT_VERSION"
-            ["livecontainer"]="$LIVECONTAINER_VERSION"
-            ["reface"]="$REFACE_VERSION"
-          )
-          
-          # Function to build download URL (static URLs only)
           build_download_url() {
             local app_key="$1"
             local pattern="${APP_URL_PATTERNS[$app_key]}"
-            
-            if [[ "$pattern" == static:* ]]; then
-              echo "${pattern#static:}"
-            else
-              echo "$pattern"  # Fallback
-            fi
+            if [[ "$pattern" == static:* ]]; then echo "${pattern#static:}"; else echo "$pattern"; fi
           }
           
-          # Function to generate description
           generate_description() {
             local app_key="$1"
             local app_version="$2"
             local template="${APP_DESCRIPTIONS[$app_key]}"
-            
-            # Only insert version if template has %s placeholder
-            if [[ "$template" == *%s* ]]; then
-              printf "$template" "$app_version"
-            else
-              echo "$template"
-            fi
+            if [[ "$template" == *%s* ]]; then printf "$template" "$app_version"; else echo "$template"; fi
           }
           
-          # Function to update app in JSON file
+          # JSON update function using jq for safe injection prevention
           update_app_in_file() {
-            local file="$1" 
-            local app_name="$2" 
-            local bundle_id="$3" 
-            local app_version="$4" 
-            local download_url="$5"
-            local description="$6"
+            local file="$1" app_name="$2" bundle_id="$3" app_version="$4" download_url="$5" description="$6"
             local temp_file="${file}.tmp"
             
-            # Check if app exists in file
-            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" \
-                 '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' \
-                 "$file" >/dev/null 2>&1; then
+            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
               echo "::warning::$app_name not found in $file, skipping..."
               return 0
             fi
             
-            # Update based on file structure
             case "$file" in
               "sidestore.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$app_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
+                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
               "trollapps.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$app_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
+                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
             esac
             
-            # Validate and move
-            if ! jq empty "$temp_file" 2>/dev/null; then
-              echo "::error::Generated invalid JSON for $file"
-              rm -f "$temp_file"
-              return 1
-            fi
-            
-            if cmp -s "$file" "$temp_file"; then
-              rm -f "$temp_file"
-            else
-              mv "$temp_file" "$file"
-              echo "✅ Updated $app_name in $file"
-            fi
+            if ! jq empty "$temp_file" 2>/dev/null; then echo "::error::Generated invalid JSON for $file"; rm -f "$temp_file"; return 1; fi
+            if ! cmp -s "$file" "$temp_file"; then mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; else rm -f "$temp_file"; fi
           }
           
-          # Function to update HTML file (only version number)
           update_html_file() {
-            local html_id="$1"
-            local app_name="$2"
-            local app_version="$3"
-            
-            if [ ! -f "index.html" ]; then
-              echo "::warning::index.html not found"
-              return 0
-            fi
-            
-            # Clean app name for regex (escape special characters)
-            local clean_app_name=$(echo "$app_name" | sed 's/[()]/\\&/g')
-            
-            # Only update version number (no description updates for version-only apps)
-            sed -i \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$app_version\2/ }" \
-              "index.html"
+            local html_id="$1" app_name="$2" app_version="$3"
+            if [ ! -f "index.html" ]; then return 0; fi
+            # Use safe sed pattern matching for id
+            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$app_version\2/ }" "index.html"
           }
           
-          # Function to update workflow defaults
           update_workflow_defaults() {
-            local app_key="$1"
-            local app_version="$2"
-            local workflow_file=".github/workflows/app-version-updates.yml"
-            
-            if [ ! -f "$workflow_file" ]; then
-              echo "::warning::Workflow file not found"
-              return 0
-            fi
-            
-            # Only update app version defaults (no tweak version)
-            sed -i \
-              -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$app_version\"/" \
-              "$workflow_file"
+            local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
+            if [ ! -f "$workflow_file" ]; then return 0; fi
+            sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$app_version\"/" "$workflow_file"
           }
           
-          # Validate JSON files exist and are valid
-          echo "📄 Validating JSON files..."
           JSON_FILES=("sidestore.json" "trollapps.json")
-          for file in "${JSON_FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "::error::$file not found"
-              exit 1
-            fi
-            
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::$file - Invalid JSON"
-              exit 1
-            fi
-            
-            if ! jq -e '.apps | type == "array"' "$file" >/dev/null 2>&1; then
-              echo "::error::$file - Missing or invalid apps array"
-              exit 1
-            fi
-            
-            echo "✅ $file - Valid JSON"
-          done
+          UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
           
-          # Initialize tracking arrays
-          UPDATED_APPS=()
-          UPDATED_VERSIONS=()
-          SKIPPED_APPS=()
-          
-          # Process each app
           for app_key in "${APP_KEYS[@]}"; do
-            # Get toggle value
             toggle_value="${APP_TOGGLES[$app_key]}"
+            if [[ "$toggle_value" != "true" ]]; then SKIPPED_APPS+=("${APP_NAMES[$app_key]}"); continue; fi
             
-            # Check if app is enabled
-            if [[ "$toggle_value" != "true" ]]; then
-              echo "::notice::Skipping ${APP_NAMES[$app_key]} (toggle disabled)"
-              SKIPPED_APPS+=("${APP_NAMES[$app_key]}")
-              continue
-            fi
-            
-            # Get version
             APP_VERSION="${APP_VERSIONS[$app_key]}"
-            
-            # Get app metadata
             APP_NAME="${APP_NAMES[$app_key]}"
             BUNDLE_ID="${APP_BUNDLES[$app_key]}"
             HTML_ID="${APP_HTML_IDS[$app_key]}"
             DOWNLOAD_URL=$(build_download_url "$app_key")
             DESCRIPTION=$(generate_description "$app_key" "$APP_VERSION")
             
-            echo ""
-            echo "========================================"
-            echo "🔄 Processing $APP_NAME..."
-            echo "========================================"
-            echo "📦 App Version: $APP_VERSION"
-            echo "🔗 Download URL: $DOWNLOAD_URL"
+            for json_file in "${JSON_FILES[@]}"; do update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"; done
+            if [ -f "index.html" ]; then update_html_file "$HTML_ID" "$APP_NAME" "$APP_VERSION"; fi
+            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then update_workflow_defaults "$app_key" "$APP_VERSION"; fi
             
-            # Update JSON files
-            for json_file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
-            done
-            
-            # Update HTML (index.html)
-            if [ -f "index.html" ]; then
-              echo "🌐 Updating HTML for $APP_NAME..."
-              update_html_file "$HTML_ID" "$APP_NAME" "$APP_VERSION"
-            fi
-            
-            # Update workflow defaults (if enabled globally)
-            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then
-              echo "⚙️ Updating workflow defaults for $APP_NAME..."
-              update_workflow_defaults "$app_key" "$APP_VERSION"
-            fi
-            
-            # Track update
             UPDATED_APPS+=("$APP_NAME")
             UPDATED_VERSIONS+=("${app_key}:${APP_VERSION}")
-            
-            echo "✅ $APP_NAME processing complete"
           done
           
-          # Set outputs
           if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
             echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
             echo "updated_versions=${UPDATED_VERSIONS[*]}" >> $GITHUB_OUTPUT
           fi
-          
-          if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then
-            echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          # Final validation of all JSON files
-          echo ""
-          echo "🔍 Final validation..."
-          for file in "${JSON_FILES[@]}"; do
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::Final validation failed for $file"
-              exit 1
-            fi
-            echo "✅ $file validated"
-          done
-          
-          echo ""
-          echo "========================================"
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "✅ Successfully processed: ${UPDATED_APPS[*]}"
-          else
-            echo "::warning::No apps were updated"
-          fi
-          echo "========================================"
+          if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT; fi
 
       # STEP 4: Commit and push changes
       - name: "Commit and push changes"
@@ -506,180 +266,24 @@ jobs:
           if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
             COMMIT_MSG="${{ github.event.inputs.change_description }}"
           else
-            COMMIT_MSG="App Version Updates: Updated app versions across all sources"
-            
-            # Add updated apps section
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated apps:"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add skipped apps section
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Skipped apps (toggle disabled):"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add version details section
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Version details:"
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                APP_VER="${PARTS[1]}"
-                # Capitalize first letter of app key for display
-                APP_DISPLAY="${APP_KEY^}"
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- ${APP_DISPLAY}: Version $APP_VER"
-              done
-            fi
-            
-            # Add note about workflow defaults update
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated workflow default versions"
-            fi
-            
-            COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Automated update via GitHub Actions"
+            COMMIT_MSG="App Version Updates: ${steps.update-files.outputs.updated_apps}"
           fi
           
-          # Stage changed files
-          git add sidestore.json trollapps.json
+          git add sidestore.json trollapps.json index.html .github/workflows/app-version-updates.yml
           
-          # Add index.html only if it was modified
-          if [ -f index.html ] && ! git diff --quiet index.html 2>/dev/null; then
-            git add index.html
-          fi
-          
-          # Add workflow file if it was modified
-          WORKFLOW_FILE=".github/workflows/app-version-updates.yml"
-          if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
-            git add "$WORKFLOW_FILE"
-            echo "⚙️ Workflow file changes staged"
-          fi
-          
-          # Check if there are staged changes
           if git diff --staged --quiet; then
-            echo "::notice::No changes to commit - files are already up to date"
-            echo "no_changes=true" >> $GITHUB_OUTPUT
+            echo "::notice::No changes to commit"
           else
-            # Commit changes
             git commit -m "$COMMIT_MSG"
-            
-            # Push with retry logic using PAT authentication
-            echo "🚀 Pushing changes to repository using PAT..."
-            MAX_RETRIES=3
-            RETRY_COUNT=0
-            
-            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              if git push origin HEAD; then
-                echo "✅ Changes committed and pushed successfully using PAT"
-                break
-              else
-                RETRY_COUNT=$((RETRY_COUNT + 1))
-                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                  echo "::warning::Push failed, pulling and retrying... (Attempt $RETRY_COUNT/$MAX_RETRIES)"
-                  git pull --rebase origin HEAD
-                else
-                  echo "::error::Failed to push after $MAX_RETRIES attempts"
-                  exit 1
-                fi
-              fi
-            done
+            git push origin HEAD
           fi
 
-      # STEP 5: Generate summary (always runs)
+      # STEP 5: Generate summary
       - name: "Generate summary"
         if: always()
         run: |
-          {
-            echo "## 📦 App Version Update Summary"
-            echo ""
-            
-            # Job status
-            if [ "${{ job.status }}" == "success" ]; then
-              echo "✅ **Status**: Success"
-            else
-              echo "❌ **Status**: Failed"
-            fi
-            echo ""
-            
-            # Apps updated
-            echo "### 📱 Apps Updated:"
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                echo "- ✓ $app"
-              done
-              echo ""
-              echo "**Processed ${#UPDATED_APPS_ARR[@]} of 5 apps**"
-            else
-              echo "- ℹ️ No apps were updated"
-              echo ""
-              echo "**Processed 0 of 5 apps**"
-            fi
-            
-            # Apps skipped
-            echo ""
-            echo "### 🚫 Apps Skipped (Toggle Disabled):"
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                echo "- $app"
-              done
-            else
-              echo "- ℹ️ No apps were skipped"
-            fi
-            
-            echo ""
-            echo "### 🔢 Version Details:"
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                APP_VER="${PARTS[1]}"
-                APP_DISPLAY="${APP_KEY^}"
-                echo "- **${APP_DISPLAY}**:"
-                echo "  - Version: \`$APP_VER\`"
-              done
-            else
-              echo "- ℹ️ No version updates"
-            fi
-            
-            echo ""
-            echo "### 📄 Files Processed:"
-            echo "- \`sidestore.json\`"
-            echo "- \`trollapps.json\`"
-            if [ -f "index.html" ]; then
-              echo "- \`index.html\`"
-            fi
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              echo "- \`.github/workflows/app-version-updates.yml\` (workflow defaults)"
-            fi
-            
-            echo ""
-            echo "### ⚙️ Configuration:"
-            echo "- Update workflow defaults: \`${{ github.event.inputs.update_workflow_defaults }}\`"
-            echo "- Authentication: PAT Token"
-            
-            echo ""
-            echo "### ⏰ Execution Time:"
-            echo "- Date: \`${{ steps.update-files.outputs.current_date }}\`"
-            echo "- Workflow: [\`${{ github.run_id }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-            
-            echo ""
-            echo "---"
-            echo "*Automated app version management via GitHub Actions*"
-          } >> $GITHUB_STEP_SUMMARY 2>&1 || echo "::warning::Failed to write step summary"
+          echo "## 📦 App Version Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.update-files.outputs.updated_apps }}" ]; then
+            echo "Updated: ${{ steps.update-files.outputs.updated_apps }}" >> $GITHUB_STEP_SUMMARY
+          fi
