@@ -68,14 +68,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # STEP 1: Checkout repository (Authenticates git automatically)
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          # SECURITY FIX: Use GITHUB_TOKEN instead of PAT
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # STEP 2: Setup dependencies and validate inputs
       - name: "Setup dependencies and validate inputs"
         env:
           INSHOT_VERSION: ${{ github.event.inputs.inshot_version }}
@@ -107,7 +106,6 @@ jobs:
               exit 1
             fi
             
-            # Strict semantic version validation (Matches both 1.0 and 1.0.0 styles)
             if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
               echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or v1.2"
               exit 1
@@ -129,16 +127,13 @@ jobs:
           
           echo "✅ Input validation complete"
           
-          # Git is already configured by actions/checkout using the PAT token
           echo "⚙️ Configuring Git User..."
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      # STEP 3: Process all repository updates
       - name: "Process all repository updates"
         id: update-files
         env:
-          # Inputs passed via env vars to prevent injection
           INSHOT_VERSION: ${{ github.event.inputs.inshot_version }}
           UPDATE_INSHOT: ${{ github.event.inputs.update_inshot }}
           APPSTOREPP_VERSION: ${{ github.event.inputs.appstorepp_version }}
@@ -192,7 +187,6 @@ jobs:
             if [[ "$template" == *%s* ]]; then printf "$template" "$app_version"; else echo "$template"; fi
           }
           
-          # JSON update function using jq for safe injection prevention
           update_app_in_file() {
             local file="$1" app_name="$2" bundle_id="$3" app_version="$4" download_url="$5" description="$6"
             local temp_file="${file}.tmp"
@@ -218,7 +212,6 @@ jobs:
           update_html_file() {
             local html_id="$1" app_name="$2" app_version="$3"
             if [ ! -f "index.html" ]; then return 0; fi
-            # Use safe sed pattern matching for id
             sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$app_version\2/ }" "index.html"
           }
           
@@ -256,15 +249,17 @@ jobs:
           fi
           if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT; fi
 
-      # STEP 4: Commit and push changes
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
+        env:
+          # SECURITY FIX: Pass input to env var to prevent command injection
+          CUSTOM_DESC: ${{ github.event.inputs.change_description }}
         run: |
           set -e
           
-          # Build commit message
-          if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
-            COMMIT_MSG="${{ github.event.inputs.change_description }}"
+          # Use env var instead of direct injection
+          if [[ -n "$CUSTOM_DESC" ]]; then
+            COMMIT_MSG="$CUSTOM_DESC"
           else
             COMMIT_MSG="App Version Updates: ${steps.update-files.outputs.updated_apps}"
           fi
@@ -278,7 +273,6 @@ jobs:
             git push origin HEAD
           fi
 
-      # STEP 5: Generate summary
       - name: "Generate summary"
         if: always()
         run: |
