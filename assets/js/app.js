@@ -11,14 +11,9 @@ const CONFIG = {
 // State Management
 const AppState = {
     apps: [],
-    filteredApps: [],
     searchTerm: '',
-    activeCategory: 'all',
-    sortBy: 'name',
     isLoading: true,
     error: null,
-    
-    // Rate limit tracking
     downloads: new Map()
 };
 
@@ -37,8 +32,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Initial Load
         showLoadingState();
         AppState.apps = await loadAppData();
-        AppState.filteredApps = [...AppState.apps]; // Initialize filtered list
-        
         AppState.isLoading = false;
         renderAppGrid();
 
@@ -49,7 +42,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-// Fetch Data from JSON
 async function loadAppData() {
     try {
         const response = await fetchWithRetry(CONFIG.API_ENDPOINT);
@@ -61,7 +53,6 @@ async function loadAppData() {
     }
 }
 
-// Robust Fetch with Retry
 async function fetchWithRetry(url, options = {}, retries = 3) {
     for (let i = 0; i < retries; i++) {
         try {
@@ -75,50 +66,46 @@ async function fetchWithRetry(url, options = {}, retries = 3) {
     }
 }
 
-// Render the grid based on current state
 function renderAppGrid() {
     const appGrid = document.getElementById('appGrid');
     
-    // Filter and Sort
-    let result = AppState.apps.filter(app => {
-        // Search Filter
+    // Simple Search Filter
+    const filteredApps = AppState.apps.filter(app => {
+        if (!AppState.searchTerm) return true;
         const term = AppState.searchTerm.toLowerCase();
-        const matchesSearch = !term || 
-               app.name.toLowerCase().includes(term) ||
+        return app.name.toLowerCase().includes(term) ||
                app.description.toLowerCase().includes(term) ||
-               app.developer.toLowerCase().includes(term);
-        
-        // Category Filter
-        const matchesCategory = AppState.activeCategory === 'all' || 
-                                app.category === AppState.activeCategory;
-                                
-        return matchesSearch && matchesCategory;
+               app.developer.toLowerCase().includes(term) ||
+               app.category.toLowerCase().includes(term);
     });
 
-    // Sorting
-    result = sortApps(result, AppState.sortBy);
-
-    if (result.length === 0) {
+    if (filteredApps.length === 0) {
         appGrid.innerHTML = `
             <div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7">
                 <h3>No apps found</h3>
-                <p>Try adjusting your search or filters</p>
+                <p>Try different search terms</p>
             </div>
         `;
+        setTimeout(() => {
+            const element = appGrid.querySelector('.fade-in');
+            if (element && observer) observer.observe(element);
+        }, 100);
         return;
     }
 
-    appGrid.innerHTML = result.map((app, index) => {
+    appGrid.innerHTML = filteredApps.map((app, index) => {
         const safeId = sanitizeHtml(app.id);
         const safeName = sanitizeHtml(app.name);
         const safeDeveloper = sanitizeHtml(app.developer);
         const safeDescription = sanitizeHtml(app.description);
+        const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
+        // Original Card Structure
         return `
         <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
             <div class="app-icon-container">
                 <img src="${app.icon}" 
-                     alt="Icon for ${safeName}" 
+                     alt="${safeAlt}" 
                      class="app-icon" 
                      loading="lazy" 
                      decoding="async"
@@ -131,55 +118,34 @@ function renderAppGrid() {
             </div>
             <div class="app-card-content">
                 <h3>${safeName}</h3>
-                <p><span class="badge" style="background:var(--card-bg);">${app.category}</span></p>
+                <p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>
                 <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
-                <p class="app-size">Size: ${app.size}</p>
-                
-                <div class="button-group" style="margin-top:auto; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-                    <button class="download-btn action-download" data-id="${safeId}" aria-label="Download ${safeName} IPA">
-                        ⬇️ Download
-                    </button>
-                    <button class="icon-btn action-share" data-id="${safeId}" aria-label="Share ${safeName}" title="Share">
-                        🔗
-                    </button>
-                </div>
+                <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
+                <button class="download-btn action-download" data-id="${safeId}" aria-label="Download ${safeName} IPA">
+                    ⬇️ Download IPA
+                </button>
             </div>
         </article>
         `;
     }).join('');
 
-    // Re-attach listeners
     setTimeout(() => {
         document.querySelectorAll('.action-download').forEach(btn => {
-            btn.addEventListener('click', (e) => trackDownload(e.target.dataset.id));
-        });
-        document.querySelectorAll('.action-share').forEach(btn => {
-            btn.addEventListener('click', (e) => shareApp(e.target.dataset.id));
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                trackDownload(id);
+            });
         });
         
-        // Re-observe for animations
         if (observer) {
-            document.querySelectorAll('.app-card').forEach(el => observer.observe(el));
+            document.querySelectorAll('.app-card').forEach(card => observer.observe(card));
         }
-    }, 50);
-}
-
-// Sorting Logic
-function sortApps(apps, sortBy) {
-    return [...apps].sort((a, b) => {
-        switch(sortBy) {
-            case 'name': return a.name.localeCompare(b.name);
-            case 'recent': return b.version.localeCompare(a.version); // Basic version compare
-            case 'size': return parseInt(a.size) - parseInt(b.size);
-            default: return 0;
-        }
-    });
+    }, 100);
 }
 
 // Rate Limiting & Download
 async function trackDownload(appId) {
     try {
-        // Rate Limit Check
         if (!checkRateLimit(appId)) return;
 
         const app = AppState.apps.find(a => a.id === appId);
@@ -199,8 +165,6 @@ async function trackDownload(appId) {
 function checkRateLimit(appId) {
     const now = Date.now();
     const recent = AppState.downloads.get(appId) || [];
-    
-    // Filter out old downloads
     const activeDownloads = recent.filter(time => time > now - CONFIG.RATE_LIMIT_TIME);
     
     if (activeDownloads.length >= CONFIG.RATE_LIMIT_COUNT) {
@@ -213,39 +177,24 @@ function checkRateLimit(appId) {
     return true;
 }
 
-// Share Functionality
-async function shareApp(appId) {
-    const app = AppState.apps.find(a => a.id === appId);
-    if (!app) return;
-
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: app.name,
-                text: `Check out ${app.name} on Mini's IPA Repo!`,
-                url: window.location.href
-            });
-        } catch (err) {
-            console.log('Share cancelled');
-        }
-    } else {
-        // Fallback: Copy to clipboard
-        navigator.clipboard.writeText(`${app.name} - ${app.downloadUrl}`);
-        showToast('Link copied to clipboard!', 'info');
-    }
-}
-
 // Skeleton Loading
 function showLoadingState() {
     const grid = document.getElementById('appGrid');
     grid.innerHTML = Array(6).fill(0).map(() => `
-        <div class="skeleton-card">
+        <div class="skeleton-card fade-in">
             <div class="skeleton skeleton-icon"></div>
-            <div class="skeleton skeleton-text"></div>
             <div class="skeleton skeleton-text short"></div>
+            <div class="skeleton skeleton-text medium"></div>
+            <div class="skeleton skeleton-text medium"></div>
             <div class="skeleton skeleton-button"></div>
         </div>
     `).join('');
+    
+    setTimeout(() => {
+        if (observer) {
+            document.querySelectorAll('.skeleton-card').forEach(card => observer.observe(card));
+        }
+    }, 100);
 }
 
 function showErrorState(msg) {
@@ -299,52 +248,39 @@ function showToast(message, type = 'info') {
 // ========== EVENT LISTENERS ==========
 
 function setupEventListeners() {
-    // Search
     const searchBox = document.getElementById('searchBox');
     if (searchBox) {
         searchBox.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
+            const value = e.target.value;
             searchTimeout = setTimeout(() => {
-                AppState.searchTerm = e.target.value.trim();
+                AppState.searchTerm = value.toLowerCase().trim();
                 renderAppGrid();
             }, CONFIG.SEARCH_DEBOUNCE);
         });
-    }
-
-    // Filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Update UI
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            // Update State
-            AppState.activeCategory = e.target.dataset.category;
-            renderAppGrid();
-        });
-    });
-
-    // Sort
-    const sortSelect = document.getElementById('sortSelect');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', (e) => {
-            AppState.sortBy = e.target.value;
-            renderAppGrid();
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== searchBox) {
+                e.preventDefault();
+                searchBox.focus();
+            }
         });
     }
-
-    // Keyboard Nav
+    
     document.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== searchBox) {
-            e.preventDefault();
-            searchBox?.focus();
+        if (e.key === 'Escape' && document.activeElement === searchBox) {
+            searchBox.blur();
         }
     });
-    
-    // Static Buttons
-    document.getElementById('btn-trollapps')?.addEventListener('click', () => addToApp('TrollApps', 'trollapps.json'));
-    document.getElementById('btn-sidestore')?.addEventListener('click', () => addToApp('SideStore', 'sidestore.json'));
-    document.getElementById('btn-reset')?.addEventListener('click', resetLocalData);
+
+    const btnTroll = document.getElementById('btn-trollapps');
+    if(btnTroll) btnTroll.addEventListener('click', () => addToApp('TrollApps', 'trollapps.json'));
+
+    const btnSide = document.getElementById('btn-sidestore');
+    if(btnSide) btnSide.addEventListener('click', () => addToApp('SideStore', 'sidestore.json'));
+
+    const btnReset = document.getElementById('btn-reset');
+    if(btnReset) btnReset.addEventListener('click', resetLocalData);
 }
 
 function addToApp(appName, manifestFile) {
@@ -352,29 +288,40 @@ function addToApp(appName, manifestFile) {
     const scheme = schemes[appName];
     if (!scheme) return;
     
+    // Dynamic URL handling (Move-proof)
     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     const url = `${scheme}://add-repo?url=${encodeURIComponent(baseUrl + manifestFile)}`;
     window.location.href = url;
+    
+    setTimeout(() => {
+        showToast(`If ${appName} didn't open, make sure it's installed`, 'info');
+    }, 1000);
 }
 
 function resetLocalData() {
-    if (confirm('Clear local cache?')) {
+    if (confirm('Clear all local data and cache?')) {
         localStorage.clear();
         sessionStorage.clear();
         location.reload();
+        showToast('Local cache cleared', 'success');
     }
 }
 
 // ========== PWA & SCROLL ==========
 
 function initializeScrollAnimations() {
-    if ('IntersectionObserver' in window) {
-        observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1 });
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => el.classList.add('visible'));
+        return;
     }
+
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
 }
 
 function setupPWA() {
@@ -391,6 +338,38 @@ function setupPWA() {
                     }
                 });
             });
+        });
+    }
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(showInstallPrompt, 3000);
+    });
+}
+
+function showInstallPrompt() {
+    if (!deferredPrompt) return;
+    const toast = document.getElementById('toast');
+    toast.textContent = 'Install Mini\'s IPA Repo? ';
+    
+    const installButton = document.createElement('button');
+    installButton.textContent = 'Install';
+    installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
+    installButton.onclick = installApp;
+    toast.appendChild(installButton);
+    toast.classList.remove('error','warning','success','info');
+    toast.classList.add('toast','info','show');
+}
+
+function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                showToast('App installed successfully!', 'success');
+            }
+            deferredPrompt = null;
         });
     }
 }
