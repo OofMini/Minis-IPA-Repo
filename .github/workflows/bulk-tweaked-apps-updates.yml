@@ -3,7 +3,6 @@ name: Bulk IPA Updates - Tweaked Apps
 on:
   workflow_dispatch:
     inputs:
-      # Spotify (EeveeSpotify)
       spotify_ipa_version:
         description: "Spotify IPA Version"
         default: "9.1.0"
@@ -17,7 +16,6 @@ on:
         type: boolean
         default: true
         
-      # YouTube (YTLite)
       youtube_ipa_version:
         description: "YouTube IPA Version"
         default: "20.50.9"
@@ -31,7 +29,6 @@ on:
         type: boolean
         default: true
         
-      # X (NeoFreeBird)
       x_ipa_version:
         description: "X IPA Version"
         default: "11.48"
@@ -45,7 +42,6 @@ on:
         type: boolean
         default: true
         
-      # YTMusicUltimate
       ytmusicultimate_ipa_version:
         description: "YTMusicUltimate IPA Version"
         default: "8.50.2"
@@ -59,7 +55,6 @@ on:
         type: boolean
         default: true
         
-      # SCInsta
       scinsta_ipa_version:
         description: "SCInsta IPA Version"
         default: "409.0.0"
@@ -73,7 +68,6 @@ on:
         type: boolean
         default: true
         
-      # Global Inputs
       change_description:
         description: "Custom commit message (optional)"
         default: ""
@@ -92,187 +86,82 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # STEP 1: Checkout repository
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
 
-      # STEP 2: Setup dependencies and validate inputs
       - name: "Setup dependencies and validate inputs"
         env:
-          # Pass all inputs as environment variables
           SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
           SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
           UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
-          
           YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
           YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
           UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
-          
           X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
           X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
           UPDATE_X: ${{ github.event.inputs.update_x }}
-          
           YTMUSICULTIMATE_IPA_VERSION: ${{ github.event.inputs.ytmusicultimate_ipa_version }}
           YTMUSICULTIMATE_TWEAK_VERSION: ${{ github.event.inputs.ytmusicultimate_tweak_version }}
           UPDATE_YTMUSICULTIMATE: ${{ github.event.inputs.update_ytmusicultimate }}
-          
           SCINSTA_IPA_VERSION: ${{ github.event.inputs.scinsta_ipa_version }}
           SCINSTA_TWEAK_VERSION: ${{ github.event.inputs.scinsta_tweak_version }}
           UPDATE_SCINSTA: ${{ github.event.inputs.update_scinsta }}
-          
-          UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
-          CHANGE_DESCRIPTION: ${{ github.event.inputs.change_description }}
         run: |
           set -e
+          sudo apt-get update -qq && sudo apt-get install -y jq
           
-          echo "📦 Installing dependencies..."
-          sudo apt-get update -qq
-          sudo apt-get install -y jq
-          echo "✅ Dependencies installed"
-          
-          echo "🔍 Validating inputs..."
-          
-          # Function to validate version format
           validate_version() {
             local version="$1"
             local app_name="$2"
-            local version_type="$3"
-            
-            if [[ -z "$version" ]]; then
-              echo "::error::$app_name $version_type cannot be empty"
-              exit 1
-            fi
-            
-            # FIXED: Updated regex to handle both 2-part (major.minor) AND 3-part (major.minor.patch) versions
-            # Allows: 11.45, 0.0, 0.0.0, v6.2.2, 5.2b4, 9.1.0
+            if [[ -z "$version" ]]; then echo "::error::$app_name version cannot be empty"; exit 1; fi
             if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
-              echo "::error::$app_name $version_type must be a valid semantic version (e.g., '9.1.0', 'v6.2.2', '5.2b4', '11.45', '0.0'), got: $version"
-              exit 1
+              echo "::error::$app_name version invalid (got: $version)."; exit 1;
             fi
           }
           
-          # Check if any app is enabled
           ANY_ENABLED=false
+          if [[ "$UPDATE_SPOTIFY" == "true" ]]; then ANY_ENABLED=true; validate_version "$SPOTIFY_IPA_VERSION" "Spotify"; fi
+          if [[ "$UPDATE_YOUTUBE" == "true" ]]; then ANY_ENABLED=true; validate_version "$YOUTUBE_IPA_VERSION" "YouTube"; fi
+          if [[ "$UPDATE_X" == "true" ]]; then ANY_ENABLED=true; validate_version "$X_IPA_VERSION" "X"; fi
+          if [[ "$UPDATE_YTMUSICULTIMATE" == "true" ]]; then ANY_ENABLED=true; validate_version "$YTMUSICULTIMATE_IPA_VERSION" "YTMusic"; fi
+          if [[ "$UPDATE_SCINSTA" == "true" ]]; then ANY_ENABLED=true; validate_version "$SCINSTA_IPA_VERSION" "SCInsta"; fi
           
-          # Check Spotify
-          if [[ "$UPDATE_SPOTIFY" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$SPOTIFY_IPA_VERSION" "Spotify" "IPA version"
-            validate_version "$SPOTIFY_TWEAK_VERSION" "Spotify" "Tweak version"
-          fi
+          if [[ "$ANY_ENABLED" == "false" ]]; then echo "::notice::No apps enabled for update. Exiting."; exit 0; fi
           
-          # Check YouTube
-          if [[ "$UPDATE_YOUTUBE" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$YOUTUBE_IPA_VERSION" "YouTube" "IPA version"
-            validate_version "$YOUTUBE_TWEAK_VERSION" "YouTube" "Tweak version"
-          fi
-          
-          # Check X
-          if [[ "$UPDATE_X" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$X_IPA_VERSION" "X" "IPA version"
-            validate_version "$X_TWEAK_VERSION" "X" "Tweak version"
-          fi
-          
-          # Check YTMusicUltimate
-          if [[ "$UPDATE_YTMUSICULTIMATE" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$YTMUSICULTIMATE_IPA_VERSION" "YTMusicUltimate" "IPA version"
-            validate_version "$YTMUSICULTIMATE_TWEAK_VERSION" "YTMusicUltimate" "Tweak version"
-          fi
-          
-          # Check SCInsta
-          if [[ "$UPDATE_SCINSTA" == "true" ]]; then
-            ANY_ENABLED=true
-            validate_version "$SCINSTA_IPA_VERSION" "SCInsta" "IPA version"
-            validate_version "$SCINSTA_TWEAK_VERSION" "SCInsta" "Tweak version"
-          fi
-          
-          if [[ "$ANY_ENABLED" == "false" ]]; then
-            echo "::notice::No apps enabled for update. Exiting."
-            exit 0
-          fi
-          
-          echo "✅ Input validation complete"
-          
-          # Configure Git for PAT authentication
-          echo "⚙️ Configuring Git..."
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
-          echo "✅ Git configured for PAT authentication"
 
-      # STEP 3: Process all repository updates
       - name: "Process all repository updates"
         id: update-files
         env:
-          # Existing apps
           SPOTIFY_IPA_VERSION: ${{ github.event.inputs.spotify_ipa_version }}
           SPOTIFY_TWEAK_VERSION: ${{ github.event.inputs.spotify_tweak_version }}
           UPDATE_SPOTIFY: ${{ github.event.inputs.update_spotify }}
-          
           YOUTUBE_IPA_VERSION: ${{ github.event.inputs.youtube_ipa_version }}
           YOUTUBE_TWEAK_VERSION: ${{ github.event.inputs.youtube_tweak_version }}
           UPDATE_YOUTUBE: ${{ github.event.inputs.update_youtube }}
-          
           X_IPA_VERSION: ${{ github.event.inputs.x_ipa_version }}
           X_TWEAK_VERSION: ${{ github.event.inputs.x_tweak_version }}
           UPDATE_X: ${{ github.event.inputs.update_x }}
-          
-          # New apps
           YTMUSICULTIMATE_IPA_VERSION: ${{ github.event.inputs.ytmusicultimate_ipa_version }}
           YTMUSICULTIMATE_TWEAK_VERSION: ${{ github.event.inputs.ytmusicultimate_tweak_version }}
           UPDATE_YTMUSICULTIMATE: ${{ github.event.inputs.update_ytmusicultimate }}
-          
           SCINSTA_IPA_VERSION: ${{ github.event.inputs.scinsta_ipa_version }}
           SCINSTA_TWEAK_VERSION: ${{ github.event.inputs.scinsta_tweak_version }}
           UPDATE_SCINSTA: ${{ github.event.inputs.update_scinsta }}
-          
-          # Global
           UPDATE_WORKFLOW_DEFAULTS: ${{ github.event.inputs.update_workflow_defaults }}
         run: |
           set -e
-          
-          # Setup error handling and cleanup
           trap 'rm -f *.tmp *.bak' EXIT ERR
-          
-          # Get current date
           CURRENT_DATE=$(date -u +"%Y-%m-%d")
-          echo "current_date=$CURRENT_DATE" >> $GITHUB_OUTPUT
-          echo "📅 Processing date: $CURRENT_DATE"
           
-          # Define app configuration for 5 tweaked apps
           APP_KEYS=("spotify" "youtube" "x" "ytmusicultimate" "scinsta")
-          
-          declare -A APP_NAMES=(
-            ["spotify"]="EeveeSpotify"
-            ["youtube"]="YTLite"
-            ["x"]="NeoFreeBird"
-            ["ytmusicultimate"]="YTMusicUltimate"
-            ["scinsta"]="SCInsta"
-          )
-          
-          declare -A APP_BUNDLES=(
-            ["spotify"]="com.spotify.client"
-            ["youtube"]="com.google.ios.youtube"
-            ["x"]="com.atebits.Tweetie2"
-            ["ytmusicultimate"]="com.google.ios.youtubemusic"
-            ["scinsta"]="com.burbn.instagram"
-          )
-          
-          declare -A APP_HTML_IDS=(
-            ["spotify"]="eeveespotify"
-            ["youtube"]="ytlite"
-            ["x"]="neofreebird"
-            ["ytmusicultimate"]="ytmusicultimate"
-            ["scinsta"]="scinsta"
-          )
-          
-          # URL patterns - YTMusicUltimate uses static URL, others as before
+          declare -A APP_NAMES=( ["spotify"]="EeveeSpotify" ["youtube"]="YTLite" ["x"]="NeoFreeBird" ["ytmusicultimate"]="YTMusicUltimate" ["scinsta"]="SCInsta" )
+          declare -A APP_BUNDLES=( ["spotify"]="com.spotify.client" ["youtube"]="com.google.ios.youtube" ["x"]="com.atebits.Tweetie2" ["ytmusicultimate"]="com.google.ios.youtubemusic" ["scinsta"]="com.burbn.instagram" )
+          declare -A APP_HTML_IDS=( ["spotify"]="eeveespotify" ["youtube"]="ytlite" ["x"]="neofreebird" ["ytmusicultimate"]="ytmusicultimate" ["scinsta"]="scinsta" )
           declare -A APP_URL_PATTERNS=(
             ["spotify"]="static:https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
             ["youtube"]="dynamic:https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_{version}.ipa"
@@ -280,8 +169,6 @@ jobs:
             ["ytmusicultimate"]="static:https://github.com/OofMini/YTMusicUltimate/releases/download/New/YTMusicUltimate.ipa"
             ["scinsta"]="dynamic:https://github.com/OofMini/SCInsta/releases/download/New/SCInsta_{version}.ipa"
           )
-          
-          # All these apps have tweak versions in descriptions
           declare -A APP_DESCRIPTIONS=(
             ["spotify"]="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA %s, EeveeSpotify %s."
             ["youtube"]="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA %s, YTLite %s."
@@ -289,473 +176,85 @@ jobs:
             ["ytmusicultimate"]="Tweaked YouTube Music with enhanced features and no ads. YouTube Music IPA %s, YTMusicUltimate %s."
             ["scinsta"]="Tweaked Instagram with additional features and enhanced privacy. Instagram IPA %s, SCInsta %s."
           )
+          declare -A APP_TOGGLES=( ["spotify"]="$UPDATE_SPOTIFY" ["youtube"]="$UPDATE_YOUTUBE" ["x"]="$UPDATE_X" ["ytmusicultimate"]="$UPDATE_YTMUSICULTIMATE" ["scinsta"]="$UPDATE_SCINSTA" )
+          declare -A APP_IPA_VERSIONS=( ["spotify"]="$SPOTIFY_IPA_VERSION" ["youtube"]="$YOUTUBE_IPA_VERSION" ["x"]="$X_IPA_VERSION" ["ytmusicultimate"]="$YTMUSICULTIMATE_IPA_VERSION" ["scinsta"]="$SCINSTA_IPA_VERSION" )
+          declare -A APP_TWEAK_VERSIONS=( ["spotify"]="$SPOTIFY_TWEAK_VERSION" ["youtube"]="$YOUTUBE_TWEAK_VERSION" ["x"]="$X_TWEAK_VERSION" ["ytmusicultimate"]="$YTMUSICULTIMATE_TWEAK_VERSION" ["scinsta"]="$SCINSTA_TWEAK_VERSION" )
           
-          # Map environment variables to app configurations
-          declare -A APP_TOGGLES=(
-            ["spotify"]="$UPDATE_SPOTIFY"
-            ["youtube"]="$UPDATE_YOUTUBE"
-            ["x"]="$UPDATE_X"
-            ["ytmusicultimate"]="$UPDATE_YTMUSICULTIMATE"
-            ["scinsta"]="$UPDATE_SCINSTA"
-          )
-          
-          declare -A APP_IPA_VERSIONS=(
-            ["spotify"]="$SPOTIFY_IPA_VERSION"
-            ["youtube"]="$YOUTUBE_IPA_VERSION"
-            ["x"]="$X_IPA_VERSION"
-            ["ytmusicultimate"]="$YTMUSICULTIMATE_IPA_VERSION"
-            ["scinsta"]="$SCINSTA_IPA_VERSION"
-          )
-          
-          declare -A APP_TWEAK_VERSIONS=(
-            ["spotify"]="$SPOTIFY_TWEAK_VERSION"
-            ["youtube"]="$YOUTUBE_TWEAK_VERSION"
-            ["x"]="$X_TWEAK_VERSION"
-            ["ytmusicultimate"]="$YTMUSICULTIMATE_TWEAK_VERSION"
-            ["scinsta"]="$SCINSTA_TWEAK_VERSION"
-          )
-          
-          # Function to build download URL
           build_download_url() {
-            local app_key="$1"
-            local tweak_version="$2"
-            local pattern="${APP_URL_PATTERNS[$app_key]}"
-            
-            if [[ "$pattern" == static:* ]]; then
-              echo "${pattern#static:}"
-            elif [[ "$pattern" == dynamic:* ]]; then
-              local template="${pattern#dynamic:}"
-              local version_clean="${tweak_version#v}"
+            local app_key="$1" tweak_version="$2" pattern="${APP_URL_PATTERNS[$app_key]}"
+            if [[ "$pattern" == static:* ]]; then echo "${pattern#static:}"; elif [[ "$pattern" == dynamic:* ]]; then
+              local template="${pattern#dynamic:}" version_clean="${tweak_version#v}"
               echo "${template//\{version\}/$version_clean}"
             fi
           }
           
-          # Function to generate description
           generate_description() {
-            local app_key="$1"
-            local ipa_version="$2"
-            local tweak_version="$3"
-            local template="${APP_DESCRIPTIONS[$app_key]}"
-            
-            printf "$template" "$ipa_version" "$tweak_version"
+            local app_key="$1" ipa_ver="$2" tweak_ver="$3" template="${APP_DESCRIPTIONS[$app_key]}"
+            printf "$template" "$ipa_ver" "$tweak_ver"
           }
           
-          # Function to update app in JSON file
           update_app_in_file() {
-            local file="$1" 
-            local app_name="$2" 
-            local bundle_id="$3" 
-            local ipa_version="$4" 
-            local download_url="$5"
-            local description="$6"
-            local temp_file="${file}.tmp"
-            
-            # Check if app exists in file
-            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" \
-                 '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' \
-                 "$file" >/dev/null 2>&1; then
-              echo "::warning::$app_name not found in $file, skipping..."
-              return 0
-            fi
-            
-            # Update based on file structure
+            local file="$1" app_name="$2" bundle_id="$3" ipa_ver="$4" url="$5" desc="$6" temp_file="${file}.tmp"
+            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then return 0; fi
             case "$file" in
-              "sidestore.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.versions[0].version = $version | 
-                     .versions[0].downloadURL = $url | 
-                     .versions[0].date = $date | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
-              "trollapps.json")
-                jq --arg app "$app_name" \
-                   --arg bundle "$bundle_id" \
-                   --arg version "$ipa_version" \
-                   --arg url "$download_url" \
-                   --arg desc "$description" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= 
-                    (.version = $version | 
-                     .downloadURL = $url | 
-                     .localizedDescription = $desc)' "$file" > "$temp_file"
-                ;;
+              "sidestore.json") jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
+              "trollapps.json") jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
             esac
-            
-            # Validate and move
-            if ! jq empty "$temp_file" 2>/dev/null; then
-              echo "::error::Generated invalid JSON for $file"
-              rm -f "$temp_file"
-              return 1
-            fi
-            
-            if cmp -s "$file" "$temp_file"; then
-              rm -f "$temp_file"
-            else
-              mv "$temp_file" "$file"
-              echo "✅ Updated $app_name in $file"
-            fi
+            if ! jq empty "$temp_file" 2>/dev/null; then echo "::error::Invalid JSON"; rm -f "$temp_file"; return 1; fi
+            if ! cmp -s "$file" "$temp_file"; then mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; else rm -f "$temp_file"; fi
           }
           
-          # Function to update HTML file
           update_html_file() {
-            local html_id="$1"
-            local app_name="$2"
-            local ipa_version="$3"
-            local tweak_version="$4"
-            
-            if [ ! -f "index.html" ]; then
-              echo "::warning::index.html not found"
-              return 0
-            fi
-            
-            # Clean app name for regex (escape special characters)
-            local clean_app_name=$(echo "$app_name" | sed 's/[()]/\\&/g')
-            
-            # Update version number
-            sed -i \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$ipa_version\2/ }" \
-              "index.html"
-            
-            # Update description with both IPA and tweak versions
-            # Extract base app name for description update
+            local html_id="$1" app_name="$2" ipa_ver="$3" tweak_ver="$4"
+            if [ ! -f "index.html" ]; then return 0; fi
+            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$ipa_ver\2/ }" "index.html"
             local base_app_name=""
-            case "$html_id" in
-              "eeveespotify") base_app_name="Spotify" ;;
-              "ytlite") base_app_name="YouTube" ;;
-              "neofreebird") base_app_name="X" ;;
-              "ytmusicultimate") base_app_name="YouTube Music" ;;
-              "scinsta") base_app_name="Instagram" ;;
-            esac
-            
-            # Update the description line with both versions
-            sed -i \
-              -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${base_app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_version\2$tweak_version/ }" \
-              "index.html"
+            case "$html_id" in "eeveespotify") base_app_name="Spotify" ;; "ytlite") base_app_name="YouTube" ;; "neofreebird") base_app_name="X" ;; "ytmusicultimate") base_app_name="YouTube Music" ;; "scinsta") base_app_name="Instagram" ;; esac
+            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${base_app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_ver\2$tweak_ver/ }" "index.html"
           }
           
-          # Function to update workflow defaults
           update_workflow_defaults() {
-            local app_key="$1"
-            local ipa_version="$2"
-            local tweak_version="$3"
-            local workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
-            
-            if [ ! -f "$workflow_file" ]; then
-              echo "::warning::Workflow file not found"
-              return 0
-            fi
-            
-            # Update both IPA and tweak version defaults
-            sed -i \
-              -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$ipa_version\"/" \
-              -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$tweak_version\"/" \
-              "$workflow_file"
+            local app_key="$1" ipa_ver="$2" tweak_ver="$3" workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
+            if [ ! -f "$workflow_file" ]; then return 0; fi
+            sed -i -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$ipa_ver\"/" -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$tweak_ver\"/" "$workflow_file"
           }
           
-          # Validate JSON files exist and are valid
-          echo "📄 Validating JSON files..."
           JSON_FILES=("sidestore.json" "trollapps.json")
-          for file in "${JSON_FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "::error::$file not found"
-              exit 1
-            fi
-            
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::$file - Invalid JSON"
-              exit 1
-            fi
-            
-            if ! jq -e '.apps | type == "array"' "$file" >/dev/null 2>&1; then
-              echo "::error::$file - Missing or invalid apps array"
-              exit 1
-            fi
-            
-            echo "✅ $file - Valid JSON"
-          done
+          UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
           
-          # Initialize tracking arrays
-          UPDATED_APPS=()
-          UPDATED_VERSIONS=()
-          SKIPPED_APPS=()
-          
-          # Process each app
           for app_key in "${APP_KEYS[@]}"; do
-            # Get toggle value
-            toggle_value="${APP_TOGGLES[$app_key]}"
+            if [[ "${APP_TOGGLES[$app_key]}" != "true" ]]; then SKIPPED_APPS+=("${APP_NAMES[$app_key]}"); continue; fi
+            IPA="${APP_IPA_VERSIONS[$app_key]}"
+            TWEAK="${APP_TWEAK_VERSIONS[$app_key]}"
+            URL=$(build_download_url "$app_key" "$TWEAK")
+            DESC=$(generate_description "$app_key" "$IPA" "$TWEAK")
             
-            # Check if app is enabled
-            if [[ "$toggle_value" != "true" ]]; then
-              echo "::notice::Skipping ${APP_NAMES[$app_key]} (toggle disabled)"
-              SKIPPED_APPS+=("${APP_NAMES[$app_key]}")
-              continue
-            fi
+            for json_file in "${JSON_FILES[@]}"; do update_app_in_file "$json_file" "${APP_NAMES[$app_key]}" "${APP_BUNDLES[$app_key]}" "$IPA" "$URL" "$DESC"; done
+            if [ -f "index.html" ]; then update_html_file "${APP_HTML_IDS[$app_key]}" "${APP_NAMES[$app_key]}" "$IPA" "$TWEAK"; fi
+            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then update_workflow_defaults "$app_key" "$IPA" "$TWEAK"; fi
             
-            # Get versions
-            IPA_VERSION="${APP_IPA_VERSIONS[$app_key]}"
-            TWEAK_VERSION="${APP_TWEAK_VERSIONS[$app_key]}"
-            
-            # Get app metadata
-            APP_NAME="${APP_NAMES[$app_key]}"
-            BUNDLE_ID="${APP_BUNDLES[$app_key]}"
-            HTML_ID="${APP_HTML_IDS[$app_key]}"
-            DOWNLOAD_URL=$(build_download_url "$app_key" "$TWEAK_VERSION")
-            DESCRIPTION=$(generate_description "$app_key" "$IPA_VERSION" "$TWEAK_VERSION")
-            
-            echo ""
-            echo "========================================"
-            echo "🔄 Processing $APP_NAME..."
-            echo "========================================"
-            echo "📦 IPA Version: $IPA_VERSION"
-            echo "⚙️ Tweak Version: $TWEAK_VERSION"
-            echo "🔗 Download URL: $DOWNLOAD_URL"
-            
-            # Update JSON files
-            for json_file in "${JSON_FILES[@]}"; do
-              update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$IPA_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
-            done
-            
-            # Update HTML (index.html)
-            if [ -f "index.html" ]; then
-              echo "🌐 Updating HTML for $APP_NAME..."
-              update_html_file "$HTML_ID" "$APP_NAME" "$IPA_VERSION" "$TWEAK_VERSION"
-            fi
-            
-            # Update workflow defaults (if enabled globally)
-            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then
-              echo "⚙️ Updating workflow defaults for $APP_NAME..."
-              update_workflow_defaults "$app_key" "$IPA_VERSION" "$TWEAK_VERSION"
-            fi
-            
-            # Track update
-            UPDATED_APPS+=("$APP_NAME")
-            UPDATED_VERSIONS+=("${app_key}:${IPA_VERSION}:${TWEAK_VERSION}")
-            
-            echo "✅ $APP_NAME processing complete"
+            UPDATED_APPS+=("${APP_NAMES[$app_key]}")
+            UPDATED_VERSIONS+=("${app_key}:${IPA}:${TWEAK}")
           done
           
-          # Set outputs
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT
-            echo "updated_versions=${UPDATED_VERSIONS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then
-            echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT
-          fi
-          
-          # Final validation of all JSON files
-          echo ""
-          echo "🔍 Final validation..."
-          for file in "${JSON_FILES[@]}"; do
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "::error::Final validation failed for $file"
-              exit 1
-            fi
-            echo "✅ $file validated"
-          done
-          
-          echo ""
-          echo "========================================"
-          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then
-            echo "✅ Successfully processed: ${UPDATED_APPS[*]}"
-          else
-            echo "::warning::No apps were updated"
-          fi
-          echo "========================================"
+          if [ ${#UPDATED_APPS[@]} -gt 0 ]; then echo "updated_apps=${UPDATED_APPS[*]}" >> $GITHUB_OUTPUT; fi
+          if [ ${#SKIPPED_APPS[@]} -gt 0 ]; then echo "skipped_apps=${SKIPPED_APPS[*]}" >> $GITHUB_OUTPUT; fi
 
-      # STEP 4: Commit and push changes
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
         run: |
           set -e
-          
-          # Build commit message
-          if [[ -n "${{ github.event.inputs.change_description }}" ]]; then
-            COMMIT_MSG="${{ github.event.inputs.change_description }}"
-          else
-            COMMIT_MSG="Repository Sync: Updated tweaked app versions across all sources"
-            
-            # Add updated apps section
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated apps:"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add skipped apps section
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Skipped apps (toggle disabled):"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- $app"
-              done
-            fi
-            
-            # Add version details section
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Version details:"
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                IPA_VER="${PARTS[1]}"
-                TWEAK_VER="${PARTS[2]}"
-                # Capitalize first letter of app key for display
-                APP_DISPLAY="${APP_KEY^}"
-                COMMIT_MSG="$COMMIT_MSG"$'\n'"- ${APP_DISPLAY}: IPA $IPA_VER, Tweak $TWEAK_VER"
-              done
-            fi
-            
-            # Add note about workflow defaults update
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Updated workflow default versions"
-            fi
-            
-            COMMIT_MSG="$COMMIT_MSG"$'\n\n'"Automated update via GitHub Actions"
-          fi
-          
-          # Stage changed files
-          git add sidestore.json trollapps.json
-          
-          # Add index.html only if it was modified
-          if [ -f index.html ] && ! git diff --quiet index.html 2>/dev/null; then
-            git add index.html
-          fi
-          
-          # Add workflow file if it was modified
-          WORKFLOW_FILE=".github/workflows/bulk-tweaked-apps-updates.yml"
-          if [ -f "$WORKFLOW_FILE" ] && ! git diff --quiet "$WORKFLOW_FILE" 2>/dev/null; then
-            git add "$WORKFLOW_FILE"
-            echo "⚙️ Workflow file changes staged"
-          fi
-          
-          # Check if there are staged changes
-          if git diff --staged --quiet; then
-            echo "::notice::No changes to commit - files are already up to date"
-            echo "no_changes=true" >> $GITHUB_OUTPUT
-          else
-            # Commit changes
+          COMMIT_MSG="Repository Sync: Updated tweaked app versions"
+          git add sidestore.json trollapps.json index.html .github/workflows/bulk-tweaked-apps-updates.yml
+          if ! git diff --staged --quiet; then
             git commit -m "$COMMIT_MSG"
-            
-            # Push with retry logic using PAT authentication
-            echo "🚀 Pushing changes to repository using PAT..."
-            MAX_RETRIES=3
-            RETRY_COUNT=0
-            
-            while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-              if git push origin HEAD; then
-                echo "✅ Changes committed and pushed successfully using PAT"
-                break
-              else
-                RETRY_COUNT=$((RETRY_COUNT + 1))
-                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                  echo "::warning::Push failed, pulling and retrying... (Attempt $RETRY_COUNT/$MAX_RETRIES)"
-                  git pull --rebase origin HEAD
-                else
-                  echo "::error::Failed to push after $MAX_RETRIES attempts"
-                  exit 1
-                fi
-              fi
-            done
+            git push origin HEAD
           fi
 
-      # STEP 5: Generate summary (always runs)
       - name: "Generate summary"
         if: always()
         run: |
-          {
-            echo "## 📦 Tweaked Apps Update Summary"
-            echo ""
-            
-            # Job status
-            if [ "${{ job.status }}" == "success" ]; then
-              echo "✅ **Status**: Success"
-            else
-              echo "❌ **Status**: Failed"
-            fi
-            echo ""
-            
-            # Apps updated
-            echo "### 📱 Apps Updated:"
-            UPDATED_APPS_STR="${{ steps.update-files.outputs.updated_apps }}"
-            if [ -n "$UPDATED_APPS_STR" ]; then
-              IFS=' ' read -ra UPDATED_APPS_ARR <<< "$UPDATED_APPS_STR"
-              for app in "${UPDATED_APPS_ARR[@]}"; do
-                echo "- ✓ $app"
-              done
-              echo ""
-              echo "**Processed ${#UPDATED_APPS_ARR[@]} of 5 apps**"
-            else
-              echo "- ℹ️ No apps were updated"
-              echo ""
-              echo "**Processed 0 of 5 apps**"
-            fi
-            
-            # Apps skipped
-            echo ""
-            echo "### 🚫 Apps Skipped (Toggle Disabled):"
-            SKIPPED_APPS_STR="${{ steps.update-files.outputs.skipped_apps }}"
-            if [ -n "$SKIPPED_APPS_STR" ]; then
-              IFS=' ' read -ra SKIPPED_APPS_ARR <<< "$SKIPPED_APPS_STR"
-              for app in "${SKIPPED_APPS_ARR[@]}"; do
-                echo "- $app"
-              done
-            else
-              echo "- ℹ️ No apps were skipped"
-            fi
-            
-            echo ""
-            echo "### 🔢 Version Details:"
-            UPDATED_VERSIONS_STR="${{ steps.update-files.outputs.updated_versions }}"
-            if [ -n "$UPDATED_VERSIONS_STR" ]; then
-              IFS=' ' read -ra VERSION_PAIRS <<< "$UPDATED_VERSIONS_STR"
-              for version_pair in "${VERSION_PAIRS[@]}"; do
-                IFS=':' read -ra PARTS <<< "$version_pair"
-                APP_KEY="${PARTS[0]}"
-                IPA_VER="${PARTS[1]}"
-                TWEAK_VER="${PARTS[2]}"
-                APP_DISPLAY="${APP_KEY^}"
-                echo "- **${APP_DISPLAY}**:"
-                echo "  - IPA Version: \`$IPA_VER\`"
-                echo "  - Tweak Version: \`$TWEAK_VER\`"
-              done
-            else
-              echo "- ℹ️ No version updates"
-            fi
-            
-            echo ""
-            echo "### 📄 Files Processed:"
-            echo "- \`sidestore.json\`"
-            echo "- \`trollapps.json\`"
-            if [ -f "index.html" ]; then
-              echo "- \`index.html\`"
-            fi
-            if [[ "${{ github.event.inputs.update_workflow_defaults }}" == "true" ]]; then
-              echo "- \`.github/workflows/bulk-tweaked-apps-updates.yml\` (workflow defaults)"
-            fi
-            
-            echo ""
-            echo "### ⚙️ Configuration:"
-            echo "- Update workflow defaults: \`${{ github.event.inputs.update_workflow_defaults }}\`"
-            echo "- Authentication: PAT Token"
-            
-            echo ""
-            echo "### ⏰ Execution Time:"
-            echo "- Date: \`${{ steps.update-files.outputs.current_date }}\`"
-            echo "- Workflow: [\`${{ github.run_id }}\`](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-            
-            echo ""
-            echo "---"
-            echo "*Automated tweaked apps repository management via GitHub Actions*"
-          } >> $GITHUB_STEP_SUMMARY 2>&1 || echo "::warning::Failed to write step summary"
+          echo "## 📦 Tweaked Apps Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
