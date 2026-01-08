@@ -1,84 +1,59 @@
-const CACHE_NAME = 'minis-ipa-repo-v3';
-const STATIC_CACHE = 'static-v3';
-const DYNAMIC_CACHE = 'dynamic-v3';
-const MAX_DYNAMIC_CACHE_SIZE = 50;
-
+const VERSION = '3.0.0';
+const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
     './index.html',
-    './manifest.json',
+    './apps.json',
     './assets/css/style.css',
     './assets/js/app.js',
+    './manifest.json',
     'https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'
 ];
 
-// Helper to limit cache size
-async function limitCacheSize(cacheName, maxSize) {
-    const cache = await caches.open(cacheName);
-    const keys = await cache.keys();
-    if (keys.length > maxSize) {
-        await cache.delete(keys[0]);
-        await limitCacheSize(cacheName, maxSize);
-    }
-}
-
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(STATIC_CACHE).then((cache) => {
-            return cache.addAll(STATIC_URLS);
-        })
-    );
     self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_URLS))
+    );
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cache) => {
-                    if (cache !== STATIC_CACHE && cache !== DYNAMIC_CACHE) {
-                        return caches.delete(cache);
-                    }
-                })
-            );
-        })
+        caches.keys().then((keys) => Promise.all(
+            keys.map((key) => {
+                if (key !== CACHE_NAME) return caches.delete(key);
+            })
+        ))
     );
     self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-    // Skip cross-origin requests for dynamic caching to prevent opaque response issues
-    if (!event.request.url.startsWith(self.location.origin) && !event.request.url.includes('github.io')) {
+    // Stale-while-revalidate strategy for JSON data
+    if (event.request.url.includes('apps.json')) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then(async (cache) => {
+                const cachedResponse = await cache.match(event.request);
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                });
+                return cachedResponse || fetchPromise;
+            })
+        );
         return;
     }
 
+    // Cache-first for static assets
     event.respondWith(
         caches.match(event.request).then((response) => {
-            if (response) {
-                return response;
-            }
-            return fetch(event.request).then((networkResponse) => {
-                return caches.open(DYNAMIC_CACHE).then((cache) => {
-                    // Only cache valid responses
-                    if (networkResponse.ok) {
-                        cache.put(event.request, networkResponse.clone());
-                        limitCacheSize(DYNAMIC_CACHE, MAX_DYNAMIC_CACHE_SIZE);
-                    }
-                    return networkResponse;
-                });
-            });
-        }).catch(() => {
-            // Fallback for HTML pages
-            if (event.request.headers.get('accept').includes('text/html')) {
-                return caches.match('./offline.html');
-            }
+            return response || fetch(event.request);
         })
     );
 });
 
-// Listen for skip waiting message
 self.addEventListener('message', (event) => {
-    if (event.data === 'skipWaiting') {
+    if (event.data && event.data.action === 'skipWaiting') {
         self.skipWaiting();
     }
 });
