@@ -31,7 +31,7 @@ jobs:
   delete-runs:
     name: "Delete Old Workflow Runs"
     runs-on: ubuntu-latest
-    timeout-minutes: 360 # Increased to 6 hours for large history
+    timeout-minutes: 60  # Increased timeout to 60 minutes
     
     steps:
       - name: "Delete Workflow Runs"
@@ -55,57 +55,54 @@ jobs:
             fi
             
             echo "🔍 Processing '$workflow_name'..."
+
+            # OPTIMIZATION: If we don't need to retain the latest, use the fast --all flag
+            if [[ "$RETAIN_LATEST" != "true" ]]; then
+               echo "⚡ Fast mode: Deleting ALL runs via API..."
+               # We ignore errors in case the workflow has 0 runs
+               gh run delete --workflow "$workflow_name" --all || echo "   (No runs found or already deleted)"
+               echo "✅ Cleared all runs for '$workflow_name'"
+               echo "----------------------------------------"
+               return
+            fi
             
-            # Counter to prevent infinite loops if API fails
-            local loop_count=0
-            local max_loops=1000
-            
-            while [ $loop_count -lt $max_loops ]; do
-              # 1. Fetch runs (Limit 1000)
-              echo "   [Loop $loop_count] Fetching run list..."
-              RUNS=$(gh run list --workflow "$workflow_name" --limit 1000 --json databaseId,status || true)
+            # SLOW MODE: We must retain the latest, so we list and delete by ID
+            while true; do
+              # Fetch larger batch (500)
+              RUNS=$(gh run list --workflow "$workflow_name" --limit 500 --json databaseId,status || true)
               
-              if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
-                echo "✅ No (more) runs found for '$workflow_name'."
+              if [[ -z "$RUNS" ]]; then
+                echo "⚠️ Could not fetch runs for '$workflow_name'."
+                break
+              fi
+
+              COUNT=$(echo "$RUNS" | jq length)
+              
+              if [[ "$COUNT" -eq 0 ]]; then
+                echo "✅ No more runs to delete for '$workflow_name'"
+                break
+              fi
+
+              echo "   Found batch of $COUNT runs..."
+              
+              # Determine IDs to delete (Skip index 0 to keep latest)
+              RUN_IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
+              
+              # If we found runs but list is empty after filtering (meaning only 1 run existed), we are done
+              if [[ -z "$RUN_IDS" ]]; then
+                echo "🛡️ Only the latest run remains. Cleanup complete."
                 break
               fi
               
-              # 2. Extract IDs
-              if [[ "$RETAIN_LATEST" == "true" ]]; then
-                # Keep index 0 (latest)
-                IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
-                # If IDs is empty here, we only have 1 run left (the one to keep)
-                if [[ -z "$IDS" ]]; then
-                  echo "🛡️ Latest run preserved. Cleanup complete."
-                  break
-                fi
-              else
-                # Delete all
-                IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
-              fi
+              # Delete in parallel (Increased to 10 threads)
+              echo "$RUN_IDS" | xargs -P 10 -I {} sh -c 'gh run delete {} --quiet' || true
               
-              COUNT=$(echo "$IDS" | wc -w)
-              echo "   🗑️ Deleting batch of $COUNT runs..."
-              
-              # 3. Delete Batch
-              # -n 30: Smaller batch size per call to ensure stability
-              # -P 2:  Reduced parallelism to avoid GitHub Rate Limiting/Throttling
-              echo "$IDS" | xargs -n 30 -P 2 gh run delete || true
-              
-              ((loop_count++))
-              
-              # Small sleep to be nice to the API
-              sleep 2
+              echo "   🗑️ Batch deleted."
             done
-            
-            if [ $loop_count -eq $max_loops ]; then
-              echo "⚠️ Hit max loop limit. There may still be runs left."
-            fi
-            
             echo "----------------------------------------"
           }
           
-          echo "🧹 Starting Robust Cleanup..."
+          echo "🧹 Starting Cleanup..."
           echo "----------------------------------------"
           
           # 1. App Version Updates
@@ -117,4 +114,4 @@ jobs:
           # 3. Pages Build and Deployment
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
-          echo "🎉 Cleanup finished."
+          echo "🎉 Done."
