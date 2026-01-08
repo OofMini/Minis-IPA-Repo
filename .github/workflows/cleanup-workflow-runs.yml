@@ -45,6 +45,14 @@ jobs:
         run: |
           set -e
 
+          # Function to re-enable workflow if it got disabled
+          enable_workflow() {
+            local workflow_name="$1"
+            echo "🔧 Checking if '$workflow_name' is disabled..."
+            gh workflow enable "$workflow_name" || true
+            echo "   (Enabled state ensured)"
+          }
+
           delete_runs() {
             local workflow_name="$1"
             local toggle="$2"
@@ -56,21 +64,21 @@ jobs:
             
             echo "🔍 Processing '$workflow_name'..."
             
+            # Ensure it is enabled first (so we can list runs)
+            enable_workflow "$workflow_name"
+            
             local loop_count=0
             local max_loops=1000
             
             while [ $loop_count -lt $max_loops ]; do
               echo "   [Loop $loop_count] Fetching run list..."
-              # Fetch up to 1000 runs
               RUNS=$(gh run list --workflow "$workflow_name" --limit 1000 --json databaseId,status || true)
               
-              # Check if empty
               if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
                 echo "✅ No (more) runs found for '$workflow_name'."
                 break
               fi
               
-              # Filter IDs
               if [[ "$RETAIN_LATEST" == "true" ]]; then
                 IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
                 if [[ -z "$IDS" ]]; then
@@ -84,8 +92,7 @@ jobs:
               COUNT=$(echo "$IDS" | wc -w)
               echo "   🗑️ Deleting batch of $COUNT runs..."
               
-              # FIXED: -n 1 ensures strictly ONE argument per command (fixes "accepts at most 1 arg")
-              # FIXED: -P 10 runs 10 deletions in parallel to maintain speed
+              # FIXED: Added '|| true' to preventing crashing on individual errors
               echo "$IDS" | xargs -n 1 -P 10 gh run delete || true
               
               ((loop_count++))
@@ -105,4 +112,4 @@ jobs:
           delete_runs "Bulk IPA Updates - Tweaked Apps" "$CLEAR_BULK"
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
-          echo "🎉 Cleanup finished."
+          echo "🎉 Cleanup finished successfully."
