@@ -1,0 +1,117 @@
+name: Cleanup Workflow Runs
+
+on:
+  workflow_dispatch:
+    inputs:
+      # Toggle 1
+      clear_app_version_updates:
+        description: "Clear 'App Version Updates' history"
+        type: boolean
+        default: true
+      
+      # Toggle 2
+      clear_bulk_updates:
+        description: "Clear 'Bulk IPA Updates - Tweaked Apps' history"
+        type: boolean
+        default: true
+      
+      # Toggle 3
+      clear_pages:
+        description: "Clear 'pages-build-deployment' history"
+        type: boolean
+        default: true
+
+      # Safety option
+      retain_latest:
+        description: "Keep the latest run for each?"
+        type: boolean
+        default: true
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  delete-runs:
+    name: "Delete Old Workflow Runs"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "Delete Workflow Runs"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLEAR_APP: ${{ github.event.inputs.clear_app_version_updates }}
+          CLEAR_BULK: ${{ github.event.inputs.clear_bulk_updates }}
+          CLEAR_PAGES: ${{ github.event.inputs.clear_pages }}
+          RETAIN_LATEST: ${{ github.event.inputs.retain_latest }}
+        run: |
+          set -e
+          
+          # Function to delete runs for a specific workflow
+          delete_runs() {
+            local workflow_name="$1"
+            local toggle="$2"
+            
+            if [[ "$toggle" != "true" ]]; then
+              echo "⏭️ Skipping '$workflow_name' (Toggle disabled)"
+              return
+            fi
+            
+            echo "🔍 Fetching runs for '$workflow_name'..."
+            
+            # List runs: ID and status
+            # We fetch 100 at a time to be safe, but you can increase limit
+            RUNS=$(gh run list --workflow "$workflow_name" --limit 100 --json databaseId,status)
+            
+            # Count runs
+            COUNT=$(echo "$RUNS" | jq length)
+            
+            if [[ "$COUNT" -eq 0 ]]; then
+              echo "✅ No runs found for '$workflow_name'"
+              return
+            fi
+            
+            echo "Found $COUNT runs."
+            
+            # Determine how many to delete
+            if [[ "$RETAIN_LATEST" == "true" ]]; then
+              # Delete all except the first one (latest)
+              echo "🛡️ Keeping the latest run..."
+              RUN_IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
+            else
+              # Delete all
+              echo "🗑️ Deleting ALL runs..."
+              RUN_IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
+            fi
+            
+            if [[ -z "$RUN_IDS" ]]; then
+              echo "✅ Nothing to delete (runs preserved)"
+              return
+            fi
+            
+            # Delete runs in parallel
+            echo "$RUN_IDS" | xargs -P 4 -I {} sh -c '
+              echo "Deleting run {}..."
+              gh run delete {} --quiet || echo "Failed to delete {}"
+            '
+            
+            echo "✅ Cleanup complete for '$workflow_name'"
+            echo "----------------------------------------"
+          }
+          
+          echo "🧹 Starting Workflow Cleanup..."
+          echo "----------------------------------------"
+          
+          # 1. App Version Updates
+          # Matches: .github/workflows/app-version-updates.yml name
+          delete_runs "App Version Updates" "$CLEAR_APP"
+          
+          # 2. Bulk IPA Updates
+          # Matches: .github/workflows/bulk-tweaked-apps-updates.yml name
+          delete_runs "Bulk IPA Updates - Tweaked Apps" "$CLEAR_BULK"
+          
+          # 3. Pages Build and Deployment
+          # Matches standard GitHub Pages workflow name
+          delete_runs "pages-build-deployment" "$CLEAR_PAGES"
+          
+          echo "🎉 All requested cleanups finished."
