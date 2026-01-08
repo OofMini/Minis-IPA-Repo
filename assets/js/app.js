@@ -5,18 +5,24 @@ const CONFIG = {
     SKELETON_DELAY: 800
 };
 
-// Utility functions
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+// Utility: Robust HTML Sanitization
+function sanitizeHtml(dirty) {
+    if (!dirty) return '';
+    const temp = document.createElement('div');
+    temp.textContent = dirty;
+    return temp.innerHTML
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 function isValidDownloadUrl(url) {
     try {
         const parsed = new URL(url);
         return parsed.protocol === 'https:' && 
-               parsed.hostname.includes('github.com');
+               (parsed.hostname === 'github.com' || parsed.hostname.endsWith('.github.com'));
     } catch {
         return false;
     }
@@ -158,6 +164,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
         initializeScrollAnimations();
         setupPWA();
+        
+        // Add global error handler (Point 12)
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
     } catch (error) {
         console.error('Initialization error:', error);
         handleError(error);
@@ -197,34 +208,12 @@ window.addEventListener('beforeunload', () => {
     if (observer) {
         observer.disconnect();
     }
-    // Update last seen
     localStorage.setItem('lastUpdated', Date.now().toString());
 });
 
 function loadApps() {
     renderAppGrid();
     areAppsRendered = true;
-}
-
-function showErrorState(message) {
-    const appGrid = document.getElementById('appGrid');
-    appGrid.innerHTML = `
-        <div class="error-state fade-in" role="alert">
-            <div class="error-emoji" aria-hidden="true">😕</div>
-            <h3 class="error-title">Unable to Load Apps</h3>
-            <p class="error-message">${escapeHtml(message)}</p>
-            <button class="download-btn" id="retry-btn" style="background: var(--info-color);">
-                🔄 Retry
-            </button>
-        </div>
-    `;
-    // Attach listener dynamically
-    setTimeout(() => {
-        const retryBtn = document.getElementById('retry-btn');
-        if(retryBtn) retryBtn.addEventListener('click', loadApps);
-        const element = appGrid.querySelector('.fade-in');
-        if (element && observer) observer.observe(element);
-    }, 100);
 }
 
 function renderAppGrid() {
@@ -252,18 +241,24 @@ function renderAppGrid() {
         return;
     }
 
-    // Build HTML safely
+    // Build HTML safely using sanitizeHtml
     appGrid.innerHTML = filteredApps.map((app, index) => {
-        const safeId = escapeHtml(app.id);
-        const safeName = escapeHtml(app.name);
-        const safeDeveloper = escapeHtml(app.developer);
-        const safeDescription = escapeHtml(app.description);
+        const safeId = sanitizeHtml(app.id);
+        const safeName = sanitizeHtml(app.name);
+        const safeDeveloper = sanitizeHtml(app.developer);
+        const safeDescription = sanitizeHtml(app.description);
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
         return `
         <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
             <div class="app-icon-container">
-                <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" width="80" height="80"
+                <img src="${app.icon}" 
+                     alt="${safeAlt}" 
+                     class="app-icon" 
+                     loading="lazy" 
+                     decoding="async"
+                     width="80" 
+                     height="80"
                      onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
             </div>
             <div class="app-status">
@@ -282,7 +277,6 @@ function renderAppGrid() {
         `;
     }).join('');
 
-    // Re-attach event listeners for download buttons since innerHTML wiped them
     setTimeout(() => {
         document.querySelectorAll('.action-download').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -299,9 +293,16 @@ function renderAppGrid() {
 
 async function trackDownload(appId) {
     try {
+        if (!appId || typeof appId !== 'string') throw new Error('Invalid App ID');
+        
         const app = appsData.find(a => a.id === appId);
         if (!app) throw new Error('App not found');
-        if (!isValidDownloadUrl(app.downloadUrl)) throw new Error('Invalid download URL');
+        
+        // Strict URL validation
+        if (!isValidDownloadUrl(app.downloadUrl)) {
+            console.error('Blocked potentially unsafe URL:', app.downloadUrl);
+            throw new Error('Invalid download URL security check failed');
+        }
 
         window.open(app.downloadUrl, '_blank', 'noopener,noreferrer');
         showToast(`✅ Downloading ${app.name}`, 'success');
@@ -348,7 +349,17 @@ function showToast(message, type = 'info') {
 function setupPWA() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').then((registration) => {
-            console.log('Service Worker registered:', registration.scope);
+            console.log('Service Worker registered');
+            
+            // Check for updates (Point 21)
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        showToast('New version available! Refresh to update.', 'info');
+                    }
+                });
+            });
         }).catch((error) => {
             console.log('Service Worker registration failed:', error);
         });
@@ -407,6 +418,7 @@ function setupEventListeners() {
         });
     }
     
+    // Keyboard navigation (Point 20)
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && document.activeElement === searchBox) {
             searchBox.blur();
