@@ -45,14 +45,6 @@ jobs:
         run: |
           set -e
 
-          # Function to re-enable workflow if it got disabled
-          enable_workflow() {
-            local workflow_name="$1"
-            echo "🔧 Checking if '$workflow_name' is disabled..."
-            gh workflow enable "$workflow_name" || true
-            echo "   (Enabled state ensured)"
-          }
-
           delete_runs() {
             local workflow_name="$1"
             local toggle="$2"
@@ -63,9 +55,6 @@ jobs:
             fi
             
             echo "🔍 Processing '$workflow_name'..."
-            
-            # Ensure it is enabled first (so we can list runs)
-            enable_workflow "$workflow_name"
             
             local loop_count=0
             local max_loops=1000
@@ -92,7 +81,8 @@ jobs:
               COUNT=$(echo "$IDS" | wc -w)
               echo "   🗑️ Deleting batch of $COUNT runs..."
               
-              # FIXED: Added '|| true' to preventing crashing on individual errors
+              # Deletes 1 run per call (-n 1) but runs 10 calls in parallel (-P 10)
+              # Added '|| true' to ensure the script finishes green even if one delete fails
               echo "$IDS" | xargs -n 1 -P 10 gh run delete || true
               
               ((loop_count++))
