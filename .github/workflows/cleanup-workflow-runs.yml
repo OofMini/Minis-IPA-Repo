@@ -39,6 +39,8 @@ jobs:
     steps:
       - name: "Delete Workflow Runs"
         env:
+          # FIXED: Explicitly set the repo so 'gh' works without checking out code
+          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLEAR_APP: ${{ github.event.inputs.clear_app_version_updates }}
           CLEAR_BULK: ${{ github.event.inputs.clear_bulk_updates }}
@@ -60,7 +62,7 @@ jobs:
             echo "🔍 Fetching runs for '$workflow_name'..."
             
             # List runs: ID and status
-            # We fetch 100 at a time to be safe, but you can increase limit
+            # We fetch 100 at a time to be safe
             RUNS=$(gh run list --workflow "$workflow_name" --limit 100 --json databaseId,status)
             
             # Count runs
@@ -103,15 +105,12 @@ jobs:
           echo "----------------------------------------"
           
           # 1. App Version Updates
-          # Matches: .github/workflows/app-version-updates.yml name
           delete_runs "App Version Updates" "$CLEAR_APP"
           
           # 2. Bulk IPA Updates
-          # Matches: .github/workflows/bulk-tweaked-apps-updates.yml name
           delete_runs "Bulk IPA Updates - Tweaked Apps" "$CLEAR_BULK"
           
           # 3. Pages Build and Deployment
-          # Matches standard GitHub Pages workflow name
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
           echo "🎉 All requested cleanups finished."
