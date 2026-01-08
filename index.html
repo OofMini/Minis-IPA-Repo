@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
@@ -10,131 +10,90 @@
                    script-src 'self'; 
                    style-src 'self'; 
                    connect-src 'self' https://github.com https://raw.githubusercontent.com https://api.github.com;
+                   form-action 'none';
+                   base-uri 'self';
+                   frame-ancestors 'none';
                    upgrade-insecure-requests;">
     
     <link rel="dns-prefetch" href="//github.com">
     <link rel="preconnect" href="https://github.com" crossorigin>
     <link rel="preload" as="image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    <link rel="preload" href="apps.json" as="fetch" crossorigin>
     
-    <title>Mini's IPA Repo - Tweaked iOS Apps</title>
-    <meta name="description" content="Premium tweaked applications for iOS 15+. Featuring Spotify, YouTube, YouTube Music, Instagram and more.">
-    <meta name="keywords" content="iOS apps, tweaked apps, SideStore, TrollApps, IPA repository, spotify, youtube, youtube music, instagram, torrent">
-    <meta name="author" content="Mini">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:title" content="Mini's IPA Repo - Tweaked iOS Apps">
-    <meta property="og:description" content="Premium tweaked applications for iOS 15+">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://oofmini.github.io/Minis-IPA-Repo/">
-    <meta property="og:image" content="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
-
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-    <link rel="manifest" href="manifest.json">
- 
-    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mini's IPA Repo">
-    <link rel="apple-touch-icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
-    <link rel="apple-touch-startup-image" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#000000">
 
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Mini's IPA Repo",
-        "description": "Premium tweaked applications for iOS 15+",
-        "url": "https://oofmini.github.io/Minis-IPA-Repo/",
-        "applicationCategory": "Utilities",
-        "operatingSystem": "iOS",
-        "offers": {
-            "@type": "Offer",
-            "availability": "https://schema.org/InStock"
-        }
-    }
-    </script>
-
+    <title>Mini's IPA Repo</title>
+    <meta name="description" content="Premium tweaked applications for iOS 15+.">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png">
 </head>
 <body>
     <header class="hero">
-        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Repository icon for Mini's IPA Repo" class="repo-icon" loading="lazy" width="60" height="60">
+        <img src="https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png" alt="Mini's IPA Repo" class="repo-icon" width="60" height="60">
         <h1 class="animated-gradient">Mini's IPA Repo</h1>
-        <p class="hero-subtitle">Premium tweaked iOS applications for iOS 15+</p>
+        <p class="hero-subtitle">Premium tweaked iOS apps</p>
 
-        <div class="badges" role="status" aria-live="polite">
-            <span class="badge" aria-label="Repository status active">✅ Active</span>
-            <span class="badge ios" aria-label="Supports iOS 15 and above">📱 iOS 15+</span>
+        <div class="badges">
+            <span class="badge">✅ Active</span>
+            <span class="badge ios">📱 iOS 15+</span>
         </div>
 
-        <nav class="cta-buttons" aria-label="Add repository to app">
-            <button class="cta-button trollapps" id="btn-trollapps" aria-label="Add repository to TrollApps">
-                <span role="img" aria-hidden="true">📱</span> Add to TrollApps
-            </button>
-            <button class="cta-button sidestore" id="btn-sidestore" aria-label="Add repository to SideStore">
-                <span role="img" aria-hidden="true">⚙️</span> Add to SideStore
-            </button>
+        <nav class="cta-buttons">
+            <button class="cta-button trollapps" id="btn-trollapps">📱 TrollApps</button>
+            <button class="cta-button sidestore" id="btn-sidestore">⚙️ SideStore</button>
         </nav>
     </header>
 
-    <main class="container" role="main">
-        <section class="search-container fade-in" aria-labelledby="search-title">
-            <h2 id="search-title" class="visually-hidden">Search apps</h2>
-            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps by name or description..." 
-                   aria-label="Search apps by name or description" autocomplete="off">
+    <main class="container">
+        <section class="controls fade-in">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search apps..." autocomplete="off">
+            
+            <div class="filter-group">
+                <div class="filters">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="Music">Music</button>
+                    <button class="filter-btn" data-category="Video">Video</button>
+                    <button class="filter-btn" data-category="Social">Social</button>
+                    <button class="filter-btn" data-category="Utilities">Utilities</button>
+                </div>
+                
+                <select id="sortSelect" class="sort-select" aria-label="Sort apps">
+                    <option value="name">Name (A-Z)</option>
+                    <option value="recent">Version (Newest)</option>
+                    <option value="size">Size (Smallest)</option>
+                </select>
+            </div>
         </section>
 
-        <section class="app-grid" id="appGrid" role="grid" aria-label="Available apps"></section>
+        <section class="app-grid" id="appGrid" role="grid"></section>
 
-        <section class="repo-info fade-in" aria-labelledby="repo-info-title">
-            <h3 id="repo-info-title">📦 Repository Information</h3>
-
-            <div class="repo-link fade-in-left stagger-1">
-                <span role="img" aria-hidden="true">🌐</span>
-                <strong>Official Website:</strong>
-                <a href="https://oofmini.github.io/Minis-IPA-Repo/" target="_blank" rel="noopener noreferrer">https://oofmini.github.io/Minis-IPA-Repo/</a>
+        <section class="repo-info fade-in">
+            <h3>📦 Repository Links</h3>
+            <div class="repo-link">
+                <span>🌐</span> <a href="https://oofmini.github.io/Minis-IPA-Repo/">Website</a>
             </div>
-
-            <div class="repo-link fade-in-left stagger-2">
-                <span role="img" aria-hidden="true">📱</span>
-                <strong>SideStore Manifest:</strong>
-                <code>https://OofMini.github.io/Minis-IPA-Repo/sidestore.json</code>
+            <div class="repo-link">
+                <span>📱</span> <code>sidestore.json</code>
             </div>
-
-            <div class="repo-link fade-in-left stagger-3">
-                <span role="img" aria-hidden="true">🧌</span>
-                <strong>TrollApps Manifest:</strong>
-                <code>https://OofMini.github.io/Minis-IPA-Repo/trollapps.json</code>
+            <div class="repo-link">
+                <span>🧌</span> <code>trollapps.json</code>
             </div>
         </section>
     </main>
 
-    <footer class="container" aria-label="Site footer">
-        <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
-            <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
-                © 2024 Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
-            </p>
-            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
-                <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    📦 GitHub Repo
-                </a>
-                <span style="opacity:0.3;">•</span>
-                <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
-                    🐛 Report Issue
-                </a>
-                <span style="opacity:0.3;">•</span>
-                <button id="btn-reset" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
-                    🗑️ Clear Cache
-                </button>
-            </div>
+    <footer class="container">
+        <p>© 2025 Mini — Tweaked IPAs</p>
+        <div class="footer-links">
+            <a href="https://github.com/OofMini/Minis-IPA-Repo">GitHub</a> • 
+            <button id="btn-reset">Reset Cache</button>
         </div>
     </footer>
 
-    <div class="toast" id="toast" aria-live="polite" role="status"></div>
-
+    <div class="toast" id="toast"></div>
     <script src="assets/js/app.js"></script>
 </body>
 </html>
