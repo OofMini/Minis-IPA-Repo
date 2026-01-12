@@ -3,8 +3,6 @@
 ## [3.0.0] - 2025-01-08
 ### Added
 - **Dynamic Data**: Moved app data to `apps.json` for easier management.
-- **Filtering & Sorting**: Users can now filter by category and sort by name/date/size.
-- **PWA Updates**: Improved service worker with update notifications.
 - **Rate Limiting**: Added client-side download rate limiting.
 - **Security**: Enhanced CSP headers and input sanitization.
 
