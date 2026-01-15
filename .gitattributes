@@ -1,2 +1,24 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Auto-detect text files and enforce LF (Linux/Mac style) line endings
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.js text
+*.json text
+*.css text
+*.html text
+*.md text
+*.yml text
+*.yaml text
+*.txt text
+
+# Treat these as binary (Do not modify line endings!)
+*.ipa binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
