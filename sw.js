@@ -1,4 +1,4 @@
-const VERSION = '3.0.1';
+const VERSION = '3.0.2';
 const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
@@ -43,8 +43,14 @@ self.addEventListener('fetch', (event) => {
             caches.open(CACHE_NAME).then(async (cache) => {
                 const cachedResponse = await cache.match(event.request);
                 const fetchPromise = fetch(event.request).then((networkResponse) => {
-                    cache.put(event.request, networkResponse.clone());
+                    // SECURITY FIX: Only cache valid responses
+                    if (networkResponse.ok) {
+                        cache.put(event.request, networkResponse.clone());
+                    }
                     return networkResponse;
+                }).catch(() => {
+                    // Fallback to cache if network fails
+                    return cachedResponse;
                 });
                 return cachedResponse || fetchPromise;
             })
