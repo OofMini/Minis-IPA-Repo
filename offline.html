@@ -1,56 +1,25 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline - Mini's IPA Repo</title>
-    <style>
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            padding: 20px;
-        }
-        .offline-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-        }
-        h1 {
-            margin: 0 0 10px;
-        }
-        p {
-            opacity: 0.7;
-            margin-bottom: 30px;
-        }
-        .retry-btn {
-            padding: 10px 20px;
-            background: #007AFF;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="theme-color" content="#000000">
 </head>
-<body>
-    <div class="offline-icon">📶</div>
-    <h1>You're Offline</h1>
-    <p>Connect to the internet to access Mini's IPA Repo</p>
-    <button class="retry-btn" onclick="location.reload()">Retry Connection</button>
+<body style="display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; flex-direction: column; padding: 20px;">
     
-    <script>
-        // Check for connection and reload when online
-        window.addEventListener('online', () => {
-            location.reload();
-        });
-    </script>
+    <div class="app-card" style="max-width: 400px; padding: 40px;">
+        <div class="error-emoji">📶</div>
+        <h3>You are Offline</h3>
+        <p style="margin: 15px 0; opacity: 0.8;">
+            Please check your internet connection to view the latest apps.
+        </p>
+        <button class="download-btn" onclick="window.location.reload()">
+            🔄 Try Again
+        </button>
+    </div>
+
 </body>
 </html>
