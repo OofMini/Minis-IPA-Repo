@@ -1,3 +1,4 @@
+
 {
   "name": "Mini's IPA Repo",
   "subtitle": "Tweaks and Jailbreak Tools",
@@ -135,7 +136,7 @@
           "localizedDescription": "Tweaked Instagram"
         }
       ],
-      "tintColor": "#000000",
+      "tintColor": "#E1306C",
       "subtitle": "Tweaked Instgram with premium features",
       "permissions": [
         "network"
@@ -187,7 +188,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Torrent/iTorrent.ipa",
           "size": 7130316,
-          "localizedDescription": "Lightweight torrent client for downloading and managing torrent files on-device."
+          "localizedDescription": "Lightweight torrent client"
         }
       ],
       "tintColor": "#34C759",
@@ -214,7 +215,7 @@
           "date": "2025-10-06",
           "downloadURL": "https://github.com/OofMini/Minis-Heap/releases/download/Live/LiveContainer.ipa",
           "size": 4194304,
-          "localizedDescription": "Runs live production containers for streaming apps and runtime isolation."
+          "localizedDescription": "JIT-less app container"
         }
       ],
       "tintColor": "#FF2D55",
@@ -228,7 +229,7 @@
       "name": "RefacePro (IOS 17+)",
       "bundleIdentifier": "com.neocortext.doublicatapp",
       "developerName": "IPAOMTK",
-      "localizedDescription": "Reface Premium Unloked.",
+      "localizedDescription": "Reface Premium Unlocked.",
       "iconURL": "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro.png",
       "screenshotURLs": [
         "https://OofMini.github.io/Minis-IPA-Repo/apps/refacepro-1.png",
