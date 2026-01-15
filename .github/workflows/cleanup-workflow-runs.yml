@@ -43,31 +43,34 @@ jobs:
           CLEAR_PAGES: ${{ github.event.inputs.clear_pages }}
           RETAIN_LATEST: ${{ github.event.inputs.retain_latest }}
         run: |
-          # Disable exit on error to allow the script to continue even if one batch fails
+          # Use +e to prevent exit on minor errors during loops
           set +e
 
           delete_runs() {
-            local workflow_name="$1"
+            local workflow_file="$1"
             local toggle="$2"
+            local pretty_name="$3"
             
             if [[ "$toggle" != "true" ]]; then
-              echo "⏭️ Skipping '$workflow_name'"
+              echo "⏭️ Skipping '$pretty_name' ($workflow_file)"
               return
             fi
             
-            echo "🔍 Processing '$workflow_name'..."
+            echo "🔍 Processing '$pretty_name'..."
             
             # Loop to handle pagination and deletion
             local loop_count=0
-            local max_loops=100
+            local max_loops=50 # Safety limit
             
             while [ $loop_count -lt $max_loops ]; do
-              # Fetch runs (completed/failed only) to avoid killing active jobs
-              # Sorting is implied (newest first)
-              RUNS=$(gh run list --workflow "$workflow_name" --limit 50 --json databaseId,status --status completed,cancelled,failure,skipped,timed_out || true)
+              # Fetch runs: Completed/Failed only. Using explicit JSON parsing.
+              echo "   fetching run list for $workflow_file..."
+              
+              # NOTE: We use the FILENAME ($workflow_file) not the name for better reliability
+              RUNS=$(gh run list --workflow "$workflow_file" --limit 30 --json databaseId,status --status completed,cancelled,failure,skipped,timed_out 2>/dev/null)
               
               if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
-                echo "✅ No cleanable runs found for '$workflow_name'."
+                echo "   ✅ No cleanable runs found."
                 break
               fi
               
@@ -77,7 +80,7 @@ jobs:
                 
                 # If only 1 run exists and we want to keep it, stop.
                 if [[ "$COUNT" -eq 1 ]]; then
-                   echo "🛡️ Latest run preserved. Cleanup complete."
+                   echo "   🛡️ Latest run preserved. Cleanup complete for this workflow."
                    break
                 fi
                 
@@ -88,9 +91,9 @@ jobs:
                 IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
               fi
               
-              # Check if we have IDs to delete
+              # Check if we have IDs to delete (handle empty string from jq)
               if [[ -z "$IDS" ]]; then
-                 echo "✨ No runs to delete in this batch."
+                 echo "   ✨ No runs to delete in this batch."
                  break
               fi
               
@@ -98,25 +101,22 @@ jobs:
               BATCH_COUNT=$(echo "$IDS" | wc -w)
               echo "   🗑️ Deleting batch of $BATCH_COUNT runs..."
               
-              # Batch delete: Pass 20 IDs at a time to 'gh run delete'
+              # Batch delete
               echo "$IDS" | xargs -n 20 gh run delete 
               
               ((loop_count++))
-              # Tiny sleep to be nice to the API
-              sleep 1
+              sleep 2 # Pause to respect API rate limits
             done
             
-            if [ $loop_count -eq $max_loops ]; then
-              echo "⚠️ Hit max loop limit. Run again if needed."
-            fi
             echo "----------------------------------------"
           }
           
           echo "🧹 Starting Cleanup..."
           echo "----------------------------------------"
           
-          delete_runs "App Version Updates" "$CLEAR_APP"
-          delete_runs "Bulk IPA Updates - Tweaked Apps" "$CLEAR_BULK"
-          delete_runs "pages-build-deployment" "$CLEAR_PAGES"
+          # Pass: FILENAME, TOGGLE, DISPLAY_NAME
+          delete_runs "app-version-updates.yml" "$CLEAR_APP" "App Version Updates"
+          delete_runs "bulk-tweaked-apps-updates.yml" "$CLEAR_BULK" "Bulk IPA Updates"
+          delete_runs "pages-build-deployment" "$CLEAR_PAGES" "Pages Deployment"
           
           echo "🎉 Cleanup finished."
