@@ -156,7 +156,7 @@ jobs:
           
           declare -A APP_NAMES=( ["inshot"]="InShotPro" ["appstorepp"]="Appstore++" ["itorrent"]="iTorrent" ["livecontainer"]="LiveContainer" ["reface"]="RefacePro (IOS 17+)" )
           declare -A APP_BUNDLES=( ["inshot"]="com.inshot.video" ["appstorepp"]="com.apple.AppStore" ["itorrent"]="ru.nonamelabs.iTorrent" ["livecontainer"]="com.kdt.livecontainer" ["reface"]="com.neocortext.reface" )
-          declare -A APP_HTML_IDS=( ["inshot"]="inshot" ["appstorepp"]="appstoreplus" ["itorrent"]="itorrent" ["livecontainer"]="livecontainer" ["reface"]="refacepro" )
+          declare -A APP_IDS=( ["inshot"]="inshot" ["appstorepp"]="appstoreplus" ["itorrent"]="itorrent" ["livecontainer"]="livecontainer" ["reface"]="refacepro" )
           declare -A APP_URL_PATTERNS=(
             ["inshot"]="static:https://github.com/OofMini/Minis-Heap/releases/download/New/InShot.ipa"
             ["appstorepp"]="static:https://github.com/OofMini/Minis-Heap/releases/download/App%2B%2B/AppStore++_TrollStore_v1.0.3-2.ipa"
@@ -188,31 +188,40 @@ jobs:
           }
           
           update_app_in_file() {
-            local file="$1" app_name="$2" bundle_id="$3" app_version="$4" download_url="$5" description="$6"
+            local file="$1" app_name="$2" bundle_id="$3" app_id="$4" app_version="$5" download_url="$6" description="$7"
             local temp_file="${file}.tmp"
             
-            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
-              echo "::warning::$app_name not found in $file, skipping..."
-              return 0
-            fi
-            
+            # Skip if file doesn't exist
+            if [ ! -f "$file" ]; then return 0; fi
+
             case "$file" in
               "sidestore.json")
-                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
+                if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+                   jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+                      '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
+                fi ;;
               "trollapps.json")
-                jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
+                if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+                   jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+                      '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file"
+                fi ;;
+              "apps.json")
+                if jq -e --arg id "$app_id" '.[] | select(.id == $id)' "$file" >/dev/null 2>&1; then
+                   jq --arg id "$app_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+                      '(.[] | select(.id == $id)) |= (.version = $version | .downloadUrl = $url | .description = $desc | .date = $date)' "$file" > "$temp_file"
+                fi ;;
             esac
             
-            if ! jq empty "$temp_file" 2>/dev/null; then echo "::error::Generated invalid JSON for $file"; rm -f "$temp_file"; return 1; fi
-            if ! cmp -s "$file" "$temp_file"; then mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; else rm -f "$temp_file"; fi
-          }
-          
-          update_html_file() {
-            local html_id="$1" app_name="$2" app_version="$3"
-            if [ ! -f "index.html" ]; then return 0; fi
-            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$app_version\2/ }" "index.html"
+            if [ -f "$temp_file" ]; then
+                if ! jq empty "$temp_file" 2>/dev/null; then 
+                    echo "::error::Generated invalid JSON for $file"; rm -f "$temp_file"; return 1; 
+                fi
+                if ! cmp -s "$file" "$temp_file"; then 
+                    mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; 
+                else 
+                    rm -f "$temp_file"; 
+                fi
+            fi
           }
           
           update_workflow_defaults() {
@@ -221,7 +230,7 @@ jobs:
             sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$app_version\"/" "$workflow_file"
           }
           
-          JSON_FILES=("sidestore.json" "trollapps.json")
+          JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
           UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
           
           for app_key in "${APP_KEYS[@]}"; do
@@ -231,12 +240,14 @@ jobs:
             APP_VERSION="${APP_VERSIONS[$app_key]}"
             APP_NAME="${APP_NAMES[$app_key]}"
             BUNDLE_ID="${APP_BUNDLES[$app_key]}"
-            HTML_ID="${APP_HTML_IDS[$app_key]}"
+            APP_ID="${APP_IDS[$app_key]}"
             DOWNLOAD_URL=$(build_download_url "$app_key")
             DESCRIPTION=$(generate_description "$app_key" "$APP_VERSION")
             
-            for json_file in "${JSON_FILES[@]}"; do update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"; done
-            if [ -f "index.html" ]; then update_html_file "$HTML_ID" "$APP_NAME" "$APP_VERSION"; fi
+            for json_file in "${JSON_FILES[@]}"; do 
+                update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
+            done
+            
             if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then update_workflow_defaults "$app_key" "$APP_VERSION"; fi
             
             UPDATED_APPS+=("$APP_NAME")
@@ -264,7 +275,7 @@ jobs:
             COMMIT_MSG="App Version Updates: ${steps.update-files.outputs.updated_apps}"
           fi
           
-          git add sidestore.json trollapps.json index.html .github/workflows/app-version-updates.yml
+          git add sidestore.json trollapps.json apps.json .github/workflows/app-version-updates.yml
           
           if git diff --staged --quiet; then
             echo "::notice::No changes to commit"
