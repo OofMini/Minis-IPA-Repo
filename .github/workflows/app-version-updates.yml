@@ -105,8 +105,15 @@ jobs:
               exit 1
             fi
             
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
-              echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or v1.2"
+            # SECURITY FIX: Stricter validation (alphanumeric suffix only)
+            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9]+)?$ ]]; then
+              echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or 1.2.3-beta1"
+              exit 1
+            fi
+
+            # SECURITY FIX: Length check to prevent DoS
+            if [[ ${#version} -gt 20 ]]; then
+              echo "::error::$app_name version string too long"
               exit 1
             fi
           }
@@ -226,7 +233,9 @@ jobs:
           update_workflow_defaults() {
             local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
             if [ ! -f "$workflow_file" ]; then return 0; fi
-            sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$app_version\"/" "$workflow_file"
+            # SECURITY FIX: Escape special characters in version string
+            escaped_version=$(printf '%s\n' "$app_version" | sed 's/[[\.*^$/]/\\&/g')
+            sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_version\"/" "$workflow_file"
           }
           
           JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
