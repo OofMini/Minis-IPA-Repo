@@ -61,6 +61,7 @@ on:
 
 permissions:
   contents: write
+  workflows: write
 
 jobs:
   repository-sync:
@@ -233,6 +234,7 @@ jobs:
           update_workflow_defaults() {
             local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
             if [ ! -f "$workflow_file" ]; then return 0; fi
+            
             # SECURITY FIX: Escape special characters in version string
             escaped_version=$(printf '%s\n' "$app_version" | sed 's/[[\.*^$/]/\\&/g')
             sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_version\"/" "$workflow_file"
