@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         setupEventListeners();
         setupGlobalErrorHandling();
         setupPWA();
-        initializeScrollAnimations();
+        initializeScrollAnimations(); // <--- Animation logic starts here
         
         showLoadingState();
         AppState.apps = await loadAppData();
@@ -81,13 +81,16 @@ function renderAppGrid() {
     });
 
     if (filteredApps.length === 0) {
-        // Optimization: Replaced inline styles with class
         appGrid.innerHTML = `
             <div class="fade-in no-results">
                 <h3>No apps found</h3>
                 <p>Try different search terms</p>
             </div>
         `;
+        // Important: Observe new elements after rendering
+        if (observer) {
+            appGrid.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
         return;
     }
 
@@ -101,11 +104,11 @@ function renderAppGrid() {
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
         const article = document.createElement('article');
+        // Added fade-in class to cards
         article.className = `app-card fade-in stagger-${(index % 3) + 1}`;
         article.setAttribute('aria-label', safeName);
         article.setAttribute('data-app-id', safeId);
         
-        // Optimization: Replaced inline styles with classes
         article.innerHTML = `
             <div class="app-icon-container">
                 <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" decoding="async" width="80" height="80">
@@ -139,8 +142,9 @@ function renderAppGrid() {
         appGrid.setAttribute('data-listening', 'true');
     }
         
+    // FIX: Re-observe new elements
     if (observer) {
-        appGrid.querySelectorAll('.app-card').forEach(card => observer.observe(card));
+        appGrid.querySelectorAll('.fade-in').forEach(card => observer.observe(card));
     }
 }
 
@@ -195,6 +199,10 @@ function showLoadingState() {
             <div class="skeleton skeleton-button"></div>
         </div>
     `).join('');
+    // Ensure skeletons are observed
+    if (observer) {
+        grid.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
 }
 
 function showErrorState(msg) {
@@ -229,7 +237,6 @@ function sanitizeHtml(dirty) {
 function isValidDownloadUrl(url) {
     try {
         const parsed = new URL(url);
-        // Optimization: Relaxed check to allow GitHub and Archive.org
         const trustedHosts = ['github.com', 'raw.githubusercontent.com', 'archive.org'];
         return parsed.protocol === 'https:' && 
                (trustedHosts.some(host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)));
@@ -326,17 +333,26 @@ function resetLocalData() {
     }
 }
 
+// FIX: This function now targets both .fade-in and .fade-in-left
 function initializeScrollAnimations() {
+    // If browser doesn't support observer, force all elements visible immediately
     if (!('IntersectionObserver' in window)) {
-        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => el.classList.add('visible'));
         return;
     }
+    
     observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: Stop observing once visible to save resources
+                observer.unobserve(entry.target);
+            }
         });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // FIX: Add .fade-in-left to the selector
+    document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
 }
 
 function setupPWA() {
