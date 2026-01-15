@@ -71,7 +71,6 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v4
         with:
-          # SECURITY FIX: Use GITHUB_TOKEN instead of PAT
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
@@ -263,12 +262,10 @@ jobs:
       - name: "Commit and push changes"
         if: steps.update-files.outputs.updated_apps
         env:
-          # SECURITY FIX: Pass input to env var to prevent command injection
           CUSTOM_DESC: ${{ github.event.inputs.change_description }}
         run: |
           set -e
           
-          # Use env var instead of direct injection
           if [[ -n "$CUSTOM_DESC" ]]; then
             COMMIT_MSG="$CUSTOM_DESC"
           else
