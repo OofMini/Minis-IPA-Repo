@@ -27,7 +27,7 @@ let observer = null;
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         setupEventListeners();
-        setupGlobalErrorHandling(); // New: CSP-compliant error handling
+        setupGlobalErrorHandling();
         setupPWA();
         initializeScrollAnimations();
         
@@ -102,7 +102,6 @@ function renderAppGrid() {
         const safeDescription = sanitizeHtml(app.description);
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
-        // Original Card Structure - REMOVED inline onerror
         return `
         <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
             <div class="app-icon-container">
@@ -130,7 +129,7 @@ function renderAppGrid() {
         `;
     }).join('');
 
-    // Attach event listeners after rendering
+    // Attach event listeners after rendering (Delegation could also be used here)
     setTimeout(() => {
         document.querySelectorAll('.action-download').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -201,7 +200,6 @@ function showLoadingState() {
 
 function showErrorState(msg) {
     const grid = document.getElementById('appGrid');
-    // Removed inline onclick, added ID for listener attachment
     grid.innerHTML = `
         <div class="error-state fade-in">
             <div class="error-emoji">⚠️</div>
@@ -211,7 +209,6 @@ function showErrorState(msg) {
         </div>
     `;
     
-    // Defer listener attachment to ensure DOM is ready
     setTimeout(() => {
         const btn = document.getElementById('btn-refresh-error');
         if (btn) btn.addEventListener('click', () => location.reload());
@@ -295,16 +292,14 @@ function setupEventListeners() {
 // Global Capture Listener for Images (CSP Compliant)
 function setupGlobalErrorHandling() {
     document.addEventListener('error', (e) => {
-        // Check if the error came from an image tag
         if (e.target.tagName.toLowerCase() === 'img') {
-            // Prevent infinite loop if fallback fails
             if (e.target.src !== CONFIG.FALLBACK_ICON) {
                 e.target.src = CONFIG.FALLBACK_ICON;
                 e.target.alt = 'Default Icon';
                 console.warn('Image load failed, switched to fallback:', e.target.closest('.app-card')?.getAttribute('aria-label'));
             }
         }
-    }, true); // Use capture phase because 'error' events do not bubble
+    }, true);
 }
 
 function addToApp(appName, manifestFile) {
@@ -312,7 +307,6 @@ function addToApp(appName, manifestFile) {
     const scheme = schemes[appName];
     if (!scheme) return;
     
-    // Dynamic URL handling (Move-proof)
     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     const url = `${scheme}://add-repo?url=${encodeURIComponent(baseUrl + manifestFile)}`;
     window.location.href = url;
@@ -386,7 +380,6 @@ function showInstallPrompt() {
     installButton.textContent = 'Install';
     installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
     
-    // Fixed: Use addEventListener instead of onclick
     installButton.addEventListener('click', installApp);
     
     toast.appendChild(installButton);
