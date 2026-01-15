@@ -99,7 +99,6 @@ jobs:
               echo "   🗑️ Deleting batch of $BATCH_COUNT runs..."
               
               # Batch delete: Pass 20 IDs at a time to 'gh run delete'
-              # This is much faster/safer than spawning 20 separate processes
               echo "$IDS" | xargs -n 20 gh run delete 
               
               ((loop_count++))
