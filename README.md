@@ -6,7 +6,7 @@
 
 A high-performance repository for tweaked iOS applications, compatible with SideStore, TrollApps, and AltStore.
 
-### 📱 Apps Collection
+### 📱 Apps
 - **EeveeSpotify** (by whoeevee)
 - **YTLite** (by dayanch96)
 - **YTMusicUltimate** (by dayanch96)
