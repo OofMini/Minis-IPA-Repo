@@ -5,7 +5,8 @@ const CONFIG = {
     SKELETON_DELAY: 800,
     API_ENDPOINT: './apps.json',
     RATE_LIMIT_TIME: 300000, // 5 minutes
-    RATE_LIMIT_COUNT: 5
+    RATE_LIMIT_COUNT: 5,
+    FALLBACK_ICON: 'https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'
 };
 
 // State Management
@@ -26,6 +27,7 @@ let observer = null;
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         setupEventListeners();
+        setupGlobalErrorHandling(); // New: CSP-compliant error handling
         setupPWA();
         initializeScrollAnimations();
         
@@ -100,7 +102,7 @@ function renderAppGrid() {
         const safeDescription = sanitizeHtml(app.description);
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
-        // Original Card Structure
+        // Original Card Structure - REMOVED inline onerror
         return `
         <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
             <div class="app-icon-container">
@@ -110,8 +112,7 @@ function renderAppGrid() {
                      loading="lazy" 
                      decoding="async"
                      width="80" 
-                     height="80"
-                     onerror="this.onerror=null;this.src='https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'">
+                     height="80">
             </div>
             <div class="app-status">
                 <span aria-label="Status fully working">✅ Fully Working</span> • v${app.version}
@@ -129,6 +130,7 @@ function renderAppGrid() {
         `;
     }).join('');
 
+    // Attach event listeners after rendering
     setTimeout(() => {
         document.querySelectorAll('.action-download').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -199,14 +201,21 @@ function showLoadingState() {
 
 function showErrorState(msg) {
     const grid = document.getElementById('appGrid');
+    // Removed inline onclick, added ID for listener attachment
     grid.innerHTML = `
         <div class="error-state fade-in">
             <div class="error-emoji">⚠️</div>
             <h3>Something went wrong</h3>
             <p>${sanitizeHtml(msg)}</p>
-            <button class="download-btn" onclick="location.reload()">Refresh Page</button>
+            <button class="download-btn" id="btn-refresh-error">Refresh Page</button>
         </div>
     `;
+    
+    // Defer listener attachment to ensure DOM is ready
+    setTimeout(() => {
+        const btn = document.getElementById('btn-refresh-error');
+        if (btn) btn.addEventListener('click', () => location.reload());
+    }, 0);
 }
 
 // ========== UTILITIES ==========
@@ -283,6 +292,21 @@ function setupEventListeners() {
     if(btnReset) btnReset.addEventListener('click', resetLocalData);
 }
 
+// Global Capture Listener for Images (CSP Compliant)
+function setupGlobalErrorHandling() {
+    document.addEventListener('error', (e) => {
+        // Check if the error came from an image tag
+        if (e.target.tagName.toLowerCase() === 'img') {
+            // Prevent infinite loop if fallback fails
+            if (e.target.src !== CONFIG.FALLBACK_ICON) {
+                e.target.src = CONFIG.FALLBACK_ICON;
+                e.target.alt = 'Default Icon';
+                console.warn('Image load failed, switched to fallback:', e.target.closest('.app-card')?.getAttribute('aria-label'));
+            }
+        }
+    }, true); // Use capture phase because 'error' events do not bubble
+}
+
 function addToApp(appName, manifestFile) {
     const schemes = { 'TrollApps': 'trollapps', 'SideStore': 'sidestore' };
     const scheme = schemes[appName];
@@ -302,6 +326,11 @@ function resetLocalData() {
     if (confirm('Clear all local data and cache?')) {
         localStorage.clear();
         sessionStorage.clear();
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+            });
+        }
         location.reload();
         showToast('Local cache cleared', 'success');
     }
@@ -356,7 +385,10 @@ function showInstallPrompt() {
     const installButton = document.createElement('button');
     installButton.textContent = 'Install';
     installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
-    installButton.onclick = installApp;
+    
+    // Fixed: Use addEventListener instead of onclick
+    installButton.addEventListener('click', installApp);
+    
     toast.appendChild(installButton);
     toast.classList.remove('error','warning','success','info');
     toast.classList.add('toast','info','show');
