@@ -19,7 +19,6 @@ const AppState = {
 };
 
 let deferredPrompt;
-let searchTimeout;
 let observer = null;
 
 // ========== CORE FUNCTIONS ==========
@@ -48,9 +47,31 @@ async function loadAppData() {
     try {
         const response = await fetchWithRetry(CONFIG.API_ENDPOINT);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
+        const data = await response.json();
+
+        // VALIDATION: Ensure data structure is correct
+        if (!Array.isArray(data) || data.length === 0) {
+            throw new Error('Invalid apps.json structure');
+        }
+        return data;
     } catch (error) {
         console.error('Failed to load app data:', error);
+        
+        // Fallback: Try to load from cache
+        if ('caches' in window) {
+            // Note: We blindly look for any cache matching our prefix pattern or just the endpoint
+            const keys = await caches.keys();
+            for (const key of keys) {
+                if (key.includes('minis-ipa-repo')) {
+                    const cache = await caches.open(key);
+                    const cached = await cache.match(CONFIG.API_ENDPOINT);
+                    if (cached) {
+                        console.warn('Using cached apps.json due to network failure');
+                        return await cached.json();
+                    }
+                }
+            }
+        }
         throw error;
     }
 }
@@ -95,15 +116,22 @@ function renderAppGrid() {
         return;
     }
 
-    appGrid.innerHTML = filteredApps.map((app, index) => {
+    // PERFORMANCE: Use DocumentFragment
+    const fragment = document.createDocumentFragment();
+
+    filteredApps.forEach((app, index) => {
         const safeId = sanitizeHtml(app.id);
         const safeName = sanitizeHtml(app.name);
         const safeDeveloper = sanitizeHtml(app.developer);
         const safeDescription = sanitizeHtml(app.description);
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
-        return `
-        <article class="app-card fade-in stagger-${(index % 3) + 1}" aria-label="${safeName}" data-app-id="${safeId}">
+        const article = document.createElement('article');
+        article.className = `app-card fade-in stagger-${(index % 3) + 1}`;
+        article.setAttribute('aria-label', safeName);
+        article.setAttribute('data-app-id', safeId);
+        
+        article.innerHTML = `
             <div class="app-icon-container">
                 <img src="${app.icon}" 
                      alt="${safeAlt}" 
@@ -125,23 +153,28 @@ function renderAppGrid() {
                     ⬇️ Download IPA
                 </button>
             </div>
-        </article>
         `;
-    }).join('');
+        fragment.appendChild(article);
+    });
 
-    // Attach event listeners after rendering (Delegation could also be used here)
-    setTimeout(() => {
-        document.querySelectorAll('.action-download').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+    appGrid.innerHTML = '';
+    appGrid.appendChild(fragment);
+
+    // PERFORMANCE: Event Delegation
+    // We only attach one listener to the grid instead of N listeners for N buttons
+    if (!appGrid.hasAttribute('data-listening')) {
+        appGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('action-download')) {
                 const id = e.target.getAttribute('data-id');
                 trackDownload(id);
-            });
+            }
         });
+        appGrid.setAttribute('data-listening', 'true');
+    }
         
-        if (observer) {
-            document.querySelectorAll('.app-card').forEach(card => observer.observe(card));
-        }
-    }, 100);
+    if (observer) {
+        appGrid.querySelectorAll('.app-card').forEach(card => observer.observe(card));
+    }
 }
 
 // Rate Limiting & Download
@@ -173,8 +206,17 @@ function checkRateLimit(appId) {
         return false;
     }
     
+    // ATOMIC FIX: Push BEFORE returning true to prevent race conditions
     activeDownloads.push(now);
     AppState.downloads.set(appId, activeDownloads);
+    
+    // UI Feedback: Temporarily disable button
+    const btn = document.querySelector(`.action-download[data-id="${appId}"]`);
+    if (btn) {
+        btn.disabled = true;
+        setTimeout(() => btn.disabled = false, 2000);
+    }
+    
     return true;
 }
 
@@ -221,13 +263,13 @@ function sanitizeHtml(dirty) {
     if (!dirty) return '';
     const temp = document.createElement('div');
     temp.textContent = dirty;
-    return temp.innerHTML.replace(/[<>"']/g, (m) => {
-        switch (m) {
-            case '<': return '&lt;';
-            case '>': return '&gt;';
-            case '"': return '&quot;';
-            case "'": return '&#039;';
-        }
+    // SECURITY FIX: Handle newlines to prevent attribute injection
+    return temp.innerHTML.replace(/[<>"'\n\r]/g, (m) => {
+        const map = {
+            '<': '&lt;', '>': '&gt;', '"': '&quot;',
+            "'": '&#039;', '\n': '&#10;', '\r': '&#13;'
+        };
+        return map[m];
     });
 }
 
@@ -246,6 +288,7 @@ function handleError(error) {
 
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
+    toast.innerHTML = ''; // Clear previous content
     toast.textContent = message;
     toast.className = `toast ${type} show`;
     setTimeout(() => toast.classList.remove('show'), CONFIG.TOAST_DURATION);
@@ -256,28 +299,36 @@ function showToast(message, type = 'info') {
 function setupEventListeners() {
     const searchBox = document.getElementById('searchBox');
     if (searchBox) {
-        searchBox.addEventListener('input', (e) => {
+        let searchTimeout;
+        
+        const handleSearch = (e) => {
             clearTimeout(searchTimeout);
             const value = e.target.value;
             searchTimeout = setTimeout(() => {
                 AppState.searchTerm = value.toLowerCase().trim();
                 renderAppGrid();
             }, CONFIG.SEARCH_DEBOUNCE);
-        });
+        };
+        
+        searchBox.addEventListener('input', handleSearch);
         
         document.addEventListener('keydown', (e) => {
             if (e.key === '/' && document.activeElement !== searchBox) {
                 e.preventDefault();
                 searchBox.focus();
             }
+            if (e.key === 'Escape' && document.activeElement === searchBox) {
+                searchBox.blur();
+            }
+        });
+
+        // MEMORY LEAK FIX: Clear timeout if page becomes hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearTimeout(searchTimeout);
+            }
         });
     }
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.activeElement === searchBox) {
-            searchBox.blur();
-        }
-    });
 
     const btnTroll = document.getElementById('btn-trollapps');
     if(btnTroll) btnTroll.addEventListener('click', () => addToApp('TrollApps', 'trollapps.json'));
@@ -289,14 +340,21 @@ function setupEventListeners() {
     if(btnReset) btnReset.addEventListener('click', resetLocalData);
 }
 
-// Global Capture Listener for Images (CSP Compliant)
+// Global Capture Listener for Images (CSP Compliant & Robust)
 function setupGlobalErrorHandling() {
+    // FIX: Use WeakSet to track failed images and prevent infinite loops
+    const failedImages = new WeakSet();
+    
     document.addEventListener('error', (e) => {
         if (e.target.tagName.toLowerCase() === 'img') {
-            if (e.target.src !== CONFIG.FALLBACK_ICON) {
+            if (!failedImages.has(e.target)) {
+                failedImages.add(e.target);
                 e.target.src = CONFIG.FALLBACK_ICON;
                 e.target.alt = 'Default Icon';
                 console.warn('Image load failed, switched to fallback:', e.target.closest('.app-card')?.getAttribute('aria-label'));
+            } else {
+                // Second failure: Use simple data URI to stop network requests
+                e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect fill="%23333" width="80" height="80"/><text x="40" y="45" text-anchor="middle" fill="white" font-size="30">?</text></svg>';
             }
         }
     }, true);
@@ -374,14 +432,18 @@ function setupPWA() {
 function showInstallPrompt() {
     if (!deferredPrompt) return;
     const toast = document.getElementById('toast');
-    toast.textContent = 'Install Mini\'s IPA Repo? ';
+    toast.innerHTML = ''; // Clear existing content
     
+    const message = document.createTextNode("Install Mini's IPA Repo? ");
     const installButton = document.createElement('button');
     installButton.textContent = 'Install';
-    installButton.style.cssText = 'margin-left: 10px; background: var(--accent-color); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;';
+    
+    // CSP FIX: Use class instead of inline style
+    installButton.className = 'toast-install-btn';
     
     installButton.addEventListener('click', installApp);
     
+    toast.appendChild(message);
     toast.appendChild(installButton);
     toast.classList.remove('error','warning','success','info');
     toast.classList.add('toast','info','show');
