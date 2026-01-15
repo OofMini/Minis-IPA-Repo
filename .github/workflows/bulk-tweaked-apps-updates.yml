@@ -162,7 +162,7 @@ jobs:
           APP_KEYS=("spotify" "youtube" "x" "ytmusicultimate" "scinsta")
           declare -A APP_NAMES=( ["spotify"]="EeveeSpotify" ["youtube"]="YTLite" ["x"]="NeoFreeBird" ["ytmusicultimate"]="YTMusicUltimate" ["scinsta"]="SCInsta" )
           declare -A APP_BUNDLES=( ["spotify"]="com.spotify.client" ["youtube"]="com.google.ios.youtube" ["x"]="com.atebits.Tweetie2" ["ytmusicultimate"]="com.google.ios.youtubemusic" ["scinsta"]="com.burbn.instagram" )
-          declare -A APP_HTML_IDS=( ["spotify"]="eeveespotify" ["youtube"]="ytlite" ["x"]="neofreebird" ["ytmusicultimate"]="ytmusicultimate" ["scinsta"]="scinsta" )
+          declare -A APP_IDS=( ["spotify"]="eeveespotify" ["youtube"]="ytlite" ["x"]="neofreebird" ["ytmusicultimate"]="ytmusicultimate" ["scinsta"]="scinsta" )
           declare -A APP_URL_PATTERNS=(
             ["spotify"]="static:https://github.com/OofMini/eeveespotifyreborn/releases/download/New/EeveeSpotify.ipa"
             ["youtube"]="dynamic:https://github.com/OofMini/YTLite/releases/download/New/YouTubePlus_{version}.ipa"
@@ -173,9 +173,9 @@ jobs:
           declare -A APP_DESCRIPTIONS=(
             ["spotify"]="Tweaked Spotify with premium features unlocked, no ads, and enhanced playback. Spotify IPA %s, EeveeSpotify %s."
             ["youtube"]="Tweaked YouTube with background playback, no ads, and picture-in-picture. YouTube IPA %s, YTLite %s."
-            ["x"]="Tweaked X with premium features and more. X IPA %s, NeoFreeBird %s."
-            ["ytmusicultimate"]="Tweaked YouTube Music with enhanced features and no ads. YouTube Music IPA %s, YTMusicUltimate %s."
-            ["scinsta"]="Tweaked Instagram with additional features and enhanced privacy. Instagram IPA %s, SCInsta %s."
+            ["x"]="Tweaked Twitter/X with premium features and more. X IPA %s, NeoFreeBird %s."
+            ["ytmusicultimate"]="Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA %s, YTMusicUltimate %s."
+            ["scinsta"]="Tweaked Instagram premium, Instagram IPA %s, SCInsta %s"
           )
           declare -A APP_TOGGLES=( ["spotify"]="$UPDATE_SPOTIFY" ["youtube"]="$UPDATE_YOUTUBE" ["x"]="$UPDATE_X" ["ytmusicultimate"]="$UPDATE_YTMUSICULTIMATE" ["scinsta"]="$UPDATE_SCINSTA" )
           declare -A APP_IPA_VERSIONS=( ["spotify"]="$SPOTIFY_IPA_VERSION" ["youtube"]="$YOUTUBE_IPA_VERSION" ["x"]="$X_IPA_VERSION" ["ytmusicultimate"]="$YTMUSICULTIMATE_IPA_VERSION" ["scinsta"]="$SCINSTA_IPA_VERSION" )
@@ -195,25 +195,38 @@ jobs:
           }
           
           update_app_in_file() {
-            local file="$1" app_name="$2" bundle_id="$3" ipa_ver="$4" url="$5" desc="$6" temp_file="${file}.tmp"
-            if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then return 0; fi
+            local file="$1" app_name="$2" bundle_id="$3" app_id="$4" ipa_ver="$5" url="$6" desc="$7" temp_file="${file}.tmp"
+            
+            if [ ! -f "$file" ]; then return 0; fi
+
             case "$file" in
-              "sidestore.json") jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
-              "trollapps.json") jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" \
-                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc)' "$file" > "$temp_file" ;;
+              "sidestore.json") 
+                  if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+                    jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" 
+                  fi ;;
+              "trollapps.json") 
+                  if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+                    jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+                   '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file" 
+                  fi ;;
+              "apps.json")
+                  if jq -e --arg id "$app_id" '.[] | select(.id == $id)' "$file" >/dev/null 2>&1; then
+                    jq --arg id "$app_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+                      '(.[] | select(.id == $id)) |= (.version = $version | .downloadUrl = $url | .description = $desc | .date = $date)' "$file" > "$temp_file"
+                  fi ;;
             esac
-            if ! jq empty "$temp_file" 2>/dev/null; then echo "::error::Invalid JSON"; rm -f "$temp_file"; return 1; fi
-            if ! cmp -s "$file" "$temp_file"; then mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; else rm -f "$temp_file"; fi
-          }
-          
-          update_html_file() {
-            local html_id="$1" app_name="$2" ipa_ver="$3" tweak_ver="$4"
-            if [ ! -f "index.html" ]; then return 0; fi
-            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(version: '\)[0-9][0-9.]*\(',\)/\1$ipa_ver\2/ }" "index.html"
-            local base_app_name=""
-            case "$html_id" in "eeveespotify") base_app_name="Spotify" ;; "ytlite") base_app_name="YouTube" ;; "neofreebird") base_app_name="X" ;; "ytmusicultimate") base_app_name="YouTube Music" ;; "scinsta") base_app_name="Instagram" ;; esac
-            sed -i -e "/id: '${html_id}'/,/^[[:space:]]*},/{ s/\(${base_app_name} IPA \)[0-9][0-9.]*\(, .* \)v\{0,1\}[0-9a-z.]*/\1$ipa_ver\2$tweak_ver/ }" "index.html"
+            
+            if [ -f "$temp_file" ]; then
+                if ! jq empty "$temp_file" 2>/dev/null; then 
+                    echo "::error::Invalid JSON generated for $file"; rm -f "$temp_file"; return 1; 
+                fi
+                if ! cmp -s "$file" "$temp_file"; then 
+                    mv "$temp_file" "$file"; echo "✅ Updated $app_name in $file"; 
+                else 
+                    rm -f "$temp_file"; 
+                fi
+            fi
           }
           
           update_workflow_defaults() {
@@ -222,18 +235,21 @@ jobs:
             sed -i -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$ipa_ver\"/" -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$tweak_ver\"/" "$workflow_file"
           }
           
-          JSON_FILES=("sidestore.json" "trollapps.json")
+          JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
           UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
           
           for app_key in "${APP_KEYS[@]}"; do
             if [[ "${APP_TOGGLES[$app_key]}" != "true" ]]; then SKIPPED_APPS+=("${APP_NAMES[$app_key]}"); continue; fi
             IPA="${APP_IPA_VERSIONS[$app_key]}"
             TWEAK="${APP_TWEAK_VERSIONS[$app_key]}"
+            APP_ID="${APP_IDS[$app_key]}"
             URL=$(build_download_url "$app_key" "$TWEAK")
             DESC=$(generate_description "$app_key" "$IPA" "$TWEAK")
             
-            for json_file in "${JSON_FILES[@]}"; do update_app_in_file "$json_file" "${APP_NAMES[$app_key]}" "${APP_BUNDLES[$app_key]}" "$IPA" "$URL" "$DESC"; done
-            if [ -f "index.html" ]; then update_html_file "${APP_HTML_IDS[$app_key]}" "${APP_NAMES[$app_key]}" "$IPA" "$TWEAK"; fi
+            for json_file in "${JSON_FILES[@]}"; do 
+                update_app_in_file "$json_file" "${APP_NAMES[$app_key]}" "${APP_BUNDLES[$app_key]}" "$APP_ID" "$IPA" "$URL" "$DESC"
+            done
+            
             if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then update_workflow_defaults "$app_key" "$IPA" "$TWEAK"; fi
             
             UPDATED_APPS+=("${APP_NAMES[$app_key]}")
@@ -248,7 +264,7 @@ jobs:
         run: |
           set -e
           COMMIT_MSG="Repository Sync: Updated tweaked app versions"
-          git add sidestore.json trollapps.json index.html .github/workflows/bulk-tweaked-apps-updates.yml
+          git add sidestore.json trollapps.json apps.json .github/workflows/bulk-tweaked-apps-updates.yml
           if ! git diff --staged --quiet; then
             git commit -m "$COMMIT_MSG"
             git push origin HEAD
