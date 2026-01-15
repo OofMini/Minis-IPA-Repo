@@ -45,14 +45,12 @@ async function loadAppData() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         
-        // VALIDATION: Ensure strict data integrity
         if (!Array.isArray(data) || data.length === 0) {
             throw new Error('Invalid apps.json structure');
         }
         return data;
     } catch (error) {
         console.error('Failed to load app data:', error);
-        // Fallback to cache logic if needed
         throw error;
     }
 }
@@ -83,8 +81,9 @@ function renderAppGrid() {
     });
 
     if (filteredApps.length === 0) {
+        // Optimization: Replaced inline styles with class
         appGrid.innerHTML = `
-            <div class="fade-in" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-color);opacity:0.7">
+            <div class="fade-in no-results">
                 <h3>No apps found</h3>
                 <p>Try different search terms</p>
             </div>
@@ -92,7 +91,6 @@ function renderAppGrid() {
         return;
     }
 
-    // PERFORMANCE FIX: Use DocumentFragment
     const fragment = document.createDocumentFragment();
 
     filteredApps.forEach((app, index) => {
@@ -107,6 +105,7 @@ function renderAppGrid() {
         article.setAttribute('aria-label', safeName);
         article.setAttribute('data-app-id', safeId);
         
+        // Optimization: Replaced inline styles with classes
         article.innerHTML = `
             <div class="app-icon-container">
                 <img src="${app.icon}" alt="${safeAlt}" class="app-icon" loading="lazy" decoding="async" width="80" height="80">
@@ -116,9 +115,9 @@ function renderAppGrid() {
             </div>
             <div class="app-card-content">
                 <h3>${safeName}</h3>
-                <p><span style="background:var(--card-bg); padding:2px 8px; border-radius:4px; font-size:0.8em;">${app.category}</span></p>
+                <p><span class="app-category-tag">${app.category}</span></p>
                 <p>By <b>${safeDeveloper}</b><br>${safeDescription}</p>
-                <p style="font-size:0.8em; opacity:0.7; margin-top:10px;">Size: ${app.size}</p>
+                <p class="app-meta-size">Size: ${app.size}</p>
                 <button class="download-btn action-download" data-id="${safeId}" aria-label="Download ${safeName} IPA">
                     ⬇️ Download IPA
                 </button>
@@ -130,7 +129,6 @@ function renderAppGrid() {
     appGrid.innerHTML = '';
     appGrid.appendChild(fragment);
 
-    // EVENT DELEGATION
     if (!appGrid.hasAttribute('data-listening')) {
         appGrid.addEventListener('click', (e) => {
             if (e.target.classList.contains('action-download')) {
@@ -174,11 +172,9 @@ function checkRateLimit(appId) {
         return false;
     }
     
-    // RACE CONDITION FIX: Update state BEFORE permitting action
     activeDownloads.push(now);
     AppState.downloads.set(appId, activeDownloads);
     
-    // UI Feedback
     const btn = document.querySelector(`.action-download[data-id="${appId}"]`);
     if (btn) {
         btn.disabled = true;
@@ -221,7 +217,6 @@ function sanitizeHtml(dirty) {
     if (!dirty) return '';
     const temp = document.createElement('div');
     temp.textContent = dirty;
-    // SECURITY FIX: Sanitize newlines to prevent attribute injection
     return temp.innerHTML.replace(/[<>"'\n\r]/g, (m) => {
         const map = {
             '<': '&lt;', '>': '&gt;', '"': '&quot;',
@@ -234,8 +229,10 @@ function sanitizeHtml(dirty) {
 function isValidDownloadUrl(url) {
     try {
         const parsed = new URL(url);
+        // Optimization: Relaxed check to allow GitHub and Archive.org
+        const trustedHosts = ['github.com', 'raw.githubusercontent.com', 'archive.org'];
         return parsed.protocol === 'https:' && 
-               (parsed.hostname === 'github.com' || parsed.hostname.endsWith('.github.com'));
+               (trustedHosts.some(host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)));
     } catch { return false; }
 }
 
@@ -276,7 +273,6 @@ function setupEventListeners() {
             }
         });
         
-        // MEMORY LEAK FIX
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) clearTimeout(searchTimeout);
         });
@@ -293,7 +289,6 @@ function setupEventListeners() {
 }
 
 function setupGlobalErrorHandling() {
-    // FALLBACK FIX: Use WeakSet to prevent infinite loops
     const failedImages = new WeakSet();
     document.addEventListener('error', (e) => {
         if (e.target.tagName.toLowerCase() === 'img') {
@@ -370,13 +365,11 @@ function setupPWA() {
 function showInstallPrompt() {
     if (!deferredPrompt) return;
     const toast = document.getElementById('toast');
-    toast.innerHTML = '';
+    toast.innerHTML = ''; 
     
     const message = document.createTextNode("Install Mini's IPA Repo? ");
     const installButton = document.createElement('button');
     installButton.textContent = 'Install';
-    
-    // CSP FIX: Use CSS class instead of inline style
     installButton.className = 'toast-install-btn';
     
     installButton.addEventListener('click', installApp);
