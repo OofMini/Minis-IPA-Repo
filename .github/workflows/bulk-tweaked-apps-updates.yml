@@ -79,6 +79,7 @@ on:
 
 permissions:
   contents: write
+  workflows: write
 
 jobs:
   repository-sync:
@@ -117,8 +118,17 @@ jobs:
             local version="$1"
             local app_name="$2"
             if [[ -z "$version" ]]; then echo "::error::$app_name version cannot be empty"; exit 1; fi
-            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?[a-z0-9]*$ ]]; then
-              echo "::error::$app_name version invalid (got: $version)."; exit 1;
+            
+            # SECURITY FIX: Stricter validation (alphanumeric suffix only)
+            if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9]+)?$ ]]; then
+              echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or 1.2.3-beta1"
+              exit 1
+            fi
+
+            # SECURITY FIX: Length check to prevent DoS
+            if [[ ${#version} -gt 20 ]]; then
+              echo "::error::$app_name version string too long"
+              exit 1
             fi
           }
           
@@ -231,7 +241,13 @@ jobs:
           update_workflow_defaults() {
             local app_key="$1" ipa_ver="$2" tweak_ver="$3" workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
             if [ ! -f "$workflow_file" ]; then return 0; fi
-            sed -i -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$ipa_ver\"/" -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$tweak_ver\"/" "$workflow_file"
+            
+            # SECURITY FIX: Escape special characters in version string to prevent sed injection
+            escaped_ipa=$(printf '%s\n' "$ipa_ver" | sed 's/[[\.*^$/]/\\&/g')
+            escaped_tweak=$(printf '%s\n' "$tweak_ver" | sed 's/[[\.*^$/]/\\&/g')
+            
+            sed -i -e "/${app_key}_ipa_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_ipa\"/" \
+                   -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_tweak\"/" "$workflow_file"
           }
           
           JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
