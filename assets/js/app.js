@@ -52,6 +52,7 @@ async function loadAppData() {
         return data;
     } catch (error) {
         console.error('Failed to load app data:', error);
+        // Fallback to cache logic if needed
         throw error;
     }
 }
@@ -375,7 +376,9 @@ function showInstallPrompt() {
     const installButton = document.createElement('button');
     installButton.textContent = 'Install';
     
+    // CSP FIX: Use CSS class instead of inline style
     installButton.className = 'toast-install-btn';
+    
     installButton.addEventListener('click', installApp);
     
     toast.appendChild(message);
