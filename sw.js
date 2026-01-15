@@ -1,4 +1,4 @@
-const VERSION = '3.0.5'; // Bumped version to force update
+const VERSION = '3.0.6'; // Bumped version
 const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
@@ -29,23 +29,21 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Strategy 1: Stale-While-Revalidate for Data (apps.json)
+    // Strategy 1: Network-First for Data (apps.json)
+    // Ensures users always get the latest list, falling back to cache only if offline.
     if (event.request.url.includes('apps.json')) {
         event.respondWith(
-            caches.open(CACHE_NAME).then(async (cache) => {
-                const cachedResponse = await cache.match(event.request);
-                const fetchPromise = fetch(event.request).then((networkResponse) => {
-                    // SECURITY FIX: Only cache successful responses (Status 200)
+            fetch(event.request)
+                .then((networkResponse) => {
                     if (networkResponse.ok) {
-                        cache.put(event.request, networkResponse.clone());
+                        const clone = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
                     }
                     return networkResponse;
-                }).catch(() => {
-                    // NETWORK FAILURE FIX: Return cached data if offline
-                    return cachedResponse;
-                });
-                return cachedResponse || fetchPromise;
-            })
+                })
+                .catch(() => {
+                    return caches.match(event.request);
+                })
         );
         return;
     }
