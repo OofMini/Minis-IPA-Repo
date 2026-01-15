@@ -1,8 +1,8 @@
-
 {
   "name": "Mini's IPA Repo",
   "short_name": "Mini IPA",
   "description": "Tweaked iOS applications repository",
+  "id": "/Minis-IPA-Repo/",
   "start_url": "/Minis-IPA-Repo/",
   "display": "standalone",
   "background_color": "#000000",
@@ -22,7 +22,10 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["utilities", "entertainment"],
+  "categories": [
+    "utilities",
+    "entertainment"
+  ],
   "lang": "en",
   "dir": "ltr"
 }
