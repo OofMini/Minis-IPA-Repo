@@ -57,6 +57,7 @@ img {
     outline: 2px solid var(--accent-color);
     outline-offset: 4px;
 }
+/* CLEANUP: Consolidated duplicate rules */
 .hero-subtitle,
 .app-card p {
     color: #cccccc !important;
@@ -154,7 +155,7 @@ img {
     width: 60px;
     height: 60px;
     border-radius: 14px;
-    margin: 0 auto 10px; /* Fixed: Centers the block-level image */
+    margin: 0 auto 10px;
     border: 2px solid var(--card-border);
 }
 .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
@@ -202,7 +203,11 @@ img {
 }
 .cta-button.trollapps { background: var(--trollapps-color); border-color: var(--trollapps-color); }
 .cta-button.sidestore { background: var(--sidestore-color); border-color: var(--sidestore-color); }
-.cta-button:hover { transform: translateY(-2px); }
+/* COMPATIBILITY: Added vendor prefix */
+.cta-button:hover { 
+    transform: translateY(-2px);
+    -webkit-transform: translateY(-2px);
+}
 
 /* Layout & Grid */
 .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
@@ -371,6 +376,19 @@ img {
 .toast.warning { background: var(--warning-color); }
 .toast.info { background: var(--info-color); }
 
+/* NEW: CSP-compliant install button class */
+.toast-install-btn {
+    margin-left: 10px;
+    background: var(--accent-color);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .app-grid { grid-template-columns: 1fr; }
@@ -382,10 +400,15 @@ img {
     .badge { padding: 5px 12px; font-size: 0.8em; }
 }
 
+/* ACCESSIBILITY: Modern clip-path implementation */
 .visually-hidden {
     position: absolute !important;
-    height: 1px; width: 1px;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
     overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    border: 0;
     white-space: nowrap;
 }
