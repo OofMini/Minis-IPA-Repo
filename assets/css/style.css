@@ -1,3 +1,4 @@
+
 :root {
     --bg-color: #000000;
     --text-color: #ffffff;
@@ -20,51 +21,61 @@
     --skeleton-delay: 800ms;
 }
 
-/* Accessibility: Better focus indicators */
-*:focus {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
-}
-
-.search-box:focus,
-.download-btn:focus,
-.cta-button:focus {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 4px;
-}
-
-/* Accessibility: Improve color contrast */
-.hero-subtitle,
-.app-card p {
-    color: #cccccc !important;
-}
-
+/* Global Styles & Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background: var(--bg-color);
     color: var(--text-color);
     font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Motion preferences */
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Accessibility */
+*:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+.search-box:focus,
+.download-btn:focus,
+.cta-button:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+}
+.hero-subtitle,
+.app-card p {
+    color: #cccccc !important;
+}
+
+/* Motion Preferences */
 @media (prefers-reduced-motion: reduce) {
     * {
         transition: none !important;
         animation: none !important;
     }
+    html { scroll-behavior: auto; }
 }
 
+/* Animations */
 .fade-in, .fade-in-left, .app-card {
     will-change: transform, opacity;
 }
-
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
@@ -87,7 +98,6 @@ body {
 .stagger-2 { transition-delay: var(--stagger-delay-2); }
 .stagger-3 { transition-delay: var(--stagger-delay-3); }
 
-/* Animated Gradient for Title */
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -102,11 +112,11 @@ body {
     animation: gradientShift 4s ease infinite;
 }
 
-/* Skeleton Loading Animation */
+/* Skeleton Loading */
 .skeleton {
-    background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 75%);
     background-size: 200% 100%;
-    animation: loading 1.5s infinite;
+    animation: loading 1.5s infinite linear;
     border-radius: 8px;
 }
 .skeleton-card {
@@ -130,21 +140,16 @@ body {
     100% { background-position: -200% 0; }
 }
 
-.error-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-}
+/* Error State */
+.error-state { grid-column: 1 / -1; text-align: center; padding: 40px; }
 .error-emoji { font-size: 3em; margin-bottom: 20px; }
-.error-title { margin-bottom: 10px; color: var(--text-color); }
-.error-message { margin-bottom: 20px; opacity: 0.8; }
 
+/* Hero Section */
 .hero {
     background: var(--bg-color);
     padding: 20px 15px 15px;
     border-bottom: 1px solid var(--card-border);
     text-align: center;
-    position: relative;
 }
 .repo-icon {
     width: 60px;
@@ -156,7 +161,7 @@ body {
 .hero h1 { font-size: 2em; font-weight: 800; margin: 0 0 5px; }
 .hero-subtitle { font-size: 1em; margin: 0 0 20px; opacity: 0.9; }
 
-/* Updated Badges Section */
+/* Badges */
 .badges {
     display: flex;
     gap: 8px;
@@ -172,9 +177,9 @@ body {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-.badge.purple { background: var(--accent-color); }
 .badge.ios { background: var(--accent-color); }
 
+/* CTA Buttons */
 .cta-buttons {
     display: flex;
     gap: 10px;
@@ -193,11 +198,14 @@ body {
     border: 1px solid;
     font-size: 0.9em;
     cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 .cta-button.trollapps { background: var(--trollapps-color); border-color: var(--trollapps-color); }
 .cta-button.sidestore { background: var(--sidestore-color); border-color: var(--sidestore-color); }
 .cta-button:hover { transform: translateY(-2px); }
 
+/* Layout & Grid */
 .container { max-width: 1000px; margin: 0 auto; padding: 20px 15px; }
 .search-container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
 
@@ -251,7 +259,6 @@ body {
     height: 100%;
     object-fit: contain;
     border-radius: 16px;
-    max-width: 100%;
 }
 
 .app-status {
@@ -278,7 +285,6 @@ body {
     font-size: 1.2em;
     font-weight: 700;
     width: 100%;
-    text-align: center;
     line-height: 1.3;
 }
 .app-card p {
@@ -288,7 +294,6 @@ body {
     line-height: 1.5;
     margin: 0 auto 20px;
     width: 100%;
-    text-align: center;
 }
 
 .download-btn {
@@ -305,9 +310,12 @@ body {
     margin-top: auto;
     border: none;
     cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 .download-btn:hover { transform: translateY(-2px); }
 
+/* Repo Info & Footer */
 .repo-info {
     margin-top: 40px;
     padding: 25px;
@@ -316,16 +324,11 @@ body {
     border: 1px solid var(--card-border);
     text-align: center;
 }
-.repo-info h3 {
-    color: var(--text-color);
-    font-size: 1.3em;
-    margin-bottom: 20px;
-    font-weight: 700;
-}
+.repo-info h3 { font-size: 1.3em; margin-bottom: 20px; font-weight: 700; }
+
 .repo-link {
     margin: 12px 0;
     font-size: 1em;
-    color: var(--text-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -343,10 +346,11 @@ body {
     padding: 4px 10px;
     border-radius: 6px;
     font-family: 'Monaco', 'Menlo', monospace;
-    color: var(--text-color);
     font-size: 0.85em;
+    word-break: break-all;
 }
 
+/* Toast Notification */
 .toast {
     position: fixed;
     bottom: 15px;
@@ -361,13 +365,14 @@ body {
     z-index: 1000;
     font-size: 0.9em;
     max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast.error { background: var(--error-color); }
 .toast.warning { background: var(--warning-color); }
 .toast.info { background: var(--info-color); }
-.toast.success { background: var(--success-color); }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .app-grid { grid-template-columns: 1fr; }
     .cta-buttons { flex-direction: column; align-items: center; }
@@ -378,7 +383,6 @@ body {
     .badge { padding: 5px 12px; font-size: 0.8em; }
 }
 
-/* Utility: visually hidden for accessible headings */
 .visually-hidden {
     position: absolute !important;
     height: 1px; width: 1px;
