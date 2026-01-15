@@ -4,63 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found - Mini's IPA Repo</title>
-    <style>
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            padding: 20px;
-        }
-        .error-code {
-            font-size: 6em;
-            font-weight: 800;
-            background: linear-gradient(270deg, #8a2be2, #ffffff, #8a2be2);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 4s ease infinite;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .message {
-            font-size: 1.2em;
-            margin: 20px 0 40px;
-            opacity: 0.8;
-        }
-        .home-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(45deg, #1db954, #1ed760);
-            color: #fff;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s ease;
-        }
-        .home-btn:hover {
-            transform: translateY(-2px);
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="theme-color" content="#000000">
 </head>
-<body>
-    <div class="error-code">404</div>
-    <h1>Page Not Found</h1>
-    <p class="message">The page you're looking for doesn't exist or has been moved.</p>
-    <a href="/Minis-IPA-Repo/" class="home-btn">
-        <span>←</span> Back to Mini's IPA Repo
-    </a>
+<body style="display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; flex-direction: column; padding: 20px;">
+    
+    <div class="app-card" style="max-width: 500px; padding: 40px; border-color: var(--card-border);">
+        <h1 class="animated-gradient" style="font-size: 6em; line-height: 1; margin-bottom: 20px;">404</h1>
+        
+        <h2 style="margin-bottom: 15px; color: var(--text-color);">Page Not Found</h2>
+        
+        <p style="margin-bottom: 30px; opacity: 0.8; color: var(--text-color);">
+            The page you're looking for doesn't exist or has been moved.
+        </p>
+        
+        <a href="/Minis-IPA-Repo/" class="download-btn" style="text-decoration: none; padding: 12px 24px; font-size: 1em;">
+            ← Back to Repo
+        </a>
+    </div>
+
 </body>
 </html>
