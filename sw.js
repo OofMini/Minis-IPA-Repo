@@ -1,4 +1,4 @@
-const VERSION = '3.0.4'; // Bumped version to force update
+const VERSION = '3.0.5'; // Bumped version to force update
 const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
@@ -29,6 +29,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    // Strategy 1: Stale-While-Revalidate for Data (apps.json)
     if (event.request.url.includes('apps.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(async (cache) => {
@@ -49,6 +50,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // Strategy 2: Cache-First for Static Assets
     event.respondWith(
         caches.match(event.request).then((response) => {
             return response || fetch(event.request);
