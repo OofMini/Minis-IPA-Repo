@@ -143,6 +143,7 @@ img {
 /* Error State */
 .error-state { grid-column: 1 / -1; text-align: center; padding: 40px; }
 .error-emoji { font-size: 3em; margin-bottom: 20px; }
+.no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-color); opacity: 0.7; }
 
 /* Hero Section */
 .hero {
@@ -299,6 +300,17 @@ img {
     margin: 0 auto 20px;
     width: 100%;
 }
+.app-category-tag {
+    background: var(--card-bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+.app-meta-size {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-top: 10px;
+}
 
 .download-btn {
     display: inline-flex;
@@ -354,6 +366,41 @@ img {
     word-break: break-all;
 }
 
+/* Footer Classes (Replaced inline styles) */
+.footer-content {
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--card-border);
+}
+.footer-copyright {
+    opacity: 0.6;
+    font-size: 0.85em;
+    margin-bottom: 10px;
+}
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.footer-link {
+    color: var(--text-color);
+    text-decoration: none;
+    opacity: 0.7;
+    font-size: 0.85em;
+}
+.footer-separator {
+    opacity: 0.3;
+}
+.footer-reset-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
 /* Toast Notification */
 .toast {
     position: fixed;
@@ -376,7 +423,7 @@ img {
 .toast.warning { background: var(--warning-color); }
 .toast.info { background: var(--info-color); }
 
-/* NEW: CSP-compliant install button class */
+/* CSP-compliant install button class */
 .toast-install-btn {
     margin-left: 10px;
     background: var(--accent-color);
