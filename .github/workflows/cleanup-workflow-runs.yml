@@ -31,7 +31,7 @@ jobs:
   delete-runs:
     name: "Delete Old Workflow Runs"
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 60
     
     steps:
       - name: "Delete Workflow Runs"
@@ -43,7 +43,8 @@ jobs:
           CLEAR_PAGES: ${{ github.event.inputs.clear_pages }}
           RETAIN_LATEST: ${{ github.event.inputs.retain_latest }}
         run: |
-          set -e
+          # Disable exit on error to allow the script to continue even if one batch fails
+          set +e
 
           delete_runs() {
             local workflow_name="$1"
@@ -56,36 +57,53 @@ jobs:
             
             echo "🔍 Processing '$workflow_name'..."
             
+            # Loop to handle pagination and deletion
             local loop_count=0
-            local max_loops=1000
+            local max_loops=100
             
             while [ $loop_count -lt $max_loops ]; do
-              echo "   [Loop $loop_count] Fetching run list..."
-              RUNS=$(gh run list --workflow "$workflow_name" --limit 1000 --json databaseId,status || true)
+              # Fetch runs (completed/failed only) to avoid killing active jobs
+              # Sorting is implied (newest first)
+              RUNS=$(gh run list --workflow "$workflow_name" --limit 50 --json databaseId,status --status completed,cancelled,failure,skipped,timed_out || true)
               
               if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
-                echo "✅ No (more) runs found for '$workflow_name'."
+                echo "✅ No cleanable runs found for '$workflow_name'."
                 break
               fi
               
+              # Logic to preserve the latest run
               if [[ "$RETAIN_LATEST" == "true" ]]; then
-                IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
-                if [[ -z "$IDS" ]]; then
-                  echo "🛡️ Latest run preserved. Cleanup complete."
-                  break
+                COUNT=$(echo "$RUNS" | jq length)
+                
+                # If only 1 run exists and we want to keep it, stop.
+                if [[ "$COUNT" -eq 1 ]]; then
+                   echo "🛡️ Latest run preserved. Cleanup complete."
+                   break
                 fi
+                
+                # Exclude the first one (index 0) from the deletion list
+                IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
               else
+                # Delete all
                 IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
               fi
               
-              COUNT=$(echo "$IDS" | wc -w)
-              echo "   🗑️ Deleting batch of $COUNT runs..."
+              # Check if we have IDs to delete
+              if [[ -z "$IDS" ]]; then
+                 echo "✨ No runs to delete in this batch."
+                 break
+              fi
               
-              # Deletes 1 run per call (-n 1) but runs 10 calls in parallel (-P 10)
-              # Added '|| true' to ensure the script finishes green even if one delete fails
-              echo "$IDS" | xargs -n 1 -P 10 gh run delete || true
+              # Calculate count for logging
+              BATCH_COUNT=$(echo "$IDS" | wc -w)
+              echo "   🗑️ Deleting batch of $BATCH_COUNT runs..."
+              
+              # Batch delete: Pass 20 IDs at a time to 'gh run delete'
+              # This is much faster/safer than spawning 20 separate processes
+              echo "$IDS" | xargs -n 20 gh run delete 
               
               ((loop_count++))
+              # Tiny sleep to be nice to the API
               sleep 1
             done
             
@@ -102,4 +120,4 @@ jobs:
           delete_runs "Bulk IPA Updates - Tweaked Apps" "$CLEAR_BULK"
           delete_runs "pages-build-deployment" "$CLEAR_PAGES"
           
-          echo "🎉 Cleanup finished successfully."
+          echo "🎉 Cleanup finished."
