@@ -6,9 +6,9 @@
     
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
-                   img-src 'self' https://oofmini.github.io https://github.com data:; 
+                   img-src 'self' https://oofmini.github.io https://github.com https://raw.githubusercontent.com data:; 
                    script-src 'self'; 
-                   style-src 'self' 'unsafe-inline'; 
+                   style-src 'self'; 
                    connect-src 'self' https://github.com https://raw.githubusercontent.com https://api.github.com;
                    upgrade-insecure-requests;">
     
@@ -86,20 +86,20 @@
     </main>
 
     <footer class="container" aria-label="Site footer">
-        <div style="text-align:center; padding:20px 0; border-top:1px solid var(--card-border);">
-            <p style="opacity:0.6; font-size:0.85em; margin-bottom:10px;">
+        <div class="footer-content">
+            <p class="footer-copyright">
                 © 2025 Mini — Tweaked IPAs for iOS 15+. External downloads may be hosted off-site.
             </p>
-            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
-                <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
+            <div class="footer-links">
+                <a href="https://github.com/OofMini/Minis-IPA-Repo" target="_blank" rel="noopener noreferrer" class="footer-link">
                     📦 GitHub Repo
                 </a>
-                <span style="opacity:0.3;">•</span>
-                <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" style="color:var(--text-color); text-decoration:none; opacity:0.7; font-size:0.85em;">
+                <span class="footer-separator">•</span>
+                <a href="https://github.com/OofMini/Minis-IPA-Repo/issues" target="_blank" rel="noopener noreferrer" class="footer-link">
                     🐛 Report Issue
                 </a>
-                <span style="opacity:0.3;">•</span>
-                <button id="btn-reset" style="background:none; border:none; color:var(--text-color); opacity:0.7; font-size:0.85em; cursor:pointer;">
+                <span class="footer-separator">•</span>
+                <button id="btn-reset" class="footer-reset-btn">
                     🗑️ Clear Cache
                 </button>
             </div>
