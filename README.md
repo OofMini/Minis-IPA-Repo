@@ -4,8 +4,6 @@
 ![Repository Status](https://img.shields.io/badge/Status-Active-success)
 ![iOS Version](https://img.shields.io/badge/iOS-15%2B-blue)
 
-A high-performance repository for tweaked iOS applications, compatible with SideStore, TrollApps, and AltStore.
-
 ### 📱 Apps
 - **EeveeSpotify** (by whoeevee)
 - **YTLite** (by dayanch96)
