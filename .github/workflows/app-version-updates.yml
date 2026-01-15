@@ -55,13 +55,12 @@ on:
         default: ""
         required: false
       update_workflow_defaults:
-        description: "Update workflow default versions"
+        description: "Update workflow default versions (Requires PAT)"
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: write
-  workflows: write
 
 jobs:
   repository-sync:
@@ -106,13 +105,11 @@ jobs:
               exit 1
             fi
             
-            # SECURITY FIX: Stricter validation (alphanumeric suffix only)
             if [[ ! "$version" =~ ^[v]?[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9]+)?$ ]]; then
               echo "::error::$app_name version invalid (got: $version). Expected format: 1.2.3 or 1.2.3-beta1"
               exit 1
             fi
 
-            # SECURITY FIX: Length check to prevent DoS
             if [[ ${#version} -gt 20 ]]; then
               echo "::error::$app_name version string too long"
               exit 1
@@ -234,8 +231,6 @@ jobs:
           update_workflow_defaults() {
             local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
             if [ ! -f "$workflow_file" ]; then return 0; fi
-            
-            # SECURITY FIX: Escape special characters in version string
             escaped_version=$(printf '%s\n' "$app_version" | sed 's/[[\.*^$/]/\\&/g')
             sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_version\"/" "$workflow_file"
           }
@@ -258,7 +253,10 @@ jobs:
                 update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
             done
             
-            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then update_workflow_defaults "$app_key" "$APP_VERSION"; fi
+            # SAFEGUARD: Only update if explicitly requested
+            if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then 
+                update_workflow_defaults "$app_key" "$APP_VERSION"
+            fi
             
             UPDATED_APPS+=("$APP_NAME")
             UPDATED_VERSIONS+=("${app_key}:${APP_VERSION}")
@@ -283,7 +281,8 @@ jobs:
             COMMIT_MSG="App Version Updates: ${steps.update-files.outputs.updated_apps}"
           fi
           
-          git add sidestore.json trollapps.json apps.json .github/workflows/app-version-updates.yml
+          # FIX: Removed .github/workflows/... from git add
+          git add sidestore.json trollapps.json apps.json
           
           if git diff --staged --quiet; then
             echo "::notice::No changes to commit"
