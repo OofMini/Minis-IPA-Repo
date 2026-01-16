@@ -1,108 +1,38 @@
-name: Cleanup Workflow Runs
+name: Cleanup Old Workflow Runs
 
 on:
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday
   workflow_dispatch:
-    inputs:
-      clear_app_version_updates:
-        description: "Clear 'App Version Updates'"
-        type: boolean
-        default: true
-      
-      clear_bulk_updates:
-        description: "Clear 'Bulk IPA Updates'"
-        type: boolean
-        default: true
-      
-      clear_pages:
-        description: "Clear 'pages-build-deployment'"
-        type: boolean
-        default: true
-
-      retain_latest:
-        description: "Keep the latest run for each?"
-        type: boolean
-        default: true
-
-permissions:
-  actions: write
-  contents: read
 
 jobs:
-  delete-runs:
-    name: "Delete Old Workflow Runs"
+  cleanup:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    permissions:
+      actions: write
+      contents: read
     
     steps:
-      - name: "Delete Workflow Runs"
+      - name: Delete old workflow runs
         env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CLEAR_APP: ${{ github.event.inputs.clear_app_version_updates }}
-          CLEAR_BULK: ${{ github.event.inputs.clear_bulk_updates }}
-          CLEAR_PAGES: ${{ github.event.inputs.clear_pages }}
-          RETAIN_LATEST: ${{ github.event.inputs.retain_latest }}
+          GH_TOKEN: ${{ github.token }}
+          DAYS_TO_KEEP: 3
         run: |
-          set +e # Don't exit on error so we can see logs
+          echo "🔍 Finding runs older than $DAYS_TO_KEEP days..."
+          
+          # Calculate the cutoff date
+          CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
+          echo "📅 Cutoff date: $CUTOFF_DATE"
 
-          delete_runs() {
-            local workflow_file="$1"
-            local toggle="$2"
-            local pretty_name="$3"
-            
-            if [[ "$toggle" != "true" ]]; then
-              echo "⏭️ Skipping '$pretty_name' ($workflow_file)"
-              return
-            fi
-            
-            echo "🔍 Processing '$pretty_name'..."
-            
-            local loop_count=0
-            local max_loops=50
-            
-            while [ $loop_count -lt $max_loops ]; do
-              echo "   Fetching runs for $workflow_file..."
-              
-              # Use filename matching explicitly
-              RUNS=$(gh run list --workflow "$workflow_file" --limit 30 --json databaseId,status --status completed,cancelled,failure,skipped,timed_out 2>/dev/null)
-              
-              if [[ -z "$RUNS" ]] || [[ $(echo "$RUNS" | jq length) -eq 0 ]]; then
-                echo "   ✅ No cleanable runs found."
-                break
-              fi
-              
-              if [[ "$RETAIN_LATEST" == "true" ]]; then
-                COUNT=$(echo "$RUNS" | jq length)
-                if [[ "$COUNT" -eq 1 ]]; then
-                   echo "   🛡️ Latest run preserved."
-                   break
-                fi
-                IDS=$(echo "$RUNS" | jq -r '.[1:] | .[].databaseId')
-              else
-                IDS=$(echo "$RUNS" | jq -r '.[].databaseId')
-              fi
-              
-              if [[ -z "$IDS" ]]; then
-                 echo "   ✨ No runs to delete in this batch."
-                 break
-              fi
-              
-              BATCH_COUNT=$(echo "$IDS" | wc -w)
-              echo "   🗑️ Deleting batch of $BATCH_COUNT runs..."
-              echo "$IDS" | xargs -n 20 gh run delete 
-              
-              ((loop_count++))
-              sleep 2
-            done
-            echo "----------------------------------------"
-          }
+          # List runs older than the cutoff and delete them
+          # --limit 100 prevents API timeouts; loop handles pagination implicitly by running repeatedly if needed
+          gh run list \
+            --json databaseId,createdAt,status \
+            --created "<$CUTOFF_DATE" \
+            --limit 100 \
+            --jq '.[].databaseId' | while read -r run_id; do
+              echo "🗑️ Deleting run ID: $run_id"
+              gh run delete "$run_id" || echo "⚠️ Failed to delete $run_id (might be already gone)"
+          done
           
-          echo "🧹 Starting Cleanup..."
-          echo "----------------------------------------"
-          
-          # Use EXACT FILENAMES here
-          delete_runs "app-version-updates.yml" "$CLEAR_APP" "App Version Updates"
-          delete_runs "bulk-tweaked-apps-updates.yml" "$CLEAR_BULK" "Bulk IPA Updates"
-          delete_runs "pages-build-deployment" "$CLEAR_PAGES" "Pages Deployment"
-          
-          echo "🎉 Cleanup finished."
+          echo "✅ Cleanup complete."
