@@ -1,9 +1,9 @@
-const VERSION = '3.1.0'; // Bumped version for refactor
+const VERSION = '3.2.0'; // Professional Edition
 const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
     './index.html',
-    './sidestore.json', // Updated from apps.json
+    './sidestore.json',
     './assets/css/style.css',
     './assets/js/app.js',
     './manifest.json',
@@ -23,14 +23,20 @@ self.addEventListener('activate', (event) => {
             keys.map((key) => {
                 if (key !== CACHE_NAME) return caches.delete(key);
             })
-        ))
+        )).then(() => {
+            // Professional UX: Notify client instead of forcing logic
+            return self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({ type: 'SW_UPDATED', version: VERSION });
+                });
+            });
+        })
     );
     self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-    // Strategy 1: Network-First for Data (sidestore.json)
-    // Ensures users always get the latest list, falling back to cache only if offline.
+    // Strategy 1: Network-First for Data
     if (event.request.url.includes('sidestore.json')) {
         event.respondWith(
             fetch(event.request)
@@ -41,9 +47,7 @@ self.addEventListener('fetch', (event) => {
                     }
                     return networkResponse;
                 })
-                .catch(() => {
-                    return caches.match(event.request);
-                })
+                .catch(() => caches.match(event.request))
         );
         return;
     }
