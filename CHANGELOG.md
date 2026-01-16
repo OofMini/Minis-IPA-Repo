@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [3.2.0] - 2026-01-16
+### 🚀 Architecture Overhaul
+- **Performance**: Migrated rendering engine from `innerHTML` to `<template>` cloning for faster, secure DOM generation.
+- **UX**: Added **Fuzzy Search** (typo tolerance) and **Keyboard Navigation** (arrow keys support).
+- **Network**: Implemented `AbortController` timeouts for network requests to prevent hanging on slow connections.
+- **PWA**: Replaced intrusive "Reload?" alerts with a native-style Toast notification for updates.
+- **Automation**: Hardened shell scripts with strict error handling (`set -euo pipefail`) and added JSON validation workflows.
+- **Cleanup**: Removed `apps.json` dependency completely; `sidestore.json` is now the Single Source of Truth.
+
+## [3.1.0] - 2026-01-15
+### 🏗️ Backend Refactor
+- **Single Source of Truth**: Frontend now fetches directly from `sidestore.json`.
+- **Optimization**: Added existence checks to automation scripts to reduce unnecessary file I/O.
+- **Fix**: Resolved GitHub Actions race conditions with `git pull --rebase`.
+
+## [3.0.6] - 2025-01-14
+### 🔧 Maintenance
+- **Fix**: Adjusted caching strategy to Network-First for data files.
+- **Security**: Updated Content Security Policy (CSP) headers.
 
 ## [3.0.1] - 2026-01-14
 ### Fixed
