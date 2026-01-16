@@ -98,7 +98,8 @@ jobs:
             COMMIT_MSG="App Version Updates: ${steps.update-files.outputs.updated_apps}"
           fi
           
-          git add sidestore.json trollapps.json apps.json
+          # Optimization: Removed apps.json
+          git add sidestore.json trollapps.json
           
           if git diff --staged --quiet; then
             echo "::notice::No changes to commit"
