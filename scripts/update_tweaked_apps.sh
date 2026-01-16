@@ -1,5 +1,18 @@
 #!/bin/bash
-set -e
+# PROFESSIONAL GRADE: Strict Mode & Error Handling
+set -euo pipefail
+IFS=$'\n\t'
+
+# Cleanup trap
+cleanup() {
+    local exit_code=$?
+    rm -f *.tmp *.bak
+    if [ $exit_code -ne 0 ]; then
+        echo "::error::Script failed unexpectedly at line $LINENO"
+    fi
+    exit $exit_code
+}
+trap cleanup EXIT INT TERM
 
 # Install dependencies
 if ! command -v jq &> /dev/null; then
@@ -26,20 +39,19 @@ validate_version() {
 }
 
 ANY_ENABLED=false
-if [[ "$UPDATE_SPOTIFY" == "true" ]]; then ANY_ENABLED=true; validate_version "$SPOTIFY_IPA_VERSION" "Spotify"; fi
-if [[ "$UPDATE_YOUTUBE" == "true" ]]; then ANY_ENABLED=true; validate_version "$YOUTUBE_IPA_VERSION" "YouTube"; fi
-if [[ "$UPDATE_X" == "true" ]]; then ANY_ENABLED=true; validate_version "$X_IPA_VERSION" "X"; fi
-if [[ "$UPDATE_YTMUSICULTIMATE" == "true" ]]; then ANY_ENABLED=true; validate_version "$YTMUSICULTIMATE_IPA_VERSION" "YTMusic"; fi
-if [[ "$UPDATE_SCINSTA" == "true" ]]; then ANY_ENABLED=true; validate_version "$SCINSTA_IPA_VERSION" "SCInsta"; fi
+if [[ "${UPDATE_SPOTIFY:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${SPOTIFY_IPA_VERSION:-}" "Spotify"; fi
+if [[ "${UPDATE_YOUTUBE:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${YOUTUBE_IPA_VERSION:-}" "YouTube"; fi
+if [[ "${UPDATE_X:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${X_IPA_VERSION:-}" "X"; fi
+if [[ "${UPDATE_YTMUSICULTIMATE:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${YTMUSICULTIMATE_IPA_VERSION:-}" "YTMusic"; fi
+if [[ "${UPDATE_SCINSTA:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${SCINSTA_IPA_VERSION:-}" "SCInsta"; fi
 
 if [[ "$ANY_ENABLED" == "false" ]]; then echo "::notice::No apps enabled for update. Exiting."; exit 0; fi
 
-if [ -n "$GITHUB_ACTIONS" ]; then
+if [ -n "${GITHUB_ACTIONS:-}" ]; then
     git config --local user.email "github-actions[bot]@users.noreply.github.com"
     git config --local user.name "github-actions[bot]"
 fi
 
-trap 'rm -f *.tmp *.bak' EXIT ERR
 CURRENT_DATE=$(date -u +"%Y-%m-%d")
 
 APP_KEYS=("spotify" "youtube" "x" "ytmusicultimate" "scinsta")
@@ -60,9 +72,9 @@ declare -A APP_DESCRIPTIONS=(
   ["ytmusicultimate"]="Tweaked YouTube Music with premium features unlocked, background playback, and no ads. Youtube Music IPA %s, YTMusicUltimate %s."
   ["scinsta"]="Tweaked Instagram premium, Instagram IPA %s, SCInsta %s"
 )
-declare -A APP_TOGGLES=( ["spotify"]="$UPDATE_SPOTIFY" ["youtube"]="$UPDATE_YOUTUBE" ["x"]="$UPDATE_X" ["ytmusicultimate"]="$UPDATE_YTMUSICULTIMATE" ["scinsta"]="$UPDATE_SCINSTA" )
-declare -A APP_IPA_VERSIONS=( ["spotify"]="$SPOTIFY_IPA_VERSION" ["youtube"]="$YOUTUBE_IPA_VERSION" ["x"]="$X_IPA_VERSION" ["ytmusicultimate"]="$YTMUSICULTIMATE_IPA_VERSION" ["scinsta"]="$SCINSTA_IPA_VERSION" )
-declare -A APP_TWEAK_VERSIONS=( ["spotify"]="$SPOTIFY_TWEAK_VERSION" ["youtube"]="$YOUTUBE_TWEAK_VERSION" ["x"]="$X_TWEAK_VERSION" ["ytmusicultimate"]="$YTMUSICULTIMATE_TWEAK_VERSION" ["scinsta"]="$SCINSTA_TWEAK_VERSION" )
+declare -A APP_TOGGLES=( ["spotify"]="${UPDATE_SPOTIFY:-false}" ["youtube"]="${UPDATE_YOUTUBE:-false}" ["x"]="${UPDATE_X:-false}" ["ytmusicultimate"]="${UPDATE_YTMUSICULTIMATE:-false}" ["scinsta"]="${UPDATE_SCINSTA:-false}" )
+declare -A APP_IPA_VERSIONS=( ["spotify"]="${SPOTIFY_IPA_VERSION:-}" ["youtube"]="${YOUTUBE_IPA_VERSION:-}" ["x"]="${X_IPA_VERSION:-}" ["ytmusicultimate"]="${YTMUSICULTIMATE_IPA_VERSION:-}" ["scinsta"]="${SCINSTA_IPA_VERSION:-}" )
+declare -A APP_TWEAK_VERSIONS=( ["spotify"]="${SPOTIFY_TWEAK_VERSION:-}" ["youtube"]="${YOUTUBE_TWEAK_VERSION:-}" ["x"]="${X_TWEAK_VERSION:-}" ["ytmusicultimate"]="${YTMUSICULTIMATE_TWEAK_VERSION:-}" ["scinsta"]="${SCINSTA_TWEAK_VERSION:-}" )
 
 build_download_url() {
   local app_key="$1" tweak_version="$2" pattern="${APP_URL_PATTERNS[$app_key]}"
@@ -87,21 +99,16 @@ update_app_in_file() {
         if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
             return 0
         fi
+        
+        jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+         '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" 
         ;;
     "trollapps.json") 
         if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
             return 0
         fi
-        ;;
-  esac
 
-  case "$file" in
-    "sidestore.json") 
-          jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
-         '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" 
-        ;;
-    "trollapps.json") 
-          jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
+        jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
          '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file" 
         ;;
   esac
@@ -132,6 +139,8 @@ update_workflow_defaults() {
   local app_key="$1" ipa_ver="$2" tweak_ver="$3" workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
   if [ ! -f "$workflow_file" ]; then return 0; fi
   
+  local escaped_ipa
+  local escaped_tweak
   escaped_ipa=$(printf '%s\n' "$ipa_ver" | sed 's/[[\.*^$/]/\\&/g')
   escaped_tweak=$(printf '%s\n' "$tweak_ver" | sed 's/[[\.*^$/]/\\&/g')
   
@@ -141,7 +150,6 @@ update_workflow_defaults() {
 
 validate_json_files
 
-# Removed apps.json from list
 JSON_FILES=("sidestore.json" "trollapps.json")
 UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
 
@@ -157,7 +165,7 @@ for app_key in "${APP_KEYS[@]}"; do
       update_app_in_file "$json_file" "${APP_NAMES[$app_key]}" "${APP_BUNDLES[$app_key]}" "$APP_ID" "$IPA" "$URL" "$DESC"
   done
   
-  if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then 
+  if [[ "${UPDATE_WORKFLOW_DEFAULTS:-false}" == "true" ]]; then 
       update_workflow_defaults "$app_key" "$IPA" "$TWEAK"
   fi
   
