@@ -21,37 +21,48 @@ jobs:
       - name: Delete old workflow runs
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }} # <--- CRITICAL FIX: Tells gh which repo to target
-          DAYS_TO_KEEP: ${{ github.event.inputs.days_to_keep || 3 }}
+          GH_REPO: ${{ github.repository }}
+          DAYS_TO_KEEP: ${{ github.event.inputs.days_to_keep || 0 }}
         run: |
-          echo "🔍 Finding runs older than $DAYS_TO_KEEP days..."
-          
-          # Calculate the cutoff date
+          # List of exact Workflow Names to clean
+          # This ensures we check EVERY workflow, not just the most active ones
+          WORKFLOWS=(
+            "App Version Updates"
+            "Bulk IPA Updates - Tweaked Apps"
+            "Code Quality Checks"
+            "Cleanup Old Workflow Runs"
+            "pages-build-deployment"
+          )
+
+          # Calculate cutoff date
           CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
-          echo "📅 Cutoff date: $CUTOFF_DATE"
+          echo "📅 Cutoff Date: $CUTOFF_DATE"
+          echo "---------------------------------------------------"
 
-          # Fetch list of runs to delete
-          # We check specifically for 'completed' runs to avoid killing active jobs
-          RUNS_TO_DELETE=$(gh run list \
-            --json databaseId,createdAt,status \
-            --created "<$CUTOFF_DATE" \
-            --status completed \
-            --limit 100 \
-            --jq '.[].databaseId')
-          
-          # Count runs (handling empty results gracefully)
-          if [ -z "$RUNS_TO_DELETE" ]; then
-            echo "✅ No runs found older than $CUTOFF_DATE. Nothing to delete."
-            exit 0
-          fi
-          
-          COUNT=$(echo "$RUNS_TO_DELETE" | wc -w)
-          echo "🗑️ Found $COUNT runs to delete."
-
-          # Loop and Delete
-          for run_id in $RUNS_TO_DELETE; do
-            echo "Processing Run ID: $run_id"
-            gh run delete "$run_id" || echo "⚠️ Could not delete $run_id"
+          for workflow in "${WORKFLOWS[@]}"; do
+            echo "🔍 Checking workflow: '$workflow'..."
+            
+            # Fetch runs specific to this workflow
+            # Using --limit 50 per workflow to ensure we process a good chunk
+            RUNS=$(gh run list \
+              --workflow "$workflow" \
+              --created "<$CUTOFF_DATE" \
+              --status completed \
+              --json databaseId \
+              --limit 50 \
+              --jq '.[].databaseId')
+            
+            if [ -z "$RUNS" ]; then
+              echo "✅ No old runs found for '$workflow'."
+            else
+              COUNT=$(echo "$RUNS" | wc -w)
+              echo "🗑️ Found $COUNT runs to delete for '$workflow'."
+              
+              for run_id in $RUNS; do
+                gh run delete "$run_id" || echo "⚠️ Failed to delete $run_id"
+              done
+            fi
+            echo "---------------------------------------------------"
           done
           
           echo "🎉 Cleanup complete."
