@@ -1,5 +1,18 @@
 #!/bin/bash
-set -e
+# PROFESSIONAL GRADE: Strict Mode & Error Handling
+set -euo pipefail
+IFS=$'\n\t'
+
+# Cleanup trap: Ensures temp files are removed even if script crashes
+cleanup() {
+    local exit_code=$?
+    rm -f *.tmp *.bak
+    if [ $exit_code -ne 0 ]; then
+        echo "::error::Script failed unexpectedly at line $LINENO"
+    fi
+    exit $exit_code
+}
+trap cleanup EXIT INT TERM
 
 # Install dependencies if missing
 if ! command -v jq &> /dev/null; then
@@ -31,11 +44,11 @@ validate_version() {
 
 ANY_ENABLED=false
 
-if [[ "$UPDATE_INSHOT" == "true" ]]; then ANY_ENABLED=true; validate_version "$INSHOT_VERSION" "InShot"; fi
-if [[ "$UPDATE_APPSTOREPP" == "true" ]]; then ANY_ENABLED=true; validate_version "$APPSTOREPP_VERSION" "AppStore++"; fi
-if [[ "$UPDATE_ITORRENT" == "true" ]]; then ANY_ENABLED=true; validate_version "$ITORRENT_VERSION" "iTorrent"; fi
-if [[ "$UPDATE_LIVECONTAINER" == "true" ]]; then ANY_ENABLED=true; validate_version "$LIVECONTAINER_VERSION" "LiveContainer"; fi
-if [[ "$UPDATE_REFACE" == "true" ]]; then ANY_ENABLED=true; validate_version "$REFACE_VERSION" "Reface"; fi
+if [[ "${UPDATE_INSHOT:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${INSHOT_VERSION:-}" "InShot"; fi
+if [[ "${UPDATE_APPSTOREPP:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${APPSTOREPP_VERSION:-}" "AppStore++"; fi
+if [[ "${UPDATE_ITORRENT:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${ITORRENT_VERSION:-}" "iTorrent"; fi
+if [[ "${UPDATE_LIVECONTAINER:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${LIVECONTAINER_VERSION:-}" "LiveContainer"; fi
+if [[ "${UPDATE_REFACE:-false}" == "true" ]]; then ANY_ENABLED=true; validate_version "${REFACE_VERSION:-}" "Reface"; fi
 
 if [[ "$ANY_ENABLED" == "false" ]]; then
   echo "::notice::No apps enabled for update. Exiting."
@@ -44,13 +57,11 @@ fi
 
 echo "✅ Input validation complete"
 
-if [ -n "$GITHUB_ACTIONS" ]; then
+if [ -n "${GITHUB_ACTIONS:-}" ]; then
     echo "⚙️ Configuring Git User..."
     git config --local user.email "github-actions[bot]@users.noreply.github.com"
     git config --local user.name "github-actions[bot]"
 fi
-
-trap 'rm -f *.tmp *.bak' EXIT ERR
 
 CURRENT_DATE=$(date -u +"%Y-%m-%d")
 echo "current_date=$CURRENT_DATE" >> "$GITHUB_OUTPUT"
@@ -74,8 +85,9 @@ declare -A APP_DESCRIPTIONS=(
   ["livecontainer"]="Runs live production containers for streaming apps and runtime isolation."
   ["reface"]="Reface Premium Unlocked."
 )
-declare -A APP_TOGGLES=( ["inshot"]="$UPDATE_INSHOT" ["appstorepp"]="$UPDATE_APPSTOREPP" ["itorrent"]="$UPDATE_ITORRENT" ["livecontainer"]="$UPDATE_LIVECONTAINER" ["reface"]="$UPDATE_REFACE" )
-declare -A APP_VERSIONS=( ["inshot"]="$INSHOT_VERSION" ["appstorepp"]="$APPSTOREPP_VERSION" ["itorrent"]="$ITORRENT_VERSION" ["livecontainer"]="$LIVECONTAINER_VERSION" ["reface"]="$REFACE_VERSION" )
+# Use parameter expansion defaults to prevent unbound variable errors
+declare -A APP_TOGGLES=( ["inshot"]="${UPDATE_INSHOT:-false}" ["appstorepp"]="${UPDATE_APPSTOREPP:-false}" ["itorrent"]="${UPDATE_ITORRENT:-false}" ["livecontainer"]="${UPDATE_LIVECONTAINER:-false}" ["reface"]="${UPDATE_REFACE:-false}" )
+declare -A APP_VERSIONS=( ["inshot"]="${INSHOT_VERSION:-}" ["appstorepp"]="${APPSTOREPP_VERSION:-}" ["itorrent"]="${ITORRENT_VERSION:-}" ["livecontainer"]="${LIVECONTAINER_VERSION:-}" ["reface"]="${REFACE_VERSION:-}" )
 
 build_download_url() {
   local app_key="$1"
@@ -96,29 +108,23 @@ update_app_in_file() {
   
   if [ ! -f "$file" ]; then return 0; fi
 
-  # Pre-check existence of app in file to skip unnecessary processing
   case "$file" in
     "sidestore.json")
         if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
             return 0
         fi
-        ;;
-    "trollapps.json")
-        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
-            return 0
-        fi
-        ;;
-  esac
-
-  case "$file" in
-    "sidestore.json")
-          jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+        
+        jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
             '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
-      ;;
+        ;;
     "trollapps.json")
-          jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
+        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+            return 0
+        fi
+
+        jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
             '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file"
-      ;;
+        ;;
   esac
   
   if [ -f "$temp_file" ]; then
@@ -146,13 +152,13 @@ validate_json_files() {
 update_workflow_defaults() {
   local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
   if [ ! -f "$workflow_file" ]; then return 0; fi
+  local escaped_version
   escaped_version=$(printf '%s\n' "$app_version" | sed 's/[[\.*^$/]/\\&/g')
   sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_version\"/" "$workflow_file"
 }
 
 validate_json_files
 
-# Removed apps.json from list
 JSON_FILES=("sidestore.json" "trollapps.json")
 UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
 
@@ -171,7 +177,7 @@ for app_key in "${APP_KEYS[@]}"; do
       update_app_in_file "$json_file" "$APP_NAME" "$BUNDLE_ID" "$APP_ID" "$APP_VERSION" "$DOWNLOAD_URL" "$DESCRIPTION"
   done
   
-  if [[ "$UPDATE_WORKFLOW_DEFAULTS" == "true" ]]; then 
+  if [[ "${UPDATE_WORKFLOW_DEFAULTS:-false}" == "true" ]]; then 
       update_workflow_defaults "$app_key" "$APP_VERSION"
   fi
   
