@@ -2,8 +2,13 @@ name: Cleanup Old Workflow Runs
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+    - cron: '0 0 * * 0' # Weekly
   workflow_dispatch:
+    inputs:
+      days_to_keep:
+        description: 'Days to keep (0 = delete everything from yesterday backwards)'
+        required: true
+        default: '0'
 
 jobs:
   cleanup:
@@ -16,23 +21,40 @@ jobs:
       - name: Delete old workflow runs
         env:
           GH_TOKEN: ${{ github.token }}
-          DAYS_TO_KEEP: 3
+          DAYS_TO_KEEP: ${{ github.event.inputs.days_to_keep || 3 }}
         run: |
           echo "🔍 Finding runs older than $DAYS_TO_KEEP days..."
           
-          # Calculate the cutoff date
+          # Calculate Cutoff
+          # Note: '0 days' means anything before *right now* today is eligible if we used minutes,
+          # but typically -0 days is treated strictly.
+          # Let's use specific date logic for clarity.
           CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
-          echo "📅 Cutoff date: $CUTOFF_DATE"
+          echo "📅 Cutoff Date: $CUTOFF_DATE"
 
-          # List runs older than the cutoff and delete them
-          # --limit 100 prevents API timeouts; loop handles pagination implicitly
-          gh run list \
+          # Fetch list of runs to delete
+          # We check specifically for 'completed' runs to avoid killing active jobs
+          RUNS_TO_DELETE=$(gh run list \
             --json databaseId,createdAt,status \
             --created "<$CUTOFF_DATE" \
+            --status completed \
             --limit 100 \
-            --jq '.[].databaseId' | while read -r run_id; do
-              echo "🗑️ Deleting run ID: $run_id"
-              gh run delete "$run_id" || echo "⚠️ Failed to delete $run_id (might be already gone)"
+            --jq '.[].databaseId')
+          
+          # Count runs
+          COUNT=$(echo "$RUNS_TO_DELETE" | wc -w)
+          
+          if [ -z "$RUNS_TO_DELETE" ]; then
+            echo "✅ No runs found older than $CUTOFF_DATE. Nothing to delete."
+            exit 0
+          fi
+
+          echo "🗑️ Found $COUNT runs to delete."
+
+          # Loop and Delete
+          for run_id in $RUNS_TO_DELETE; do
+            echo "Processing Run ID: $run_id"
+            gh run delete "$run_id" || echo "⚠️ Could not delete $run_id"
           done
           
-          echo "✅ Cleanup complete."
+          echo "🎉 Cleanup complete."
