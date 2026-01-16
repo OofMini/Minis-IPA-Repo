@@ -15,7 +15,6 @@ validate_version() {
   local app_name="$2"
   if [[ -z "$version" ]]; then echo "::error::$app_name version cannot be empty"; exit 1; fi
   
-  # OPTIMIZATION: Relaxed Regex
   if [[ ! "$version" =~ ^[vV]?[0-9]+(\.[0-9]+)*([-a-zA-Z0-9]+)?$ ]]; then
     echo "::warning::$app_name version '$version' uses a non-standard format."
   fi
@@ -85,20 +84,26 @@ update_app_in_file() {
 
   case "$file" in
     "sidestore.json") 
-        if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+            return 0
+        fi
+        ;;
+    "trollapps.json") 
+        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+            return 0
+        fi
+        ;;
+  esac
+
+  case "$file" in
+    "sidestore.json") 
           jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
          '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file" 
-        fi ;;
+        ;;
     "trollapps.json") 
-        if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
           jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
          '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file" 
-        fi ;;
-    "apps.json")
-        if jq -e --arg id "$app_id" '.[] | select(.id == $id)' "$file" >/dev/null 2>&1; then
-          jq --arg id "$app_id" --arg version "$ipa_ver" --arg url "$url" --arg desc "$desc" --arg date "$CURRENT_DATE" \
-            '(.[] | select(.id == $id)) |= (.version = $version | .downloadUrl = $url | .description = $desc | .date = $date)' "$file" > "$temp_file"
-        fi ;;
+        ;;
   esac
   
   if [ -f "$temp_file" ]; then
@@ -113,6 +118,16 @@ update_app_in_file() {
   fi
 }
 
+validate_json_files() {
+    for file in sidestore.json trollapps.json; do
+        if [ ! -f "$file" ]; then continue; fi
+        if ! jq empty "$file" 2>/dev/null; then
+            echo "::error::$file is corrupted before updates"
+            exit 1
+        fi
+    done
+}
+
 update_workflow_defaults() {
   local app_key="$1" ipa_ver="$2" tweak_ver="$3" workflow_file=".github/workflows/bulk-tweaked-apps-updates.yml"
   if [ ! -f "$workflow_file" ]; then return 0; fi
@@ -124,7 +139,10 @@ update_workflow_defaults() {
          -e "/${app_key}_tweak_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_tweak\"/" "$workflow_file"
 }
 
-JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
+validate_json_files
+
+# Removed apps.json from list
+JSON_FILES=("sidestore.json" "trollapps.json")
 UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
 
 for app_key in "${APP_KEYS[@]}"; do
