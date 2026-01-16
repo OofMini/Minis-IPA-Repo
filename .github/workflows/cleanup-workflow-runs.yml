@@ -2,7 +2,7 @@ name: Cleanup Old Workflow Runs
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Weekly
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
   workflow_dispatch:
     inputs:
       days_to_keep:
@@ -21,16 +21,14 @@ jobs:
       - name: Delete old workflow runs
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }} # <--- CRITICAL FIX: Tells gh which repo to target
           DAYS_TO_KEEP: ${{ github.event.inputs.days_to_keep || 3 }}
         run: |
           echo "🔍 Finding runs older than $DAYS_TO_KEEP days..."
           
-          # Calculate Cutoff
-          # Note: '0 days' means anything before *right now* today is eligible if we used minutes,
-          # but typically -0 days is treated strictly.
-          # Let's use specific date logic for clarity.
+          # Calculate the cutoff date
           CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
-          echo "📅 Cutoff Date: $CUTOFF_DATE"
+          echo "📅 Cutoff date: $CUTOFF_DATE"
 
           # Fetch list of runs to delete
           # We check specifically for 'completed' runs to avoid killing active jobs
@@ -41,14 +39,13 @@ jobs:
             --limit 100 \
             --jq '.[].databaseId')
           
-          # Count runs
-          COUNT=$(echo "$RUNS_TO_DELETE" | wc -w)
-          
+          # Count runs (handling empty results gracefully)
           if [ -z "$RUNS_TO_DELETE" ]; then
             echo "✅ No runs found older than $CUTOFF_DATE. Nothing to delete."
             exit 0
           fi
-
+          
+          COUNT=$(echo "$RUNS_TO_DELETE" | wc -w)
           echo "🗑️ Found $COUNT runs to delete."
 
           # Loop and Delete
