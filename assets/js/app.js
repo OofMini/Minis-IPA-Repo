@@ -3,7 +3,7 @@ const CONFIG = {
     SEARCH_DEBOUNCE: 300,
     TOAST_DURATION: 3000,
     SKELETON_DELAY: 800,
-    API_ENDPOINT: './apps.json',
+    API_ENDPOINT: './sidestore.json', // Updated endpoint
     RATE_LIMIT_TIME: 300000, // 5 minutes
     RATE_LIMIT_COUNT: 5,
     FALLBACK_ICON: 'https://OofMini.github.io/Minis-IPA-Repo/apps/repo-icon.png'
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         setupEventListeners();
         setupGlobalErrorHandling();
         setupPWA();
-        initializeScrollAnimations(); // <--- Animation logic starts here
+        initializeScrollAnimations();
         
         showLoadingState();
         AppState.apps = await loadAppData();
@@ -45,14 +45,59 @@ async function loadAppData() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         
-        if (!Array.isArray(data) || data.length === 0) {
-            throw new Error('Invalid apps.json structure');
+        // Validation: Ensure basic structure exists
+        if (!data.apps || !Array.isArray(data.apps)) {
+            throw new Error('Invalid sidestore.json structure');
         }
-        return data;
+
+        // Map SideStore structure to flat AppState format
+        return data.apps.map(app => {
+            const latestVersion = app.versions && app.versions.length > 0 ? app.versions[0] : {};
+            const bundleId = app.bundleIdentifier || '';
+
+            return {
+                id: generateId(bundleId),
+                name: app.name,
+                developer: app.developerName, // Renamed from developerName
+                description: app.localizedDescription, // Renamed from localizedDescription
+                icon: app.iconURL, // Renamed from iconURL
+                version: latestVersion.version || 'Unknown',
+                date: latestVersion.date || '',
+                downloadUrl: latestVersion.downloadURL || '',
+                category: inferCategory(bundleId),
+                size: formatSize(latestVersion.size)
+            };
+        });
+
     } catch (error) {
         console.error('Failed to load app data:', error);
         throw error;
     }
+}
+
+// Helper: Generate ID from bundle identifier
+function generateId(bundleIdentifier) {
+    if (!bundleIdentifier) return 'unknown';
+    const parts = bundleIdentifier.split('.');
+    return parts[parts.length - 1].toLowerCase();
+}
+
+// Helper: Infer category based on bundle ID patterns
+function inferCategory(bundleIdentifier) {
+    const bid = bundleIdentifier.toLowerCase();
+    if (bid.includes('spotify') || bid.includes('youtubemusic')) return 'Music';
+    if (bid.includes('youtube')) return 'Video';
+    if (bid.includes('instagram') || bid.includes('tweetie2')) return 'Social';
+    if (bid.includes('instashot')) return 'Photo & Video';
+    if (bid.includes('reface')) return 'Entertainment';
+    return 'Utilities';
+}
+
+// Helper: Convert bytes to MB
+function formatSize(bytes) {
+    if (!bytes || isNaN(bytes)) return 'Unknown';
+    const mb = (bytes / (1024 * 1024)).toFixed(0);
+    return `${mb} MB`;
 }
 
 async function fetchWithRetry(url, options = {}, retries = 3) {
@@ -87,7 +132,6 @@ function renderAppGrid() {
                 <p>Try different search terms</p>
             </div>
         `;
-        // Important: Observe new elements after rendering
         if (observer) {
             appGrid.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
         }
@@ -104,7 +148,6 @@ function renderAppGrid() {
         const safeAlt = `Icon for ${safeName} by ${safeDeveloper}`;
         
         const article = document.createElement('article');
-        // Added fade-in class to cards
         article.className = `app-card fade-in stagger-${(index % 3) + 1}`;
         article.setAttribute('aria-label', safeName);
         article.setAttribute('data-app-id', safeId);
@@ -142,7 +185,6 @@ function renderAppGrid() {
         appGrid.setAttribute('data-listening', 'true');
     }
         
-    // FIX: Re-observe new elements
     if (observer) {
         appGrid.querySelectorAll('.fade-in').forEach(card => observer.observe(card));
     }
@@ -199,7 +241,6 @@ function showLoadingState() {
             <div class="skeleton skeleton-button"></div>
         </div>
     `).join('');
-    // Ensure skeletons are observed
     if (observer) {
         grid.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
@@ -333,9 +374,7 @@ function resetLocalData() {
     }
 }
 
-// FIX: This function now targets both .fade-in and .fade-in-left
 function initializeScrollAnimations() {
-    // If browser doesn't support observer, force all elements visible immediately
     if (!('IntersectionObserver' in window)) {
         document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => el.classList.add('visible'));
         return;
@@ -345,13 +384,11 @@ function initializeScrollAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Optional: Stop observing once visible to save resources
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1 });
 
-    // FIX: Add .fade-in-left to the selector
     document.querySelectorAll('.fade-in, .fade-in-left').forEach(el => observer.observe(el));
 }
 
