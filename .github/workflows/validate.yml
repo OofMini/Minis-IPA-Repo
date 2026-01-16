@@ -1,0 +1,32 @@
+name: Code Quality Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Validate JSON Files
+        run: |
+          for file in sidestore.json trollapps.json manifest.json; do
+            if [ -f "$file" ]; then
+              echo "Validating $file..."
+              if ! jq empty "$file"; then
+                echo "::error::Invalid JSON in $file"
+                exit 1
+              fi
+            fi
+          done
+      
+      - name: Check Shell Scripts
+        run: |
+          for script in scripts/*.sh; do
+            if [ -f "$script" ]; then
+              bash -n "$script"
+            fi
+          done
