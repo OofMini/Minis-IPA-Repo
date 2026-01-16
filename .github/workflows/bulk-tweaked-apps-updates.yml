@@ -116,7 +116,7 @@ jobs:
           set -e
           COMMIT_MSG="Repository Sync: Updated tweaked app versions"
           
-          # Optimization: Removed apps.json
+          # Optimization: Removed apps.json reference
           git add sidestore.json trollapps.json
           
           if ! git diff --staged --quiet; then
