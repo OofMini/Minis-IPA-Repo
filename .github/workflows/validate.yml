@@ -11,22 +11,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      # 1. Standard JSON Syntax Validation
       - name: Validate JSON Files
         run: |
           for file in sidestore.json trollapps.json manifest.json; do
             if [ -f "$file" ]; then
               echo "Validating $file..."
               if ! jq empty "$file"; then
-                echo "::error::Invalid JSON in $file"
+                echo "::error::Invalid JSON syntax in $file"
                 exit 1
               fi
             fi
           done
       
+      # 2. Duplicate Bundle ID Check (Prevents UI Glitches)
+      - name: Check for Duplicate Bundle IDs
+        run: |
+          if [ -f "sidestore.json" ]; then
+            echo "Checking sidestore.json for duplicates..."
+            # Extract IDs, sort them, and find duplicates
+            DUPLICATES=$(jq -r '.apps[].bundleIdentifier' sidestore.json | sort | uniq -d)
+            
+            if [ -n "$DUPLICATES" ]; then
+              echo "::error::Found duplicate Bundle IDs in sidestore.json: $DUPLICATES"
+              exit 1
+            fi
+            echo "✅ No duplicate Bundle IDs found."
+          fi
+
+      # 3. Shell Script Syntax Check
       - name: Check Shell Scripts
         run: |
           for script in scripts/*.sh; do
             if [ -f "$script" ]; then
+              echo "Checking $script..."
               bash -n "$script"
             fi
           done
