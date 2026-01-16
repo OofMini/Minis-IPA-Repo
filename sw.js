@@ -1,9 +1,9 @@
-const VERSION = '3.0.6'; // Bumped version
+const VERSION = '3.1.0'; // Bumped version for refactor
 const CACHE_NAME = `minis-ipa-repo-v${VERSION}`;
 const STATIC_URLS = [
     './',
     './index.html',
-    './apps.json',
+    './sidestore.json', // Updated from apps.json
     './assets/css/style.css',
     './assets/js/app.js',
     './manifest.json',
@@ -29,9 +29,9 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Strategy 1: Network-First for Data (apps.json)
+    // Strategy 1: Network-First for Data (sidestore.json)
     // Ensures users always get the latest list, falling back to cache only if offline.
-    if (event.request.url.includes('apps.json')) {
+    if (event.request.url.includes('sidestore.json')) {
         event.respondWith(
             fetch(event.request)
                 .then((networkResponse) => {
