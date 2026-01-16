@@ -2,7 +2,7 @@ name: Cleanup Old Workflow Runs
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Run weekly on Sunday
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
           echo "📅 Cutoff date: $CUTOFF_DATE"
 
           # List runs older than the cutoff and delete them
-          # --limit 100 prevents API timeouts; loop handles pagination implicitly by running repeatedly if needed
+          # --limit 100 prevents API timeouts; loop handles pagination implicitly
           gh run list \
             --json databaseId,createdAt,status \
             --created "<$CUTOFF_DATE" \
