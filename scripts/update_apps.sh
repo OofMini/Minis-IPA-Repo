@@ -19,7 +19,6 @@ validate_version() {
     exit 1
   fi
   
-  # OPTIMIZATION: Relaxed Regex to support more version formats (e.g., v1.0, 1.0.0-beta, 1.0r)
   if [[ ! "$version" =~ ^[vV]?[0-9]+(\.[0-9]+)*([-a-zA-Z0-9]+)?$ ]]; then
     echo "::warning::$app_name version '$version' uses a non-standard format. Proceeding with caution."
   fi
@@ -45,14 +44,12 @@ fi
 
 echo "✅ Input validation complete"
 
-# Configure Git if running in CI
 if [ -n "$GITHUB_ACTIONS" ]; then
     echo "⚙️ Configuring Git User..."
     git config --local user.email "github-actions[bot]@users.noreply.github.com"
     git config --local user.name "github-actions[bot]"
 fi
 
-# Process Updates
 trap 'rm -f *.tmp *.bak' EXIT ERR
 
 CURRENT_DATE=$(date -u +"%Y-%m-%d")
@@ -99,23 +96,29 @@ update_app_in_file() {
   
   if [ ! -f "$file" ]; then return 0; fi
 
-  # OPTIMIZATION: Check for existence before attempting jq to save cycles
+  # Pre-check existence of app in file to skip unnecessary processing
   case "$file" in
     "sidestore.json")
-      if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+            return 0
+        fi
+        ;;
+    "trollapps.json")
+        if ! jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
+            return 0
+        fi
+        ;;
+  esac
+
+  case "$file" in
+    "sidestore.json")
           jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
             '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.versions[0].version = $version | .versions[0].downloadURL = $url | .versions[0].date = $date | .localizedDescription = $desc)' "$file" > "$temp_file"
-      fi ;;
+      ;;
     "trollapps.json")
-      if jq -e --arg app "$app_name" --arg bundle "$bundle_id" '.apps[] | select(.name == $app or .bundleIdentifier == $bundle)' "$file" >/dev/null 2>&1; then
           jq --arg app "$app_name" --arg bundle "$bundle_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
             '(.apps[] | select(.name == $app or .bundleIdentifier == $bundle)) |= (.version = $version | .downloadURL = $url | .localizedDescription = $desc | .versionDate = $date)' "$file" > "$temp_file"
-      fi ;;
-    "apps.json")
-      if jq -e --arg id "$app_id" '.[] | select(.id == $id)' "$file" >/dev/null 2>&1; then
-          jq --arg id "$app_id" --arg version "$app_version" --arg url "$download_url" --arg desc "$description" --arg date "$CURRENT_DATE" \
-            '(.[] | select(.id == $id)) |= (.version = $version | .downloadUrl = $url | .description = $desc | .date = $date)' "$file" > "$temp_file"
-      fi ;;
+      ;;
   esac
   
   if [ -f "$temp_file" ]; then
@@ -130,6 +133,16 @@ update_app_in_file() {
   fi
 }
 
+validate_json_files() {
+    for file in sidestore.json trollapps.json; do
+        if [ ! -f "$file" ]; then continue; fi
+        if ! jq empty "$file" 2>/dev/null; then
+            echo "::error::$file is corrupted before updates"
+            exit 1
+        fi
+    done
+}
+
 update_workflow_defaults() {
   local app_key="$1" app_version="$2" workflow_file=".github/workflows/app-version-updates.yml"
   if [ ! -f "$workflow_file" ]; then return 0; fi
@@ -137,7 +150,10 @@ update_workflow_defaults() {
   sed -i -e "/${app_key}_version:/,/default:/ s/\(default: \)\"[^\"]*\"/\1\"$escaped_version\"/" "$workflow_file"
 }
 
-JSON_FILES=("sidestore.json" "trollapps.json" "apps.json")
+validate_json_files
+
+# Removed apps.json from list
+JSON_FILES=("sidestore.json" "trollapps.json")
 UPDATED_APPS=(); UPDATED_VERSIONS=(); SKIPPED_APPS=()
 
 for app_key in "${APP_KEYS[@]}"; do
