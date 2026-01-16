@@ -2,11 +2,11 @@ name: Cleanup Old Workflow Runs
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+    - cron: '0 0 * * 0' # Weekly
   workflow_dispatch:
     inputs:
       days_to_keep:
-        description: 'Days to keep (0 = delete everything from yesterday backwards)'
+        description: 'Days to keep (0 = delete EVERYTHING including today)'
         required: true
         default: '0'
 
@@ -24,45 +24,52 @@ jobs:
           GH_REPO: ${{ github.repository }}
           DAYS_TO_KEEP: ${{ github.event.inputs.days_to_keep || 0 }}
         run: |
-          # List of exact Workflow Names to clean
-          # This ensures we check EVERY workflow, not just the most active ones
-          WORKFLOWS=(
-            "App Version Updates"
-            "Bulk IPA Updates - Tweaked Apps"
-            "Code Quality Checks"
-            "Cleanup Old Workflow Runs"
-            "pages-build-deployment"
-          )
+          # 1. Smart Date Calculation
+          if [[ "$DAYS_TO_KEEP" -eq 0 ]]; then
+            # If 0, set cutoff to TOMORROW to include all of today's runs
+            CUTOFF_DATE=$(date -d "+1 day" +%Y-%m-%d)
+            echo "🔥 DELETION MODE: Deleting EVERYTHING created before $CUTOFF_DATE (includes today)"
+          else
+            # Otherwise, use standard logic (e.g., older than 3 days)
+            CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
+            echo "📅 Standard Cleanup: Deleting runs older than $CUTOFF_DATE"
+          fi
 
-          # Calculate cutoff date
-          CUTOFF_DATE=$(date -d "-$DAYS_TO_KEEP days" +%Y-%m-%d)
-          echo "📅 Cutoff Date: $CUTOFF_DATE"
           echo "---------------------------------------------------"
 
-          for workflow in "${WORKFLOWS[@]}"; do
+          # 2. Get All Workflow Names Dynamically
+          # This ensures we catch 'pages-build-deployment', 'Code Quality Checks', etc.
+          # without hardcoding them.
+          WORKFLOW_NAMES=$(gh workflow list --all --json name --jq '.[].name')
+
+          # Loop through every workflow found in the repo
+          echo "$WORKFLOW_NAMES" | while read -r workflow; do
+            if [ -z "$workflow" ]; then continue; fi
+            
             echo "🔍 Checking workflow: '$workflow'..."
             
-            # Fetch runs specific to this workflow
-            # Using --limit 50 per workflow to ensure we process a good chunk
+            # Fetch run IDs
             RUNS=$(gh run list \
               --workflow "$workflow" \
               --created "<$CUTOFF_DATE" \
-              --status completed \
               --json databaseId \
-              --limit 50 \
+              --limit 100 \
               --jq '.[].databaseId')
             
             if [ -z "$RUNS" ]; then
-              echo "✅ No old runs found for '$workflow'."
+              echo "   ✅ No deletable runs found."
             else
               COUNT=$(echo "$RUNS" | wc -w)
-              echo "🗑️ Found $COUNT runs to delete for '$workflow'."
+              echo "   🗑️ Found $COUNT runs to delete."
               
               for run_id in $RUNS; do
-                gh run delete "$run_id" || echo "⚠️ Failed to delete $run_id"
+                # Run deletion in background for speed, then wait
+                gh run delete "$run_id" >/dev/null 2>&1 || echo "   ⚠️ Failed to delete $run_id" &
               done
+              wait # Wait for batch to finish
+              echo "   ✨ Batch cleaned."
             fi
             echo "---------------------------------------------------"
           done
           
-          echo "🎉 Cleanup complete."
+          echo "🎉 Complete cleanup finished."
