@@ -1,0 +1,33 @@
+name: Tool - Remove IPA Extensions
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: "Direct URL to the IPA file"
+        required: true
+        type: string
+
+jobs:
+  remove-extensions:
+    name: Strip Extensions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Process IPA
+        id: process
+        run: |
+          chmod +x scripts/remove_extensions.sh
+          ./scripts/remove_extensions.sh "${{ inputs.ipa_url }}"
+
+      - name: Upload Modified IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Modified-IPA-NoExtensions
+          path: ${{ steps.process.outputs.modified_ipa_path }}
+          retention-days: 1
