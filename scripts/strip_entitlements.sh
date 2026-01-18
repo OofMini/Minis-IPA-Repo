@@ -27,37 +27,44 @@ if [[ -z "$KEYS_TO_REMOVE" ]]; then
     KEYS_TO_REMOVE="com.apple.developer.siri"
 fi
 
-# 1. Install ldid (Robust Multi-Try Method)
+# 1. Install ldid (Robust Method)
 LDID_CMD="ldid"
 
 if ! command -v ldid &> /dev/null; then
     echo "📦 Installing ldid..."
     
-    # Try apt-get first (often fails on standard Ubuntu runners for this specific tool)
-    if sudo apt-get update -qq && sudo apt-get install -y ldid -qq 2>/dev/null; then
-        echo "   - Installed via apt-get"
-    # Try Homebrew (Available on GitHub Actions ubuntu-latest)
-    elif command -v brew &> /dev/null; then
-        echo "   - Trying brew..."
-        # Brew can be slow, so we suppress output unless error
-        brew install ldid >/dev/null 2>&1
-        echo "   - Installed via brew"
-    else
-        echo "   - Package managers failed. Downloading binary directly..."
-        # Fallback: Download static binary
-        curl -L -o ldid_bin https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5/ldid_linux_x86_64
+    # Method A: Download Static Binary (Fastest & Most Reliable on CI)
+    echo "   - Attempting to download static binary..."
+    # URL fixed to specific working release
+    curl -L -o ldid_bin "https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64"
+    
+    # Check if download looks valid (larger than 1KB)
+    if [[ -f "ldid_bin" ]] && [[ $(stat -c%s "ldid_bin") -gt 1024 ]]; then
         chmod +x ldid_bin
         LDID_CMD="./ldid_bin"
+        echo "   - Download successful."
+    else
+        echo "   - Binary download failed. Trying Homebrew..."
+        rm -f ldid_bin
+        
+        # Method B: Homebrew (Slower fallback)
+        if command -v brew &> /dev/null; then
+            brew install ldid
+            LDID_CMD="ldid"
+        else
+            echo "::error::Could not install ldid via Download or Brew."
+            exit 1
+        fi
     fi
 fi
 
-# Verify ldid is working
-if ! $LDID_CMD --version &> /dev/null && ! [[ -x "$LDID_CMD" ]]; then
-    echo "::error::ldid installation failed completely."
+# Verify ldid is actually working
+if ! "$LDID_CMD" --version &> /dev/null && ! [[ -x "$LDID_CMD" ]]; then
+    echo "::error::ldid installation failed validation."
     exit 1
 fi
 
-echo "✅ ldid is ready: $($LDID_CMD --version | head -n 1)"
+echo "✅ ldid is ready"
 
 # 2. Download IPA
 FILENAME=$(basename "${IPA_URL%%\?*}")
@@ -89,7 +96,7 @@ echo "🔍 Processing Binary: $BINARY_NAME"
 
 # 3. Extract Entitlements
 echo "   - Extracting current entitlements..."
-$LDID_CMD -e "$BINARY_PATH" > entitlements.xml
+"$LDID_CMD" -e "$BINARY_PATH" > entitlements.xml
 
 if [ ! -s entitlements.xml ]; then
     echo "::warning::No entitlements found in binary. Nothing to strip."
@@ -110,16 +117,11 @@ try:
             pl = plistlib.loads(content)
         except:
             try:
-                import xml.parsers.expat
-                pl = plistlib.loads(content)
+                # If binary/xml mix fails, try loading as standard XML string
+                pl = plistlib.loads(content, fmt=None)
             except:
-                # If binary/xml mix fails, try loading as standard XML string fallback
-                # This handles cases where ldid outputs raw XML text
-                try:
-                    pl = plistlib.loads(content)
-                except:
-                    print('::warning::Could not parse entitlements. Skipping modification.')
-                    sys.exit(2)
+                print('::warning::Could not parse entitlements. Skipping modification.')
+                sys.exit(2)
 
     modified = False
     for key in keys_to_remove:
@@ -147,7 +149,7 @@ except Exception as e:
     if [ $RET_CODE -eq 0 ]; then
         # 5. Re-sign binary with new entitlements
         echo "✍️  Re-signing binary with clean entitlements..."
-        $LDID_CMD -Sentitlements_new.xml "$BINARY_PATH"
+        "$LDID_CMD" -Sentitlements_new.xml "$BINARY_PATH"
         rm entitlements_new.xml
     elif [ $RET_CODE -eq 2 ]; then
         echo "ℹ️  Skipping resign (no changes needed)."
