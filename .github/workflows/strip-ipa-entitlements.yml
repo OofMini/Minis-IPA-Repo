@@ -1,0 +1,38 @@
+name: Tool - Strip IPA Entitlements
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: "Direct URL to the IPA file"
+        required: true
+        type: string
+      entitlements:
+        description: "Comma-separated keys to remove (e.g. com.apple.developer.siri, com.apple.developer.icloud-services)"
+        required: false
+        default: "com.apple.developer.siri"
+        type: string
+
+jobs:
+  strip-entitlements:
+    name: Strip Entitlements
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Process IPA
+        id: process
+        run: |
+          chmod +x scripts/strip_entitlements.sh
+          ./scripts/strip_entitlements.sh "${{ inputs.ipa_url }}" "${{ inputs.entitlements }}"
+
+      - name: Upload Stripped IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Stripped-IPA
+          path: ${{ steps.process.outputs.modified_ipa_path }}
+          retention-days: 1
