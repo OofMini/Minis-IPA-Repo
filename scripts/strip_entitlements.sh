@@ -6,7 +6,7 @@ IFS=$'\n\t'
 # Cleanup trap
 cleanup() {
     local exit_code=$?
-    rm -rf temp_strip_entitlements ldid
+    rm -rf temp_strip_entitlements entitlements.xml entitlements_new.xml
     if [ $exit_code -ne 0 ]; then
         echo "::error::Script failed unexpectedly at line $LINENO"
     fi
@@ -27,15 +27,25 @@ if [[ -z "$KEYS_TO_REMOVE" ]]; then
     KEYS_TO_REMOVE="com.apple.developer.siri"
 fi
 
-# 1. Install ldid (Link Identity Editor) for handling entitlements
+# 1. Install ldid (Reliable Method via Package Manager)
 if ! command -v ldid &> /dev/null; then
     echo "📦 Installing ldid..."
-    # We download a known stable binary because apt version can be outdated
-    curl -L -o ldid https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5/ldid_linux_x86_64
-    chmod +x ldid
-    LDID="./ldid"
-else
-    LDID="ldid"
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update -qq
+        sudo apt-get install -y ldid -qq
+    elif command -v brew &> /dev/null; then
+        echo "   - using brew (this may take a moment)..."
+        brew install ldid
+    else
+        echo "::error::Could not find apt-get or brew to install ldid."
+        exit 1
+    fi
+fi
+
+# Verify ldid installed correctly
+if ! command -v ldid &> /dev/null; then
+    echo "::error::ldid installation failed."
+    exit 1
 fi
 
 # 2. Download IPA
@@ -46,11 +56,21 @@ MODIFIED_NAME="${FILENAME%.ipa}_Stripped.ipa"
 echo "⬇️ Downloading: $FILENAME"
 curl -L -o "$FILENAME" "$IPA_URL"
 
+if [[ ! -f "$FILENAME" ]]; then
+    echo "::error::Download failed."
+    exit 1
+fi
+
 echo "📦 Unpacking IPA..."
 unzip -q "$FILENAME" -d temp_strip_entitlements
 
 # Find the .app directory
 APP_DIR=$(find temp_strip_entitlements/Payload -maxdepth 1 -name "*.app" | head -n 1)
+if [[ -z "$APP_DIR" ]]; then
+    echo "::error::Invalid IPA: No .app folder found."
+    exit 1
+fi
+
 BINARY_NAME=$(basename "${APP_DIR%.*}")
 BINARY_PATH="$APP_DIR/$BINARY_NAME"
 
@@ -58,11 +78,10 @@ echo "🔍 Processing Binary: $BINARY_NAME"
 
 # 3. Extract Entitlements
 echo "   - Extracting current entitlements..."
-$LDID -e "$BINARY_PATH" > entitlements.xml
+ldid -e "$BINARY_PATH" > entitlements.xml
 
 if [ ! -s entitlements.xml ]; then
     echo "::warning::No entitlements found in binary. Nothing to strip."
-    # Pack it back up anyway in case they just wanted a repack
 else
     # 4. Modify Entitlements using Python (Safe Plist Editing)
     echo "✂️  Stripping keys: $KEYS_TO_REMOVE"
@@ -75,9 +94,25 @@ keys_to_remove = [k.strip() for k in keys_to_remove]
 
 try:
     with open('entitlements.xml', 'rb') as f:
-        # Load plist (handles both XML and Binary formats)
-        pl = plistlib.load(f)
-        
+        content = f.read()
+        # ldid output might have garbage at start/end or be XML/binary
+        # We try to parse it directly
+        try:
+            pl = plistlib.loads(content)
+        except:
+            # Fallback for XML if loads fails (older python/plistlib versions)
+            try:
+                pl = plistlib.load(f) # unlikely to work if loads failed but worth a shot if seek reset
+            except:
+                # If binary/xml mix fails, assume XML and try to parse string
+                # Note: ldid -e usually outputs XML text.
+                import xml.parsers.expat
+                try:
+                    pl = plistlib.loads(content)
+                except:
+                    print('::warning::Could not parse entitlements with standard plistlib. Trying workaround.')
+                    sys.exit(2) 
+
     modified = False
     for key in keys_to_remove:
         if key in pl:
@@ -104,7 +139,7 @@ except Exception as e:
     if [ $RET_CODE -eq 0 ]; then
         # 5. Re-sign binary with new entitlements
         echo "✍️  Re-signing binary with clean entitlements..."
-        $LDID -Sentitlements_new.xml "$BINARY_PATH"
+        ldid -Sentitlements_new.xml "$BINARY_PATH"
         rm entitlements_new.xml
     elif [ $RET_CODE -eq 2 ]; then
         echo "ℹ️  Skipping resign (no changes needed)."
