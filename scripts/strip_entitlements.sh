@@ -6,7 +6,7 @@ IFS=$'\n\t'
 # Cleanup trap
 cleanup() {
     local exit_code=$?
-    rm -rf temp_strip_entitlements entitlements.xml entitlements_new.xml
+    rm -rf temp_strip_entitlements entitlements.xml entitlements_new.xml ldid_bin
     if [ $exit_code -ne 0 ]; then
         echo "::error::Script failed unexpectedly at line $LINENO"
     fi
@@ -27,26 +27,37 @@ if [[ -z "$KEYS_TO_REMOVE" ]]; then
     KEYS_TO_REMOVE="com.apple.developer.siri"
 fi
 
-# 1. Install ldid (Reliable Method via Package Manager)
+# 1. Install ldid (Robust Multi-Try Method)
+LDID_CMD="ldid"
+
 if ! command -v ldid &> /dev/null; then
     echo "📦 Installing ldid..."
-    if command -v apt-get &> /dev/null; then
-        sudo apt-get update -qq
-        sudo apt-get install -y ldid -qq
+    
+    # Try apt-get first (often fails on standard Ubuntu runners for this specific tool)
+    if sudo apt-get update -qq && sudo apt-get install -y ldid -qq 2>/dev/null; then
+        echo "   - Installed via apt-get"
+    # Try Homebrew (Available on GitHub Actions ubuntu-latest)
     elif command -v brew &> /dev/null; then
-        echo "   - using brew (this may take a moment)..."
-        brew install ldid
+        echo "   - Trying brew..."
+        # Brew can be slow, so we suppress output unless error
+        brew install ldid >/dev/null 2>&1
+        echo "   - Installed via brew"
     else
-        echo "::error::Could not find apt-get or brew to install ldid."
-        exit 1
+        echo "   - Package managers failed. Downloading binary directly..."
+        # Fallback: Download static binary
+        curl -L -o ldid_bin https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5/ldid_linux_x86_64
+        chmod +x ldid_bin
+        LDID_CMD="./ldid_bin"
     fi
 fi
 
-# Verify ldid installed correctly
-if ! command -v ldid &> /dev/null; then
-    echo "::error::ldid installation failed."
+# Verify ldid is working
+if ! $LDID_CMD --version &> /dev/null && ! [[ -x "$LDID_CMD" ]]; then
+    echo "::error::ldid installation failed completely."
     exit 1
 fi
+
+echo "✅ ldid is ready: $($LDID_CMD --version | head -n 1)"
 
 # 2. Download IPA
 FILENAME=$(basename "${IPA_URL%%\?*}")
@@ -78,12 +89,12 @@ echo "🔍 Processing Binary: $BINARY_NAME"
 
 # 3. Extract Entitlements
 echo "   - Extracting current entitlements..."
-ldid -e "$BINARY_PATH" > entitlements.xml
+$LDID_CMD -e "$BINARY_PATH" > entitlements.xml
 
 if [ ! -s entitlements.xml ]; then
     echo "::warning::No entitlements found in binary. Nothing to strip."
 else
-    # 4. Modify Entitlements using Python (Safe Plist Editing)
+    # 4. Modify Entitlements using Python
     echo "✂️  Stripping keys: $KEYS_TO_REMOVE"
     
     python3 -c "
@@ -95,23 +106,20 @@ keys_to_remove = [k.strip() for k in keys_to_remove]
 try:
     with open('entitlements.xml', 'rb') as f:
         content = f.read()
-        # ldid output might have garbage at start/end or be XML/binary
-        # We try to parse it directly
         try:
             pl = plistlib.loads(content)
         except:
-            # Fallback for XML if loads fails (older python/plistlib versions)
             try:
-                pl = plistlib.load(f) # unlikely to work if loads failed but worth a shot if seek reset
-            except:
-                # If binary/xml mix fails, assume XML and try to parse string
-                # Note: ldid -e usually outputs XML text.
                 import xml.parsers.expat
+                pl = plistlib.loads(content)
+            except:
+                # If binary/xml mix fails, try loading as standard XML string fallback
+                # This handles cases where ldid outputs raw XML text
                 try:
                     pl = plistlib.loads(content)
                 except:
-                    print('::warning::Could not parse entitlements with standard plistlib. Trying workaround.')
-                    sys.exit(2) 
+                    print('::warning::Could not parse entitlements. Skipping modification.')
+                    sys.exit(2)
 
     modified = False
     for key in keys_to_remove:
@@ -127,7 +135,7 @@ try:
             plistlib.dump(pl, f)
     else:
         print('   - No matching keys found to remove.')
-        sys.exit(2) # Exit code 2 = no changes
+        sys.exit(2) 
 
 except Exception as e:
     print(f'::error::Failed to process plist: {e}')
@@ -139,7 +147,7 @@ except Exception as e:
     if [ $RET_CODE -eq 0 ]; then
         # 5. Re-sign binary with new entitlements
         echo "✍️  Re-signing binary with clean entitlements..."
-        ldid -Sentitlements_new.xml "$BINARY_PATH"
+        $LDID_CMD -Sentitlements_new.xml "$BINARY_PATH"
         rm entitlements_new.xml
     elif [ $RET_CODE -eq 2 ]; then
         echo "ℹ️  Skipping resign (no changes needed)."
