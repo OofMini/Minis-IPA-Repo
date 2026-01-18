@@ -33,12 +33,10 @@ LDID_CMD="ldid"
 if ! command -v ldid &> /dev/null; then
     echo "📦 Installing ldid..."
     
-    # Method A: Download Static Binary (Fastest & Most Reliable on CI)
+    # Download Static Binary (Fastest & Most Reliable on CI)
     echo "   - Attempting to download static binary..."
-    # URL fixed to specific working release
     curl -L -o ldid_bin "https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64"
     
-    # Check if download looks valid (larger than 1KB)
     if [[ -f "ldid_bin" ]] && [[ $(stat -c%s "ldid_bin") -gt 1024 ]]; then
         chmod +x ldid_bin
         LDID_CMD="./ldid_bin"
@@ -47,24 +45,15 @@ if ! command -v ldid &> /dev/null; then
         echo "   - Binary download failed. Trying Homebrew..."
         rm -f ldid_bin
         
-        # Method B: Homebrew (Slower fallback)
         if command -v brew &> /dev/null; then
             brew install ldid
             LDID_CMD="ldid"
         else
-            echo "::error::Could not install ldid via Download or Brew."
+            echo "::error::Could not install ldid."
             exit 1
         fi
     fi
 fi
-
-# Verify ldid is actually working
-if ! "$LDID_CMD" --version &> /dev/null && ! [[ -x "$LDID_CMD" ]]; then
-    echo "::error::ldid installation failed validation."
-    exit 1
-fi
-
-echo "✅ ldid is ready"
 
 # 2. Download IPA
 FILENAME=$(basename "${IPA_URL%%\?*}")
@@ -89,19 +78,38 @@ if [[ -z "$APP_DIR" ]]; then
     exit 1
 fi
 
-BINARY_NAME=$(basename "${APP_DIR%.*}")
+# 3. Find Binary Name (Robustly via Info.plist)
+echo "🔍 Identifying Binary..."
+if [[ -f "$APP_DIR/Info.plist" ]]; then
+    BINARY_NAME=$(python3 -c "import plistlib, sys; print(plistlib.load(open('$APP_DIR/Info.plist', 'rb')).get('CFBundleExecutable', ''))" 2>/dev/null || echo "")
+fi
+
+# Fallback if python check failed or returned empty
+if [[ -z "${BINARY_NAME:-}" ]]; then
+    echo "::warning::Could not read CFBundleExecutable. Guessing from folder name."
+    BINARY_NAME=$(basename "${APP_DIR%.*}")
+fi
+
 BINARY_PATH="$APP_DIR/$BINARY_NAME"
+echo "   - Target Binary: $BINARY_NAME"
 
-echo "🔍 Processing Binary: $BINARY_NAME"
+if [[ ! -f "$BINARY_PATH" ]]; then
+    echo "::error::Binary not found at $BINARY_PATH"
+    exit 1
+fi
 
-# 3. Extract Entitlements
+# 4. Process Entitlements
 echo "   - Extracting current entitlements..."
-"$LDID_CMD" -e "$BINARY_PATH" > entitlements.xml
+
+# Allow ldid -e to fail (return non-zero) without crashing script using "|| true"
+# This happens if the binary is unsigned.
+"$LDID_CMD" -e "$BINARY_PATH" > entitlements.xml 2>/dev/null || true
 
 if [ ! -s entitlements.xml ]; then
-    echo "::warning::No entitlements found in binary. Nothing to strip."
+    echo "::warning::Binary is unsigned or has no entitlements."
+    echo "✍️  Applying fresh ad-hoc signature (cleans restrictions)..."
+    "$LDID_CMD" -S "$BINARY_PATH"
 else
-    # 4. Modify Entitlements using Python
     echo "✂️  Stripping keys: $KEYS_TO_REMOVE"
     
     python3 -c "
@@ -120,8 +128,8 @@ try:
                 # If binary/xml mix fails, try loading as standard XML string
                 pl = plistlib.loads(content, fmt=None)
             except:
-                print('::warning::Could not parse entitlements. Skipping modification.')
-                sys.exit(2)
+                # Fallback: Treat as empty/unparseable and exit with code 3
+                sys.exit(3)
 
     modified = False
     for key in keys_to_remove:
@@ -136,28 +144,29 @@ try:
         with open('entitlements_new.xml', 'wb') as f:
             plistlib.dump(pl, f)
     else:
-        print('   - No matching keys found to remove.')
-        sys.exit(2) 
+        sys.exit(2) # Code 2: No changes needed
 
 except Exception as e:
-    print(f'::error::Failed to process plist: {e}')
-    sys.exit(1)
+    print(f'::warning::Plist processing error: {e}')
+    sys.exit(3) # Code 3: Parse error
 "
     
     RET_CODE=$?
     
     if [ $RET_CODE -eq 0 ]; then
-        # 5. Re-sign binary with new entitlements
-        echo "✍️  Re-signing binary with clean entitlements..."
+        echo "✍️  Re-signing binary with modified entitlements..."
         "$LDID_CMD" -Sentitlements_new.xml "$BINARY_PATH"
         rm entitlements_new.xml
     elif [ $RET_CODE -eq 2 ]; then
-        echo "ℹ️  Skipping resign (no changes needed)."
+        echo "ℹ️  Entitlements clean. Skipping resign."
+    else
+        echo "::warning::Could not parse entitlements. Re-signing ad-hoc to be safe."
+        "$LDID_CMD" -S "$BINARY_PATH"
     fi
     rm entitlements.xml
 fi
 
-# 6. Repack
+# 5. Repack
 echo "📦 Repacking IPA..."
 cd temp_strip_entitlements
 zip -qr "../$MODIFIED_NAME" Payload
